@@ -40,7 +40,7 @@ export default {
     }
   },
   home: {
-    title: 'Este.js'
+    title: 'Vetoapp'
   },
   me: {
     title: 'Me',

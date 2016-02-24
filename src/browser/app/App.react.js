@@ -37,7 +37,7 @@ class App extends Component {
             name: 'description',
             content: 'Dev stack and starter kit for functional and universal React web apps'
           }]}
-          titleTemplate="%s - Este.js"
+          titleTemplate="%s"
         />
         {/* Pass location to ensure header active links are updated. */}
         <Header location={location} />
