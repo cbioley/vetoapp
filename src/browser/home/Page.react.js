@@ -2,7 +2,7 @@ import Component from 'react-pure-render/component';
 import Helmet from 'react-helmet';
 import React, { PropTypes } from 'react';
 import { FormattedHTMLMessage } from 'react-intl';
-import { Link } from 'react-router';
+// import { Link } from 'react-router';
 import { connect } from 'react-redux';
 
 class Page extends Component {
