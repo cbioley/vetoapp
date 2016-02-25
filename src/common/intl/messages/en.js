@@ -1,7 +1,8 @@
 export default {
   app: {
     footer: {
-      madeByHtml: 'made by <a href="https://twitter.com/steida">steida</a>'
+      madeByHtml: `made by <a href="https://twitter.com/steida">steida</a> with
+        <a href="https://github.com/este/este">este</a>`
     },
     links: {
       home: 'Home',
