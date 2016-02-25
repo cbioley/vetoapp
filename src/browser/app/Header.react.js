@@ -15,7 +15,12 @@ class Header extends Component {
 
     return (
       <header>
-        <img src={require('./logo-400px.png')} width="400" height="190" />
+        <img
+          className="img-fluid"
+          height="190"
+          src={require('./logo-400px.png')}
+          width="400"
+        />
         <ul>
           {viewer &&
             <li><Link activeClassName="active" to="/me">{msg.me}</Link></li>

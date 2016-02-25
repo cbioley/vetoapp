@@ -1,107 +1,44 @@
-// Remember to use rems and ems. http://css-tricks.com/rems-ems.
+$brand-primary: #346392;
+$enable-flex: true;
+$font-family-sans-serif: "Segoe UI", "Lucida Grande", Ubuntu, sans-serif;
 
-@import '~normalize.css/normalize.css';
+// From node_modules/bootstrap/scss/bootstrap.scss
+@import "~bootstrap/scss/variables";
+@import "~bootstrap/scss/mixins";
+@import "~bootstrap/scss/normalize";
+@import "~bootstrap/scss/print";
+@import "~bootstrap/scss/reboot";
+@import "~bootstrap/scss/type";
+@import "~bootstrap/scss/images";
+// @import "~bootstrap/scss/code";
+@import "~bootstrap/scss/grid";
+@import "~bootstrap/scss/tables";
+@import "~bootstrap/scss/forms";
+@import "~bootstrap/scss/buttons";
+// @import "~bootstrap/scss/animation";
+// @import "~bootstrap/scss/dropdown";
+@import "~bootstrap/scss/button-group";
+@import "~bootstrap/scss/input-group";
+@import "~bootstrap/scss/custom-forms";
+// @import "~bootstrap/scss/nav";
+// @import "~bootstrap/scss/navbar";
+// @import "~bootstrap/scss/card";
+// @import "~bootstrap/scss/breadcrumb";
+// @import "~bootstrap/scss/pagination";
+// @import "~bootstrap/scss/pager";
+// @import "~bootstrap/scss/labels";
+// @import "~bootstrap/scss/jumbotron";
+// @import "~bootstrap/scss/alert";
+// @import "~bootstrap/scss/progress";
+// @import "~bootstrap/scss/media";
+// @import "~bootstrap/scss/list-group";
+// @import "~bootstrap/scss/responsive-embed";
+// @import "~bootstrap/scss/close";
+@import "~bootstrap/scss/utilities";
+@import "~bootstrap/scss/utilities-background";
+@import "~bootstrap/scss/utilities-spacing";
+@import "~bootstrap/scss/utilities-responsive";
 
-// http://phonegap-tips.com/articles/essential-phonegap-css-webkit-tap-highlight-color.html
-* {
-  -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
-}
-
-// Goodness.
-*,
-::after,
-::before {
-  box-sizing: border-box;
-}
-
-html,
-body {
-  height: 100%;
-}
-
-body {
-  color: #333;
-  font-family: 'Segoe UI', 'Lucida Grande', 'Ubuntu', 'sans-serif';
-  font-size: 16px;
-  line-height: 1.5;
-}
-
-#app {
-  margin: 1em 2em;
-
-  > header {
-    h1 {
-      margin-bottom: 0;
-    }
-
-    ul {
-      li {
-        font-size: 1em;
-      }
-    }
-  }
-
-  > footer {
-    font-size: .75em;
-    font-style: italic;
-  }
-
-  :focus {
-    outline-style: none;
-  }
-
-  a {
-    color: #346392;
-    text-decoration: none;
-
-    &:hover:not(.active) {
-      text-decoration: underline;
-    }
-
-    &.active {
-      font-weight: bold;
-    }
-  }
-
-  button {
-    background-color: #6496c8;
-    border: 0;
-    border-radius: 1em;
-    color: #fff;
-    font-weight: bold;
-    line-height: 1.8;
-    margin: 0 10px 0 0;
-    padding: 0 1em;
-    text-shadow: -1px 1px #417cb8;
-
-    &:hover {
-      background-color: #346392;
-      text-shadow: -1px 1px #27496d;
-    }
-
-    &:active {
-      background-color: #27496d;
-      text-shadow: -1px 1px #193047;
-    }
-
-    &[disabled] {
-      background-color: #6496c8;
-      opacity: .5;
-      text-shadow: -1px 1px #417cb8;
-    }
-
-  }
-
-  button,
-  input,
-  textarea {
-    &:disabled {
-      opacity: .5;
-    }
-  }
-
-  p,
-  li {
-    max-width: 42em;
-  }
+.container {
+  padding-top: 1em;
 }

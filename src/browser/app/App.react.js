@@ -28,11 +28,11 @@ class App extends Component {
     const { children, location } = this.props;
 
     return (
-      <div className="page">
+      <div className="container">
         <Helmet
           link={[
             ...['32x32', '16x16'].map(sizes => ({
-              // TODO: Add limit 0 somehow to prevents inlining.
+              // TODO: Add limit 0 somehow to prevent inlining.
               href: require(`./favicon-${sizes}.png`),
               rel: 'icon',
               type: 'image/png',
