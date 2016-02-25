@@ -31,7 +31,14 @@ class App extends Component {
       <div className="page">
         <Helmet
           link={[
-            { rel: 'shortcut icon', href: require('./favicon.ico') }
+            ...['32x32', '16x16'].map(sizes => ({
+              // TODO: Add limit 0 somehow to prevents inlining.
+              href: require(`./favicon-${sizes}.png`),
+              rel: 'icon',
+              type: 'image/png',
+              sizes
+            })),
+            { href: require('./favicon.ico'), rel: 'shortcut icon' }
           ]}
           meta={[{
             name: 'description',
