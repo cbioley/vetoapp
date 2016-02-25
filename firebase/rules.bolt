@@ -17,10 +17,6 @@ type LongString extends String {
   validate() { this.length < 1000 }
 }
 
-type HelloWorld {
-  createdAt: Number
-}
-
 type User {
   authenticatedAt: Number,
   displayName: LongString,
@@ -34,13 +30,6 @@ type Email {
 }
 
 // Paths
-
-path /hello-world is HelloWorld {
-  // Anyone can create, read, update. No one can delete.
-  create() { true }
-  read() { true }
-  update() { true }
-}
 
 path /users {
   read() { true }
