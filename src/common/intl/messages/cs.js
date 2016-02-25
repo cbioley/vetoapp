@@ -1,34 +1,35 @@
 export default {
   app: {
     footer: {
-      madeByHtml: `made by <a href="https://twitter.com/steida">steida</a> with
-        <a href="https://github.com/este/este">este</a>`
+      madeByHtml: `napsal <a href="https://twitter.com/steida">steida</a> s
+        pomocí <a href="https://github.com/este/este">este</a>`
     },
     links: {
-      home: 'Home',
-      login: 'Login',
-      me: 'Me'
+      home: 'Domů',
+      login: 'Přihlášení',
+      me: 'Já'
     }
   },
   auth: {
     form: {
       button: {
-        login: 'Login',
-        signup: 'Sign up'
+        login: 'Přihlásit se',
+        signup: 'Odhlásit'
       },
-      legend: 'Login',
+      legend: 'Přihlášení',
       placeholder: {
-        email: 'your@email.com',
-        password: 'password'
+        email: 'tvuj@email.com',
+        password: 'heslo'
       },
-      wrongPassword: 'Wrong password.'
+      wrongPassword: 'Špatné heslo.'
     },
     logout: {
-      button: 'Logout'
+      button: 'Odhlásit'
     },
     login: {
-      title: 'Login'
+      title: 'Přihlášení'
     },
+    // TODO: Localize.
     validation: {
       email: 'Email address is not valid.',
       password: 'Password must contain at least {minLength} characters.',
@@ -43,9 +44,10 @@ export default {
     title: 'Vetoapp'
   },
   me: {
-    title: 'Me',
-    welcome: 'Hi {email}.'
+    title: 'Já',
+    welcome: 'Ahoj {email}.'
   },
+  // TODO: Localize.
   notFound: {
     continueMessage: 'Continue here please.',
     header: 'This page isn\'t available',
