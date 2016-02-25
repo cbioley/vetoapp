@@ -1,5 +1,5 @@
 {
-  "firebase": "este",
+  "firebase": "vetoap",
   "cleanUrls": true,
   "trailingSlash": false,
   "rules": "firebase/rules.bolt",
