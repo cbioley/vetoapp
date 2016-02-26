@@ -4,35 +4,41 @@ import Component from 'react-pure-render/component';
 import Helmet from 'react-helmet';
 import React, { PropTypes } from 'react';
 import { FormattedMessage } from 'react-intl';
-import { Link } from 'react-router';
 import { connect } from 'react-redux';
 
 class Page extends Component {
 
   static propTypes = {
-    children: PropTypes.object,
     msg: PropTypes.object,
     viewer: PropTypes.object
   };
 
   render() {
-    const { children, msg, viewer: { email } } = this.props;
+    const { msg, viewer } = this.props;
+    const displayName = viewer.displayName || viewer.email;
 
     return (
       <div className="me-page">
-        <Helmet title={msg.me.title} />
-        <ul>
-          <li><Link activeClassName="active" to="/me/profile">{msg.profile.title}</Link></li>
-          <li><Link activeClassName="active" to="/me/settings">{msg.settings.title}</Link></li>
-        </ul>
-        {children ||
-          <p>
-            <FormattedMessage
-              defaultMessage={msg.me.welcome}
-              id={'msg.me.welcome'}
-              values={{ email }}
-            />
-          </p>
+        <Helmet title={msg.title} />
+        <h2>
+          <FormattedMessage
+            defaultMessage={msg.h2}
+            id={'msg.me.h2'}
+            values={{ displayName }}
+          />
+        </h2>
+        <p>
+          <FormattedMessage
+            defaultMessage={msg.p}
+            id={'msg.me.p'}
+            values={{ displayName }}
+          />
+        </p>
+        {viewer.profileImageURL &&
+          <img
+            className="profile-image-url img-circle"
+            src={viewer.profileImageURL}
+          />
         }
         <AuthLogout />
       </div>
@@ -42,6 +48,6 @@ class Page extends Component {
 }
 
 export default connect(state => ({
-  msg: state.intl.msg,
+  msg: state.intl.msg.me,
   viewer: state.users.viewer
 }))(Page);

@@ -1,8 +1,9 @@
 export default {
   app: {
     footer: {
-      madeByHtml: `napsal <a href="https://twitter.com/steida">steida</a> s
-        pomocí <a href="https://github.com/este/este">este</a>`
+      madeByHtml: `
+        made by <a target="_blank" href="https://twitter.com/steida">steida</a>,
+        report an <a target="_blank" href="https://github.com/steida/vetoapp/issues/new">issue</a>`
     },
     links: {
       home: 'Domů',
@@ -14,7 +15,7 @@ export default {
     form: {
       button: {
         login: 'Přihlásit se',
-        signup: 'Odhlásit'
+        signup: 'Odhlásit se'
       },
       legend: 'Přihlášení',
       placeholder: {
@@ -24,34 +25,43 @@ export default {
       wrongPassword: 'Špatné heslo.'
     },
     logout: {
-      button: 'Odhlásit'
+      button: 'Odhlásit se'
     },
     login: {
       title: 'Přihlášení'
     },
     // TODO: Localize.
     validation: {
-      email: 'Email address is not valid.',
-      password: 'Password must contain at least {minLength} characters.',
-      required: `Please fill out {prop, select,
+      email: 'Emailová adresa není ve správném formátu.',
+      password: 'Heslo musí obsahovat minimálně {minLength} znaků.',
+      required: `Prosím vyplňte {prop, select,
         email {email}
-        password {password}
+        password {heslo}
         other {'{prop}'}
       }.`
     }
   },
   home: {
-    title: 'Vetoapp'
+    title: 'Vetoapp',
+    infoText: `
+      <p>Zákonů je tak strašné množství, že už se v nich nevyznají ani
+      právníci. Na poslance spoléhat nemůžeme, mají tolik práce s psaním
+      zákonů nových, že na rušení starých jim už nezbývá čas.</p><p>Naštěstí si
+      můžeme pomoci sami. V Ústavě ČR je kouzelná věta: <b>Lid je zdrojem veškeré
+      státní moci</b>. Svobodnější země jako je třeba Švýcarsko, znají
+      <a target="_blank" href="http://mmister.com/lidove-veto-co-to-je-a-proc-to-funguje">lidové veto</a>.
+      My ho můžeme mít také. <b>Nečekejme na volby, měňme věci teď</b>.</p>`
   },
   me: {
     title: 'Já',
-    welcome: 'Ahoj {email}.'
+    h2: 'ahoj {displayName}',
+    p: `Tohle je tvá osobní stránka, na které časem uvidíš spoustu zajímavých
+      věcí.`
   },
-  // TODO: Localize.
   notFound: {
-    continueMessage: 'Continue here please.',
-    header: 'This page isn\'t available',
-    message: 'The link may be broken, or the page may have been removed.',
-    title: 'Page Not Found'
+    continueMessage: 'Pokračujte prosím zde.',
+    header: 'Tato stránka neexistuje.',
+    message: 'Možná máte špatný odkaz, nebo byla stránka smazána.',
+    title: 'Tato stránka neexistuje'
   }
 };

@@ -31,7 +31,10 @@ class Logout extends Component {
 
     return (
       <div className="logout">
-        <button onClick={this.logout}>{msg.button}</button>
+        <button
+          className="btn btn-danger-outline btn-sm"
+          onClick={this.logout}
+        >{msg.button}</button>
       </div>
     );
   }

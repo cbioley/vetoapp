@@ -79,6 +79,7 @@ class Login extends Component {
       <div className="firebase-login">
         <div className="social-auth-providers">
           <button
+            className="btn btn-primary"
             data-provider="facebook"
             disabled={auth.formDisabled}
             onClick={this.onSocialLoginClick}
@@ -93,6 +94,7 @@ class Login extends Component {
             }
             <input
               autoFocus
+              className="form-control"
               maxLength="100"
               ref={this.onEmailInputRef}
               placeholder="your@email.com"
@@ -100,6 +102,8 @@ class Login extends Component {
             />
             {!forgetPasswordIsShown &&
               <input
+                className="form-control"
+                disabled={forgetPasswordIsShown}
                 maxLength="1000"
                 placeholder="password"
                 type="password"
@@ -107,10 +111,15 @@ class Login extends Component {
               />
             }
             {!forgetPasswordIsShown ?
-              <div className="buttons">
-                <button>Login</button>
-                <button onClick={this.onSignUpClick} type="button">Sign Up</button>
+              <div className="btn-group" role="group">
+                <button className="btn btn-primary btn-sm">Login</button>
                 <button
+                  className="btn btn-secondary btn-sm"
+                  onClick={this.onSignUpClick}
+                  type="button"
+                >Sign Up</button>
+                <button
+                  className="btn btn-warning btn-sm"
                   onClick={this.toggleForgetPassword}
                   type="button"
                 >Forgot your password?</button>
@@ -121,12 +130,14 @@ class Login extends Component {
                 }
               </div>
             :
-              <div className="buttons">
+              <div className="btn-group" role="group">
                 <button
+                  className="btn btn-primary btn-sm"
                   onClick={this.onResetPasswordClick}
                   type="button"
                 >Reset Password</button>
                 <button
+                  className="btn btn-secondary btn-sm"
                   onClick={this.toggleForgetPassword}
                   type="button"
                 >Dismiss</button>

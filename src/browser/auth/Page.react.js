@@ -1,23 +1,33 @@
 import Component from 'react-pure-render/component';
+import FirebaseLogin from '../firebase/Login.react';
 import Helmet from 'react-helmet';
-import Login from './Login.react';
 import React, { PropTypes } from 'react';
+import { Link } from 'react-router';
 import { connect } from 'react-redux';
 
 class Page extends Component {
 
   static propTypes = {
-    location: PropTypes.object,
-    msg: PropTypes.object
+    msg: PropTypes.object,
+    viewer: PropTypes.object
   };
 
   render() {
-    const { location, msg } = this.props;
+    const { msg, viewer } = this.props;
 
     return (
       <div className="login-page">
         <Helmet title={msg.title} />
-        <Login location={location} />
+        {!viewer ?
+          <div className="no-viewer">
+            <FirebaseLogin />
+          </div>
+        :
+          <div className="viewer">
+            Přihlášení proběhlo úspěšně. Pokračujte prosím
+            {' '} <Link to="/">zde</Link>.
+          </div>
+        }
       </div>
     );
   }
@@ -25,5 +35,6 @@ class Page extends Component {
 }
 
 export default connect(state => ({
-  msg: state.intl.msg.auth.login
+  msg: state.intl.msg.auth.login,
+  viewer: state.users.viewer
 }))(Page);
