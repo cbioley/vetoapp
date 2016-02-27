@@ -23,7 +23,6 @@ class Login extends Component {
     this.onSocialLoginClick = this.onSocialLoginClick.bind(this);
     this.onFormSubmit = this.onFormSubmit.bind(this);
     this.onSignUpClick = this.onSignUpClick.bind(this);
-    this.onEmailInputRef = this.onEmailInputRef.bind(this);
     this.toggleForgetPassword = this.toggleForgetPassword.bind(this);
     this.onResetPasswordClick = this.onResetPasswordClick.bind(this);
     // Note we deliberately use component state, because we don't want to
@@ -37,9 +36,7 @@ class Login extends Component {
   toggleForgetPassword() {
     this.setState(({ forgetPasswordIsShown }) => ({
       forgetPasswordIsShown: !forgetPasswordIsShown
-    }), () => {
-      if (this.emailInput) this.emailInput.focus();
-    });
+    }));
   }
 
   async redirectOnSuccess(action) {
@@ -65,10 +62,6 @@ class Login extends Component {
   onSignUpClick() {
     const { fields, signUp } = this.props;
     this.redirectOnSuccess(signUp(fields.$values()));
-  }
-
-  onEmailInputRef(input) {
-    this.emailInput = input;
   }
 
   async onResetPasswordClick() {
@@ -107,10 +100,8 @@ class Login extends Component {
                   <legend>{msg.forgotPassword}</legend>
                 }
                 <input
-                  autoFocus
                   className="form-control"
                   maxLength="100"
-                  ref={this.onEmailInputRef}
                   placeholder="your@email.com"
                   {...fields.email}
                 />
