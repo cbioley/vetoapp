@@ -92,6 +92,7 @@ class Login extends Component {
                 onClick={this.onSocialLoginClick}
               >{msg.facebookLogin}</button>
             </div>
+            {/* https://github.com/steida/vetoapp/issues/8 */}
             <form onSubmit={this.onFormSubmit}>
               <fieldset className="form-group" disabled={auth.formDisabled}>
                 {!this.state.forgetPasswordIsShown ?
@@ -99,6 +100,7 @@ class Login extends Component {
                 :
                   <legend>{msg.forgotPassword}</legend>
                 }
+                <small className="text-muted">{msg.emailIsSecret}</small>
                 <input
                   className="form-control"
                   maxLength="100"
