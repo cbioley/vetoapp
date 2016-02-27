@@ -25,7 +25,7 @@ export default {
     recoveryEmailHasBeenSent: 'Na váš email jsme zaslali návod k resetu hesla.',
     resetPassword: 'Resetovat heslo',
     dismiss: 'Zpět',
-    emailIsSecret: 'Slibujeme, že váš email nikdy a nikde nezveřejníme.'
+    emailIsSecret: 'Slibujeme, že váš email nikdy nezveřejníme.'
     // emailIsSecret: 'We\'ll never share your email with anyone else.'
     // validation: {
     //   email: 'Emailová adresa není ve správném formátu.',

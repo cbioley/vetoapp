@@ -1,3 +1,4 @@
+import About from './about/Page.react';
 import App from './app/App.react';
 import Auth from './auth/Page.react';
 import Home from './home/Page.react';
@@ -20,6 +21,7 @@ export default function createRoutes(getState) {
   return (
     <Route component={App} path="/">
       <IndexRoute component={Home} />
+      <Route component={About} path="about" />
       <Route component={Auth} path="login" />
       <Route component={Me} onEnter={requireAuth} path="me" />
       <Route component={NotFound} path="*" />
