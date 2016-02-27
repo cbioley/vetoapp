@@ -92,7 +92,7 @@ gulp.task('to-html', done => {
 
   const urls = {
     '/': 'index.html',
-    '/foo-bla-bar': '404.html',
+    '/this-is-not-the-web-page-you-are-looking-for': '404.html',
     '/login': 'login.html',
     '/me': 'me.html'
   };
