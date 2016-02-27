@@ -33,3 +33,8 @@ ReactDOM.render(
   </Provider>,
   app
 );
+
+// This is here just for testing, and should be removed on Safari 9.3 release.
+import touchAction from 'touch-action';
+// Don't set whole document, because bootstrap uses touch-action.
+touchAction({ val: 'auto' });

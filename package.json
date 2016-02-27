@@ -99,6 +99,7 @@
     "sinon-as-promised": "^4.0.0",
     "sinon-chai": "^2.8.0",
     "style-loader": "^0.13.0",
+    "touch-action": "^1.0.1",
     "urijs": "^1.16.1",
     "url-loader": "^0.5.5",
     "validator": "^5.0.0",
