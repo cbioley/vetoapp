@@ -37,7 +37,7 @@ export default {
   home: {
     title: 'Vetoapp',
     infoText: `
-      <p>Zákonů je tak strašné množství, že už se v nich nevyznají ani
+      <p>Zákonů už je tak strašné množství, že se v nich nevyznají ani
       právníci. Na poslance spoléhat nemůžeme, mají tolik práce s psaním
       zákonů nových, že na rušení starých jim už nezbývá čas.</p><p>Naštěstí si
       můžeme pomoci sami. V Ústavě ČR je kouzelná věta: <b>Lid je zdrojem veškeré
