@@ -4,13 +4,16 @@ import React, { PropTypes } from 'react';
 import { connect } from 'react-redux';
 import { fields } from '../../common/lib/redux-fields';
 import { firebaseActions } from '../../common/lib/redux-firebase';
+import { replace } from 'react-router-redux';
 
 class Login extends Component {
 
   static propTypes = {
     auth: PropTypes.object.isRequired,
     fields: PropTypes.object.isRequired,
+    location: PropTypes.object.isRequired,
     login: PropTypes.func.isRequired,
+    msg: PropTypes.object.isRequired,
     resetPassword: PropTypes.func.isRequired,
     signUp: PropTypes.func.isRequired
   };
@@ -31,21 +34,37 @@ class Login extends Component {
     };
   }
 
+  toggleForgetPassword() {
+    this.setState(({ forgetPasswordIsShown }) => ({
+      forgetPasswordIsShown: !forgetPasswordIsShown
+    }), () => {
+      if (this.emailInput) this.emailInput.focus();
+    });
+  }
+
+  async redirectOnSuccess(action) {
+    const result = await action.payload.promise;
+    if (result.error) return;
+    const { location, replace } = this.props;
+    const nextPathname = location.state && location.state.nextPathname || '/';
+    replace(nextPathname);
+  }
+
   onSocialLoginClick(e) {
     const { provider } = e.target.dataset;
     const { fields, login } = this.props;
-    login(provider, fields.$values());
+    this.redirectOnSuccess(login(provider, fields.$values()));
   }
 
   onFormSubmit(e) {
     e.preventDefault();
     const { fields, login } = this.props;
-    login('password', fields.$values());
+    this.redirectOnSuccess(login('password', fields.$values()));
   }
 
   onSignUpClick() {
     const { fields, signUp } = this.props;
-    signUp(fields.$values());
+    this.redirectOnSuccess(signUp(fields.$values()));
   }
 
   onEmailInputRef(input) {
@@ -63,91 +82,93 @@ class Login extends Component {
     });
   }
 
-  toggleForgetPassword() {
-    this.setState(({ forgetPasswordIsShown }) => ({
-      forgetPasswordIsShown: !forgetPasswordIsShown
-    }), () => {
-      if (this.emailInput) this.emailInput.focus();
-    });
-  }
-
   render() {
-    const { auth, fields } = this.props;
+    const { auth, fields, msg } = this.props;
     const { forgetPasswordIsShown, recoveryEmailSent } = this.state;
 
     return (
-      <div className="firebase-login">
-        <div className="social-auth-providers">
-          <button
-            className="btn btn-primary"
-            data-provider="facebook"
-            disabled={auth.formDisabled}
-            onClick={this.onSocialLoginClick}
-          >Facebook Login</button>
-        </div>
-        <form onSubmit={this.onFormSubmit}>
-          <fieldset disabled={auth.formDisabled}>
-            {!this.state.forgetPasswordIsShown ?
-              <legend>Email Login / Sign Up</legend>
-            :
-              <legend>Email Password Recovery</legend>
-            }
-            <input
-              autoFocus
-              className="form-control"
-              maxLength="100"
-              ref={this.onEmailInputRef}
-              placeholder="your@email.com"
-              {...fields.email}
-            />
-            {!forgetPasswordIsShown &&
-              <input
-                className="form-control"
-                disabled={forgetPasswordIsShown}
-                maxLength="1000"
-                placeholder="password"
-                type="password"
-                {...fields.password}
-              />
-            }
-            {!forgetPasswordIsShown ?
-              <div className="btn-group" role="group">
-                <button className="btn btn-primary btn-sm">Login</button>
-                <button
-                  className="btn btn-secondary btn-sm"
-                  onClick={this.onSignUpClick}
-                  type="button"
-                >Sign Up</button>
-                <button
-                  className="btn btn-warning btn-sm"
-                  onClick={this.toggleForgetPassword}
-                  type="button"
-                >Forgot your password?</button>
-                {recoveryEmailSent &&
-                  <p>
-                    <b>Recovery email has been sent.</b>
-                  </p>
+      <div className="row">
+        <div className="col-md-8">
+          <div className="firebase-login">
+            <p>{msg.loginInfo}</p>
+            <div className="social-auth-providers">
+              <button
+                className="btn btn-info"
+                data-provider="facebook"
+                disabled={auth.formDisabled}
+                onClick={this.onSocialLoginClick}
+              >{msg.facebookLogin}</button>
+            </div>
+            <form onSubmit={this.onFormSubmit}>
+              <fieldset className="form-group" disabled={auth.formDisabled}>
+                {!this.state.forgetPasswordIsShown ?
+                  <legend>{msg.emailLoginSignup}</legend>
+                :
+                  <legend>{msg.forgotPassword}</legend>
                 }
-              </div>
-            :
-              <div className="btn-group" role="group">
-                <button
-                  className="btn btn-primary btn-sm"
-                  onClick={this.onResetPasswordClick}
-                  type="button"
-                >Reset Password</button>
-                <button
-                  className="btn btn-secondary btn-sm"
-                  onClick={this.toggleForgetPassword}
-                  type="button"
-                >Dismiss</button>
+                <input
+                  autoFocus
+                  className="form-control"
+                  maxLength="100"
+                  ref={this.onEmailInputRef}
+                  placeholder="your@email.com"
+                  {...fields.email}
+                />
+                {!forgetPasswordIsShown &&
+                  <input
+                    className="form-control"
+                    disabled={forgetPasswordIsShown}
+                    maxLength="1000"
+                    placeholder="password"
+                    type="password"
+                    {...fields.password}
+                  />
+                }
+                {!forgetPasswordIsShown ?
+                  <div className="buttons">
+                    <button
+                      className="btn btn-primary btn-sm"
+                    >{msg.login}</button>{' '}
+                    <button
+                      className="btn btn-success btn-sm"
+                      onClick={this.onSignUpClick}
+                      type="button"
+                    >{msg.signUp}</button>{' '}
+                    <button
+                      className="btn btn-warning btn-sm"
+                      onClick={this.toggleForgetPassword}
+                      type="button"
+                    >{msg.forgotPassword}</button>
+                  </div>
+                :
+                  <div className="buttons">
+                    <button
+                      className="btn btn-danger btn-sm"
+                      onClick={this.onResetPasswordClick}
+                      type="button"
+                    >{msg.resetPassword}</button>{' '}
+                    <button
+                      className="btn btn-secondary btn-sm"
+                      onClick={this.toggleForgetPassword}
+                      type="button"
+                    >{msg.dismiss}</button>
+                  </div>
+                }
+              </fieldset>
+            </form>
+            {auth.formError &&
+              <div className="alert alert-danger" role="alert">
+                {/* TODO: Localize. */}
+                {auth.formError.message}
               </div>
             }
-          </fieldset>
-        </form>
-        {auth.formError &&
-          <p className="error-message">{auth.formError.message}</p>
-        }
+            {recoveryEmailSent &&
+              <div className="alert alert-success" role="alert">
+                {msg.recoveryEmailHasBeenSent}
+              </div>
+            }
+          </div>
+        </div>
       </div>
     );
   }
@@ -160,5 +181,6 @@ Login = fields(Login, {
 });
 
 export default connect(state => ({
-  auth: state.auth
-}), firebaseActions)(Login);
+  auth: state.auth,
+  msg: state.intl.msg.auth
+}), { ...firebaseActions, replace })(Login);

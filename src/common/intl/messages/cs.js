@@ -12,34 +12,27 @@ export default {
     }
   },
   auth: {
-    form: {
-      button: {
-        login: 'Přihlásit se',
-        signup: 'Odhlásit se'
-      },
-      legend: 'Přihlášení',
-      placeholder: {
-        email: 'tvuj@email.com',
-        password: 'heslo'
-      },
-      wrongPassword: 'Špatné heslo.'
-    },
-    logout: {
-      button: 'Odhlásit se'
-    },
-    login: {
-      title: 'Přihlášení'
-    },
-    // TODO: Localize.
-    validation: {
-      email: 'Emailová adresa není ve správném formátu.',
-      password: 'Heslo musí obsahovat minimálně {minLength} znaků.',
-      required: `Prosím vyplňte {prop, select,
-        email {email}
-        password {heslo}
-        other {'{prop}'}
-      }.`
-    }
+    loginInfo: `Přihlašte se prosím pomocí svého Facebook účtu, nebo použijte
+      email.`,
+    facebookLogin: 'Přihlásit se přes Facebook',
+    emailLoginSignup: 'Email Přihlášení / Vytvoření účtu',
+    login: 'Přihlásit se',
+    loginTitle: 'Přihlášení',
+    signUp: 'Vytvořit účet',
+    logout: 'Odhlásit se',
+    forgotPassword: 'Reset hesla',
+    recoveryEmailHasBeenSent: 'Na váš email jsme zaslali návod k resetu hesla.',
+    resetPassword: 'Resetovat heslo',
+    dismiss: 'Zpět'
+    // validation: {
+    //   email: 'Emailová adresa není ve správném formátu.',
+    //   password: 'Heslo musí obsahovat minimálně {minLength} znaků.',
+    //   required: `Prosím vyplňte {prop, select,
+    //     email {email}
+    //     password {heslo}
+    //     other {'{prop}'}
+    //   }.`
+    // }
   },
   home: {
     title: 'Vetoapp',
@@ -54,7 +47,7 @@ export default {
   },
   me: {
     title: 'Já',
-    h2: 'ahoj {displayName}',
+    h2: '{displayName}',
     p: `Tohle je tvá osobní stránka, na které časem uvidíš spoustu zajímavých
       věcí.`
   },

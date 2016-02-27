@@ -20,13 +20,6 @@ class Page extends Component {
     return (
       <div className="me-page">
         <Helmet title={msg.title} />
-        <h2>
-          <FormattedMessage
-            defaultMessage={msg.h2}
-            id={'msg.me.h2'}
-            values={{ displayName }}
-          />
-        </h2>
         <p>
           <FormattedMessage
             defaultMessage={msg.p}
@@ -34,6 +27,13 @@ class Page extends Component {
             values={{ displayName }}
           />
         </p>
+        <h2>
+          <FormattedMessage
+            defaultMessage={msg.h2}
+            id={'msg.me.h2'}
+            values={{ displayName }}
+          />
+        </h2>
         {viewer.profileImageURL &&
           <img
             className="profile-image-url img-circle"

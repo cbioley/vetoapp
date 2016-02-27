@@ -1,6 +1,7 @@
 .firebase-login {
   .social-auth-providers {
-    margin-bottom: 1em;
+    margin-bottom: 2em;
+    margin-top: 2em;
   }
   form {
     max-width: 24em;
@@ -13,7 +14,7 @@
         border: solid 1px #aaa;
       }
     }
-    .btn-group {
+    .buttons {
       padding-top: 1em;
     }
     .hint {

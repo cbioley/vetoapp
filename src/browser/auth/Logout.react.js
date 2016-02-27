@@ -34,7 +34,7 @@ class Logout extends Component {
         <button
           className="btn btn-danger-outline btn-sm"
           onClick={this.logout}
-        >{msg.button}</button>
+        >{msg.logout}</button>
       </div>
     );
   }
@@ -42,5 +42,5 @@ class Logout extends Component {
 }
 
 export default connect(state => ({
-  msg: state.intl.msg.auth.logout
+  msg: state.intl.msg.auth
 }), authActions)(Logout);
