@@ -3,6 +3,7 @@ import Component from 'react-pure-render/component';
 import Footer from './Footer.react';
 import Header from './Header.react';
 import Helmet from 'react-helmet';
+import NotFound from '../notfound/Page.react';
 import React, { PropTypes } from 'react';
 import { connect } from 'react-redux';
 import { onAppComponentDidMount } from '../../common/app/actions';
@@ -26,6 +27,7 @@ class App extends Component {
 
   render() {
     const { children, location } = this.props;
+    const notFound = children.type === NotFound;
 
     return (
       <div className="container">
@@ -47,7 +49,7 @@ class App extends Component {
           titleTemplate="%s"
         />
         {/* Pass location to ensure header active links are updated. */}
-        <Header location={location} />
+        <Header location={location} notFound={notFound} />
         {children}
         <Footer />
       </div>

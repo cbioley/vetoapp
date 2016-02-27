@@ -6,9 +6,10 @@ export default {
         report an <a target="_blank" href="https://github.com/steida/vetoapp/issues/new">issue</a>`
     },
     links: {
-      home: 'Domů',
+      home: 'Přehled',
       login: 'Přihlášení',
-      me: 'Já'
+      me: 'Já',
+      about: 'O Vetoapp'
     }
   },
   auth: {
@@ -23,7 +24,9 @@ export default {
     forgotPassword: 'Reset hesla',
     recoveryEmailHasBeenSent: 'Na váš email jsme zaslali návod k resetu hesla.',
     resetPassword: 'Resetovat heslo',
-    dismiss: 'Zpět'
+    dismiss: 'Zpět',
+    emailIsSecret: 'Slibujeme, že váš email nikdy a nikde nezveřejníme.'
+    // emailIsSecret: 'We\'ll never share your email with anyone else.'
     // validation: {
     //   email: 'Emailová adresa není ve správném formátu.',
     //   password: 'Heslo musí obsahovat minimálně {minLength} znaků.',

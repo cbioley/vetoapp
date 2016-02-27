@@ -1,17 +1,19 @@
 import Component from 'react-pure-render/component';
 import React, { PropTypes } from 'react';
-import { Link } from 'react-router';
+import { IndexLink, Link } from 'react-router';
 import { connect } from 'react-redux';
 
 class Header extends Component {
 
   static propTypes = {
     msg: PropTypes.object.isRequired,
+    notFound: PropTypes.bool.isRequired,
     viewer: PropTypes.object
   };
 
   render() {
-    const { msg, viewer } = this.props;
+    const { msg, notFound, viewer } = this.props;
+    const showNavTabs = viewer && !notFound;
 
     return (
       <header>
@@ -23,11 +25,31 @@ class Header extends Component {
             width="400"
           />
         </Link>
-        <ul>
-          {viewer &&
-            <li><Link activeClassName="active" to="/me">{msg.me}</Link></li>
-          }
-        </ul>
+        {showNavTabs &&
+          <nav className="nav nav-tabs" role="navigation">
+            <li className="nav-item">
+              <IndexLink
+                activeClassName="active"
+                className="nav-link"
+                to="/"
+              >{msg.home}</IndexLink>
+            </li>
+            <li className="nav-item">
+              <Link
+                activeClassName="active"
+                className="nav-link"
+                to="/me"
+              >{msg.me}</Link>
+            </li>
+            <li className="nav-item">
+              <Link
+                activeClassName="active"
+                className="nav-link"
+                to="/about"
+              >{msg.about}</Link>
+            </li>
+          </nav>
+        }
       </header>
     );
   }
