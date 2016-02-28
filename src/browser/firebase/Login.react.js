@@ -86,7 +86,7 @@ class Login extends Component {
             <p>{msg.loginInfo}</p>
             <div className="social-auth-providers">
               <button
-                className="btn btn-info"
+                className="btn btn-primary"
                 data-provider="facebook"
                 disabled={auth.formDisabled}
                 onClick={this.onSocialLoginClick}

@@ -10,11 +10,15 @@ isUser(uid) { isSignedIn() && auth.uid == uid }
 
 type ShortRequiredString extends String {
   // Is required via this.length > 0
-  validate() { this.length > 0 && this.length < 100 }
+  validate() { this.length > 0 && this.length <= 100 }
+}
+
+type LongRequiredString extends String {
+  validate() { this.length > 0 && this.length <= 1000 }
 }
 
 type LongString extends String {
-  validate() { this.length < 1000 }
+  validate() { this.length <= 1000 }
 }
 
 type User {

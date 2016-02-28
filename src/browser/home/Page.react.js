@@ -25,28 +25,13 @@ class Page extends Component {
                 <FormattedHTMLMessage defaultMessage={msg.infoText} />
                 <Link className="btn btn-info btn-lg" to="/login">
                   <FormattedHTMLMessage
-                    defaultMessage="Jo, to dává smysl. Chci se přidat."
+                    defaultMessage={msg.callToAction}
                   />
                 </Link>
               </div>
             :
               <div className="viewer">
-                <p>
-                  <FormattedHTMLMessage
-                    defaultMessage={`
-                      Během několika dnů bude vetoapp spuštěna.
-                      <br />
-                      Zatím si poslechni tuhle písničku.
-                    `}
-                  />
-                </p>
-                <iframe
-                  allowFullScreen
-                  frameBorder="0"
-                  height="315"
-                  max-width="420"
-                  src="https://www.youtube.com/embed/2ERApRREtkQ"
-                ></iframe>
+                <p>SOON</p>
               </div>
             }
           </div>

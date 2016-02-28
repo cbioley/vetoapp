@@ -38,12 +38,18 @@ class Header extends Component {
               <Link
                 activeClassName="active"
                 className="nav-link"
-                to="/me"
-              >{msg.me}</Link>
+                to="/suggest-veto"
+              >{msg.suggestVeto}</Link>
             </li>
             <li className="nav-item">
               <Link
                 activeClassName="active"
+                className="nav-link"
+                to="/me"
+              >{msg.me}</Link>
+            </li>
+            <li className="nav-item">
+              <Link activeClassName="active"
                 className="nav-link"
                 to="/about"
               >{msg.about}</Link>
