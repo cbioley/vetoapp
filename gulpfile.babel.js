@@ -94,7 +94,6 @@ gulp.task('to-html', done => {
     '/': 'index.html',
     '/about': 'about.html',
     '/login': 'login.html',
-    '/me': 'me.html',
     '/this-is-not-the-web-page-you-are-looking-for': '404.html'
   };
 
