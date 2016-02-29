@@ -100,7 +100,6 @@ class Login extends Component {
                 :
                   <legend>{msg.forgotPassword}</legend>
                 }
-                <small className="text-muted">{msg.emailIsSecret}</small>
                 <input
                   className="form-control"
                   maxLength="100"

@@ -27,17 +27,15 @@ export default {
     recoveryEmailHasBeenSent: 'Na váš email jsme zaslali návod k resetu hesla.',
     resetPassword: 'Resetovat heslo',
     dismiss: 'Zpět',
-    emailIsSecret: 'Slibujeme, že váš email nikdy nezveřejníme.'
-    // emailIsSecret: 'We\'ll never share your email with anyone else.'
-    // validation: {
-    //   email: 'Emailová adresa není ve správném formátu.',
-    //   password: 'Heslo musí obsahovat minimálně {minLength} znaků.',
-    //   required: `Prosím vyplňte {prop, select,
-    //     email {email}
-    //     password {heslo}
-    //     other {'{prop}'}
-    //   }.`
-    // }
+    validation: {
+      email: 'Emailová adresa není ve správném formátu.',
+      password: 'Heslo musí obsahovat minimálně {minLength} znaků.',
+      required: `Prosím vyplňte {prop, select,
+        email {email}
+        password {heslo}
+        other {'{prop}'}
+      }.`
+    }
   },
   home: {
     title: 'Vetoapp',
@@ -53,9 +51,7 @@ export default {
   },
   me: {
     title: 'Já',
-    h2: '{displayName}',
-    p: `Tohle je tvá osobní stránka, na které časem uvidíš spoustu zajímavých
-      věcí.`
+    h2: '{displayName}'
   },
   notFound: {
     continueMessage: 'Pokračujte prosím zde.',

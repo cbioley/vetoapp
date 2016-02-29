@@ -20,13 +20,6 @@ class Page extends Component {
     return (
       <div className="me-page">
         <Helmet title={msg.title} />
-        <p>
-          <FormattedMessage
-            defaultMessage={msg.p}
-            id={'msg.me.p'}
-            values={{ displayName }}
-          />
-        </p>
         <h2>
           <FormattedMessage
             defaultMessage={msg.h2}

@@ -1,32 +1,42 @@
+import * as vetosActions from '../../common/vetos/actions';
 import Component from 'react-pure-render/component';
 import Helmet from 'react-helmet';
 import React, { PropTypes } from 'react';
 import Textarea from 'react-textarea-autosize';
 import countries from './countries';
+import focusInvalidField from '../lib/focusInvalidField';
 import { connect } from 'react-redux';
 import { fields } from '../../common/lib/redux-fields';
+
+const CountriesOptions = countries.map(({ name, code }) =>
+  <option key={code} value={code}>{name}</option>
+);
 
 class SuggestVeto extends Component {
 
   static propTypes = {
     fields: PropTypes.object.isRequired,
-    msg: PropTypes.object
+    msg: PropTypes.object,
+    suggestVeto: PropTypes.func.isRequired,
+    vetos: PropTypes.object
   };
 
   constructor(props) {
     super(props);
     this.onFormSubmit = this.onFormSubmit.bind(this);
-    this.countries = countries.map(({ name, code }) => ({ name, code }));
   }
 
-  onFormSubmit(e) {
+  async onFormSubmit(e) {
     e.preventDefault();
-    // const { fields } = this.props;
-    alert('In progress. Stay tuned!'); // eslint-disable-line no-alert
+    const { fields, suggestVeto } = this.props;
+    const result = await suggestVeto(fields.$values()).payload.promise;
+    if (result.error) {
+      focusInvalidField(this, result.payload);
+    }
   }
 
   render() {
-    const { fields, msg } = this.props;
+    const { fields, msg, vetos } = this.props;
 
     return (
       <div className="suggest-veto">
@@ -34,7 +44,7 @@ class SuggestVeto extends Component {
         <div className="row">
           <div className="col-md-8">
             <form onSubmit={this.onFormSubmit}>
-              <fieldset disabled={false}>
+              <fieldset className="form-group" disabled={vetos.suggestVetoFormDisabled}>
                 <fieldset className="form-group">
                   <label htmlFor="suggest-veto-name">
                     Který zákon je tak strašný, že je třeba jej vetovat?
@@ -61,7 +71,7 @@ class SuggestVeto extends Component {
                     id="suggest-veto-reason"
                     maxLength="1000"
                     maxRows={10}
-                    minRows={2}
+                    minRows={3}
                     placeholder={
                       'Zákon porušuje cs.wikipedia.org/wiki/Princip_neagrese'
                     }
@@ -72,21 +82,23 @@ class SuggestVeto extends Component {
                 <fieldset className="form-group">
                   <label htmlFor="suggest-veto-country">V které zemi?</label>
                   <select
-                    className="form-control"
+                    className="c-select"
+                    style={{ display: 'block' }}
                     id="suggest-veto-country"
                     {...fields.country}
-                  >
-                    {countries.map(({ name, code }) =>
-                      <option key={code} value={code}>{name}</option>
-                    )}
-                  </select>
+                  >{CountriesOptions}</select>
                 </fieldset>
                 <button
                   type="submit"
                   className="btn btn-primary"
-                >{msg.app.links.suggestVeto}</button>
+                >Odeslat</button>
               </fieldset>
             </form>
+            {vetos.suggestVetoFormError &&
+              <div className="alert alert-danger" role="alert">
+                {vetos.suggestVetoFormError.message}
+              </div>
+            }
           </div>
         </div>
       </div>
@@ -102,5 +114,6 @@ SuggestVeto = fields(SuggestVeto, {
 });
 
 export default connect(state => ({
-  msg: state.intl.msg
-}))(SuggestVeto);
+  msg: state.intl.msg,
+  vetos: state.vetos
+}), vetosActions)(SuggestVeto);

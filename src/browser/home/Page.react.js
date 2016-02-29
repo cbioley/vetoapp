@@ -1,5 +1,6 @@
 import Component from 'react-pure-render/component';
 import Helmet from 'react-helmet';
+import LastVetos from '../vetos/LastVetos.react';
 import React, { PropTypes } from 'react';
 import { FormattedHTMLMessage } from 'react-intl';
 import { Link } from 'react-router';
@@ -31,7 +32,7 @@ class Page extends Component {
               </div>
             :
               <div className="viewer">
-                <p>SOON</p>
+                <LastVetos />
               </div>
             }
           </div>

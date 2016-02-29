@@ -4,21 +4,24 @@
 // Functions
 
 isSignedIn() { auth != null }
-isUser(uid) { isSignedIn() && auth.uid == uid }
+isSignedInUser(uid) { isSignedIn() && auth.uid == uid }
 
 // Types
 
-type ShortRequiredString extends String {
-  // Is required via this.length > 0
-  validate() { this.length > 0 && this.length <= 100 }
+type ShortString extends String {
+  validate() { this.length <= 100 }
 }
 
-type LongRequiredString extends String {
-  validate() { this.length > 0 && this.length <= 1000 }
+type ShortRequiredString extends String {
+  // Required form field with maxLength="100".
+  validate() { this.length > 0 && this.length <= 100 }
 }
 
 type LongString extends String {
   validate() { this.length <= 1000 }
+}
+type LongRequiredString extends String {
+  validate() { this.length > 0 && this.length <= 1000 }
 }
 
 type User {
@@ -33,18 +36,40 @@ type Email {
   email: ShortRequiredString
 }
 
+type Veto {
+  country: ShortRequiredString,
+  createdAt: Number,
+  creatorDisplayName: ShortRequiredString,
+  creatorId: ShortRequiredString,
+  creatorProfileImageURL: LongString,
+  id: ShortRequiredString,
+  municipality: ShortString,
+  name: LongRequiredString,
+  reason: LongRequiredString,
+  updatedAt: Number
+}
+
 // Paths
 
 path /users {
-  read() { true }
   index() { ["authenticatedAt"] }
+  read() { true }
 }
 
 path /users/{uid} is User {
-  write() { isUser(uid) }
+  write() { isSignedInUser(uid) }
 }
 
 path /users-emails/{uid} is Email {
-  read() { isUser(uid) }
-  write() { isUser(uid) }
+  read() { isSignedInUser(uid) }
+  write() { isSignedInUser(uid) }
+}
+
+path /vetos {
+  index() { ["country", "createdAt", "creatorDisplayName", "name"] }
+  read() { true }
+}
+
+path /vetos/{id} is Veto {
+  write() { isSignedInUser(this.creatorId) }
 }

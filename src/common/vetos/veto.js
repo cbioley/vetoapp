@@ -3,9 +3,11 @@ import { Record } from 'immutable';
 const Veto = Record({
   country: '',
   createdAt: null,
+  creatorDisplayName: '',
   creatorId: null,
+  creatorProfileImageURL: '',
   id: '',
-  // municipality: '',
+  municipality: '',
   name: '',
   reason: '',
   updatedAt: null
