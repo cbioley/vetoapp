@@ -82,8 +82,8 @@ class SuggestVeto extends Component {
                 <fieldset className="form-group">
                   <label htmlFor="suggest-veto-country">V které zemi?</label>
                   <select
-                    className="c-select"
-                    style={{ display: 'block' }}
+                    className="form-control c-select"
+                    style={{display: 'block', maxWidth: '25em'}}
                     id="suggest-veto-country"
                     {...fields.country}
                   >{CountriesOptions}</select>
