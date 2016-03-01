@@ -1,6 +1,6 @@
 import * as actions from './actions';
 import Veto from './veto';
-import { Record, Seq } from 'immutable';
+import { Map, Record, Seq } from 'immutable';
 
 const lastVetosPageSize = 4;
 
@@ -8,9 +8,15 @@ const InitialState = Record({
   lastVetos: null,
   lastVetosLimitToLast: lastVetosPageSize,
   suggestVetoFormDisabled: false,
-  suggestVetoFormError: null
+  suggestVetoFormError: null,
+  usersVetos: Map(),
 });
 const initialState = new InitialState;
+
+const vetosToSortedByCreatedAtList = vetos => Seq(vetos)
+  .map(json => new Veto(json))
+  .sortBy(veto => -veto.createdAt)
+  .toList();
 
 export default function vetosReducer(state = initialState, action) {
   if (!(state instanceof InitialState)) return initialState;
@@ -19,16 +25,18 @@ export default function vetosReducer(state = initialState, action) {
 
     case actions.MORE_LAST_VETOS: {
       return state.update('lastVetosLimitToLast', lastVetosLimitToLast =>
-        lastVetosLimitToLast += lastVetosPageSize
-      );
+        lastVetosLimitToLast + lastVetosPageSize);
+    }
+
+    case actions.SET_USER_VETOS: {
+      const { userId, vetos } = action.payload;
+      const list = vetosToSortedByCreatedAtList(vetos);
+      return state.setIn(['usersVetos', userId], list);
     }
 
     case actions.SET_LAST_VETOS: {
       const { vetos } = action.payload;
-      const list = Seq(vetos)
-        .map(json => new Veto(json))
-        .sortBy(veto => -veto.createdAt)
-        .toList();
+      const list = vetosToSortedByCreatedAtList(vetos);
       return state.set('lastVetos', list);
     }
 

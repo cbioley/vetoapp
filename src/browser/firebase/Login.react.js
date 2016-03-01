@@ -14,6 +14,7 @@ class Login extends Component {
     location: PropTypes.object.isRequired,
     login: PropTypes.func.isRequired,
     msg: PropTypes.object.isRequired,
+    replace: PropTypes.func.isRequired,
     resetPassword: PropTypes.func.isRequired,
     signUp: PropTypes.func.isRequired
   };
@@ -83,7 +84,6 @@ class Login extends Component {
       <div className="row">
         <div className="col-md-8">
           <div className="firebase-login">
-            <p>{msg.loginInfo}</p>
             <div className="social-auth-providers">
               <button
                 className="btn btn-primary"

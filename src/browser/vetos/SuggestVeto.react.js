@@ -5,8 +5,10 @@ import React, { PropTypes } from 'react';
 import Textarea from 'react-textarea-autosize';
 import countries from './countries';
 import focusInvalidField from '../lib/focusInvalidField';
+import { Link } from 'react-router';
 import { connect } from 'react-redux';
 import { fields } from '../../common/lib/redux-fields';
+import { replace } from 'react-router-redux';
 
 const CountriesOptions = countries.map(({ name, code }) =>
   <option key={code} value={code}>{name}</option>
@@ -16,9 +18,11 @@ class SuggestVeto extends Component {
 
   static propTypes = {
     fields: PropTypes.object.isRequired,
-    msg: PropTypes.object,
+    msg: PropTypes.object.isRequired,
+    replace: PropTypes.func.isRequired,
     suggestVeto: PropTypes.func.isRequired,
-    vetos: PropTypes.object
+    vetos: PropTypes.object.isRequired,
+    viewer: PropTypes.object
   };
 
   constructor(props) {
@@ -28,15 +32,20 @@ class SuggestVeto extends Component {
 
   async onFormSubmit(e) {
     e.preventDefault();
-    const { fields, suggestVeto } = this.props;
+    const { fields, replace, suggestVeto } = this.props;
     const result = await suggestVeto(fields.$values()).payload.promise;
     if (result.error) {
       focusInvalidField(this, result.payload);
+      return;
     }
+    fields.$reset();
+    // TODO: Use veto id for redirect.
+    // http://localhost:8000/vetos/4k9IjZCje
+    replace('vetos');
   }
 
   render() {
-    const { fields, msg, vetos } = this.props;
+    const { fields, msg, vetos, viewer } = this.props;
 
     return (
       <div className="suggest-veto">
@@ -83,15 +92,21 @@ class SuggestVeto extends Component {
                   <label htmlFor="suggest-veto-country">V které zemi?</label>
                   <select
                     className="form-control c-select"
-                    style={{display: 'block', maxWidth: '25em'}}
+                    style={{ display: 'block', maxWidth: '25em' }}
                     id="suggest-veto-country"
                     {...fields.country}
                   >{CountriesOptions}</select>
                 </fieldset>
-                <button
-                  type="submit"
-                  className="btn btn-primary"
-                >Odeslat</button>
+                {viewer ?
+                  <button
+                    type="submit"
+                    className="btn btn-primary"
+                  >Odeslat</button>
+                :
+                  <Link className="btn btn-info btn-lg m-b-1" to="/login">
+                    Přihlásit se
+                  </Link>
+                }
               </fieldset>
             </form>
             {vetos.suggestVetoFormError &&
@@ -115,5 +130,6 @@ SuggestVeto = fields(SuggestVeto, {
 
 export default connect(state => ({
   msg: state.intl.msg,
-  vetos: state.vetos
-}), vetosActions)(SuggestVeto);
+  vetos: state.vetos,
+  viewer: state.users.viewer
+}), { ...vetosActions, replace })(SuggestVeto);

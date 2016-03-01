@@ -13,7 +13,6 @@ class Header extends Component {
 
   render() {
     const { msg, notFound, viewer } = this.props;
-    const showNavTabs = viewer && !notFound;
 
     return (
       <header>
@@ -25,35 +24,41 @@ class Header extends Component {
             width="400"
           />
         </Link>
-        {showNavTabs &&
+        {!notFound &&
           <nav className="nav nav-tabs" role="navigation">
             <li className="nav-item">
-              <IndexLink
-                activeClassName="active"
-                className="nav-link"
-                to="/"
-              >{msg.home}</IndexLink>
+              <IndexLink activeClassName="active" className="nav-link" to="/">
+                {msg.home}
+              </IndexLink>
             </li>
             <li className="nav-item">
-              <Link
-                activeClassName="active"
-                className="nav-link"
-                to="/suggest-veto"
-              >{msg.suggestVeto}</Link>
+              <Link activeClassName="active" className="nav-link" to="/suggest-veto">
+                {msg.suggestVeto}
+              </Link>
             </li>
             <li className="nav-item">
-              <Link
-                activeClassName="active"
-                className="nav-link"
-                to="/me"
-              >{msg.me}</Link>
+              <Link activeClassName="active" className="nav-link" to="/vetos">
+                {msg.vetos}
+              </Link>
             </li>
             <li className="nav-item">
-              <Link activeClassName="active"
-                className="nav-link"
-                to="/about"
-              >{msg.about}</Link>
+              <Link activeClassName="active" className="nav-link" to="/about">
+                {msg.about}
+              </Link>
             </li>
+            {viewer ?
+              <li className="nav-item">
+                <Link activeClassName="active" className="nav-link" to="/me">
+                  {msg.me}
+                </Link>
+              </li>
+            :
+              <li className="nav-item">
+                <Link activeClassName="active" className="nav-link" to="/login">
+                  {msg.login}
+                </Link>
+              </li>
+            }
           </nav>
         }
       </header>

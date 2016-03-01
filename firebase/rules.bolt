@@ -4,7 +4,7 @@
 // Functions
 
 isSignedIn() { auth != null }
-isSignedInUser(uid) { isSignedIn() && auth.uid == uid }
+isViewer(uid) { isSignedIn() && auth.uid == uid }
 
 // Types
 
@@ -49,7 +49,8 @@ type Veto {
   updatedAt: Number
 }
 
-// Paths
+// Paths. Can be nested.
+// https://www.firebase.com/blog/2016-01-12-whats-new-in-bolt-07.html
 
 path /users {
   index() { ["authenticatedAt"] }
@@ -57,19 +58,22 @@ path /users {
 }
 
 path /users/{uid} is User {
-  write() { isSignedInUser(uid) }
+  write() { isViewer(uid) }
 }
 
 path /users-emails/{uid} is Email {
-  read() { isSignedInUser(uid) }
-  write() { isSignedInUser(uid) }
+  read() { isViewer(uid) }
+  write() { isViewer(uid) }
 }
 
 path /vetos {
-  index() { ["country", "createdAt", "creatorDisplayName", "name"] }
+  index() { ["createdAt", "creatorId"] }
   read() { true }
 }
 
 path /vetos/{id} is Veto {
-  write() { isSignedInUser(this.creatorId) }
+  // https://www.firebase.com/blog/2016-01-26-easier-write-rules-bolt.html
+  create() { isViewer(this.creatorId) }
+  delete() { isViewer(prior(this).creatorId) }
+  update() { isViewer(prior(this).creatorId) }
 }

@@ -17,6 +17,17 @@ export default function validate(getState) {
       getSimplePasswordMessage(minLength) {
         return format(msg.auth.validation.password, { minLength });
       }
+      fewWordsAtLeast() {
+        return this.custom((value, prop) => {
+          const minLength = 50;
+          if (value.length >= minLength) return;
+          throw new ValidationError(
+            `Text is too short. Use at least 50 characters.
+              You entered ${value.length}.`,
+            prop
+          );
+        });
+      }
     }
 
     return new LocalizedValidation(json);

@@ -7,16 +7,15 @@ export default {
     },
     // Links should be pages titles as well.
     links: {
-      about: 'O Vetoapp',
+      about: 'O Nás',
       home: 'Přehled',
       login: 'Přihlášení',
       me: 'Já',
-      suggestVeto: 'Navrhnout Veto'
+      suggestVeto: 'Navrhnout Veto',
+      vetos: 'Veta'
     }
   },
   auth: {
-    loginInfo: `Přihlašte se prosím pomocí svého Facebook účtu, nebo použijte
-      email.`,
     facebookLogin: 'Přihlásit se přes Facebook',
     emailLoginSignup: 'Email Přihlášení / Vytvoření účtu',
     login: 'Přihlásit se',

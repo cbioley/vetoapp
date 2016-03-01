@@ -2,6 +2,7 @@ import Veto from '../../common/vetos/veto';
 
 export const MORE_LAST_VETOS = 'MORE_LAST_VETOS';
 export const SET_LAST_VETOS = 'SET_LAST_VETOS';
+export const SET_USER_VETOS = 'SET_USER_VETOS';
 export const SUGGEST_VETO_ERROR = 'SUGGEST_VETO_ERROR';
 export const SUGGEST_VETO_START = 'SUGGEST_VETO_START';
 export const SUGGEST_VETO_SUCCESS = 'SUGGEST_VETO_SUCCESS';
@@ -9,6 +10,13 @@ export const SUGGEST_VETO_SUCCESS = 'SUGGEST_VETO_SUCCESS';
 export function moreLastVetos() {
   return {
     type: MORE_LAST_VETOS
+  };
+}
+
+export function setUserVetos(userId, vetos) {
+  return {
+    type: SET_USER_VETOS,
+    payload: { userId, vetos }
   };
 }
 
@@ -34,7 +42,7 @@ export function suggestVeto(fields) {
     // TODO: Localize name and reason.
     const promise = validate(veto)
       .prop('name').required()
-      .prop('reason').required()
+      .prop('reason').required().fewWordsAtLeast()
       .promise
       .then(() => firebase.child('vetos').child(veto.id).set(veto));
     return {
