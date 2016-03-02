@@ -2,7 +2,7 @@ import * as actions from './actions';
 import Veto from './veto';
 import { Map, Record, Seq } from 'immutable';
 
-const lastVetosPageSize = 4;
+const lastVetosPageSize = 10;
 
 const InitialState = Record({
   lastVetos: null,
