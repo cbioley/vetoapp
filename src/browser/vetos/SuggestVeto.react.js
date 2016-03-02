@@ -41,7 +41,7 @@ class SuggestVeto extends Component {
       return;
     }
     fields.$reset();
-    replace(`vetos/${values.id}`);
+    replace(`vetos/${result.payload.id}`);
   }
 
   render() {

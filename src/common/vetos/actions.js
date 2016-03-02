@@ -40,11 +40,13 @@ export function suggestVeto(fields) {
       updatedAt: firebase.constructor.ServerValue.TIMESTAMP
     }).toJS();
     // TODO: Localize name and reason.
-    const promise = validate(veto)
-      .prop('name').required()
-      .prop('reason').required().fewWordsAtLeast()
-      .promise
-      .then(() => firebase.child('vetos').child(veto.id).set(veto));
+    const promise =
+      validate(veto)
+        .prop('name').required()
+        .prop('reason').required().fewWordsAtLeast()
+        .promise
+      .then(() => firebase.child('vetos').child(veto.id).set(veto))
+      .then(() => veto);
     return {
       type: 'SUGGEST_VETO',
       payload: { promise }
