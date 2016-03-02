@@ -20,7 +20,7 @@ class UserVetos extends Component {
     return (
       <div className="user-vetos">
         <h2>{h2}</h2>
-        <VetosTable vetos={userVetos} />
+        <VetosTable hideCreator vetos={userVetos} />
       </div>
     );
   }

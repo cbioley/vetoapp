@@ -3,16 +3,16 @@ import Component from 'react-pure-render/component';
 import Helmet from 'react-helmet';
 import React, { PropTypes } from 'react';
 import Textarea from 'react-textarea-autosize';
-import countries from './countries';
+// import countries from './countries';
 import focusInvalidField from '../lib/focusInvalidField';
 import { Link } from 'react-router';
 import { connect } from 'react-redux';
 import { fields } from '../../common/lib/redux-fields';
 import { replace } from 'react-router-redux';
 
-const CountriesOptions = countries.map(({ name, code }) =>
-  <option key={code} value={code}>{name}</option>
-);
+// const CountriesOptions = countries.map(({ name, code }) =>
+//   <option key={code} value={code}>{name}</option>
+// );
 
 class SuggestVeto extends Component {
 
@@ -33,15 +33,15 @@ class SuggestVeto extends Component {
   async onFormSubmit(e) {
     e.preventDefault();
     const { fields, replace, suggestVeto } = this.props;
-    const result = await suggestVeto(fields.$values()).payload.promise;
+    const values = fields.$values();
+    values.country = 'CZ'; // TODO: Remove after czech release.
+    const result = await suggestVeto(values).payload.promise;
     if (result.error) {
       focusInvalidField(this, result.payload);
       return;
     }
     fields.$reset();
-    // TODO: Use veto id for redirect.
-    // http://localhost:8000/vetos/4k9IjZCje
-    replace('vetos');
+    replace(`vetos/${values.id}`);
   }
 
   render() {
@@ -51,7 +51,7 @@ class SuggestVeto extends Component {
       <div className="suggest-veto">
         <Helmet title={msg.app.links.suggestVeto} />
         <div className="row">
-          <div className="col-md-8">
+          <div className="col-md-10">
             <form onSubmit={this.onFormSubmit}>
               <fieldset className="form-group" disabled={vetos.suggestVetoFormDisabled}>
                 <fieldset className="form-group">
@@ -78,8 +78,8 @@ class SuggestVeto extends Component {
                   <Textarea
                     className="form-control"
                     id="suggest-veto-reason"
-                    maxLength="1000"
-                    maxRows={10}
+                    maxLength="10000"
+                    maxRows={100}
                     minRows={3}
                     placeholder={
                       'Zákon porušuje cs.wikipedia.org/wiki/Princip_neagrese'
@@ -88,7 +88,7 @@ class SuggestVeto extends Component {
                     {...fields.reason}
                   />
                 </fieldset>
-                <fieldset className="form-group">
+                {/* No needed for czech release. <fieldset className="form-group">
                   <label htmlFor="suggest-veto-country">V které zemi?</label>
                   <select
                     className="form-control c-select"
@@ -96,7 +96,7 @@ class SuggestVeto extends Component {
                     id="suggest-veto-country"
                     {...fields.country}
                   >{CountriesOptions}</select>
-                </fieldset>
+                </fieldset>*/}
                 {viewer ?
                   <button
                     type="submit"
@@ -124,7 +124,7 @@ class SuggestVeto extends Component {
 
 SuggestVeto = fields(SuggestVeto, {
   path: 'suggestVeto',
-  fields: ['name', 'reason', 'country'],
+  fields: ['name', 'reason'/* , 'country' */],
   getInitialState: () => ({ country: 'CZ' })
 });
 

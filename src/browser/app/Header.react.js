@@ -13,6 +13,7 @@ class Header extends Component {
 
   render() {
     const { msg, notFound, viewer } = this.props;
+    const showNavigation = viewer && !notFound;
 
     return (
       <header>
@@ -24,7 +25,7 @@ class Header extends Component {
             width="400"
           />
         </Link>
-        {!notFound &&
+        {showNavigation &&
           <nav className="nav nav-tabs" role="navigation">
             <li className="nav-item">
               <IndexLink activeClassName="active" className="nav-link" to="/">

@@ -1,7 +1,19 @@
 .vetos-table {
+
   td {
+
+    &.name {
+      // width: 100%;
+    }
+
+    overflow: hidden;
+    text-overflow: ellipsis;
+    // white-space: nowrap;
     a {
       display: block; // To have links with maximum width for easy clicking.
+      // overflow: hidden;
+      // text-overflow: ellipsis;
+      // white-space: nowrap;
     }
   }
 }

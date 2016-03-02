@@ -18,7 +18,7 @@ class Page extends Component {
       <div className="suggest-veto">
         <Helmet title="Veta" />
         <div className="row">
-          <div className="col-md-8">
+          <div className="col-md-10">
             {viewer &&
               <UserVetos h2="Tebou navržená veta" userId={viewer.id} />
             }

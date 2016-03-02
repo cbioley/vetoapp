@@ -8,24 +8,33 @@ import { Link } from 'react-router';
 export default class VetosTable extends Component {
 
   static propTypes = {
-    vetos: PropTypes.object
+    hideCreator: PropTypes.bool,
+    vetos: PropTypes.object,
   };
 
   render() {
-    const { vetos } = this.props;
+    const { hideCreator, vetos } = this.props;
 
     return (
       <div className="vetos-table">
         {!vetos ?
           <Loading />
+        : !vetos.size ?
+          <p>Zatím si žádné veto nenavrhnul.</p>
         :
           <table className="table">
             <tbody>
               {vetos.map(({ id, createdAt, name, creatorDisplayName }) =>
                 <tr key={id}>
-                  <td><Link to={`vetos/${id}`}>{name}</Link></td>
-                  <td><FormattedRelative value={createdAt} /></td>
-                  <td>{creatorDisplayName}</td>
+                  <td className="name">
+                    <Link to={`vetos/${id}`}>{name}</Link>
+                  </td>
+                  {!hideCreator &&
+                    <td>{creatorDisplayName}</td>
+                  }
+                  <td>
+                    <FormattedRelative value={createdAt} />
+                  </td>
                 </tr>
               )}
             </tbody>

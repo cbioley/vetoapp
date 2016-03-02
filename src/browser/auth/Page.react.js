@@ -21,6 +21,10 @@ class Page extends Component {
         <Helmet title={msg.loginTitle} />
         {!viewer ?
           <div className="no-viewer">
+            <span>
+              Přihlašte se prosím pomocí svého Facebook účtu, nebo pomocí
+              emailu.
+            </span>
             <FirebaseLogin location={location} />
           </div>
         :
