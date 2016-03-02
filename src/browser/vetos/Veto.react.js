@@ -1,6 +1,7 @@
 import * as vetosActions from '../../common/vetos/actions';
 import Component from 'react-pure-render/component';
 import Helmet from 'react-helmet';
+import Linkify from 'react-linkify';
 import Loading from '../lib/Loading.react';
 import React, { PropTypes } from 'react';
 import { Link } from 'react-router';
@@ -43,7 +44,9 @@ class Veto extends Component {
           <div>
             <Helmet title={veto.name} />
             <h2>{veto.name}</h2>
-            <p>{veto.reason}</p>
+            <p>
+              <Linkify properties={{ target: '_blank'} }>{veto.reason}</Linkify>
+            </p>
             {isViewerVeto &&
               <button
                 className="btn btn-primary"
