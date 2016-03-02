@@ -15,7 +15,7 @@ export default function configureStore(options) {
     platformMiddleware = []
   } = options;
 
-  // TODO: Try to get vetoapp.
+  // Use vetoap-dev for dev.
   const firebase = new Firebase('https://vetoap.firebaseio.com');
   // // Check whether connection works.
   // firebase.child('hello-world').set({
