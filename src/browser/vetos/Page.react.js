@@ -15,7 +15,7 @@ class Page extends Component {
     const { viewer } = this.props;
 
     return (
-      <div className="suggest-veto">
+      <div className="vetos-page">
         <Helmet title="Veta" />
         <div className="row">
           <div className="col-md-10">

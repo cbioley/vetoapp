@@ -46,6 +46,7 @@ class App extends Component {
             name: 'description',
             content: 'Dev stack and starter kit for functional and universal React web apps'
           }]}
+          // TODO: Add Vetoapp if nothing is defined somehow for async loading.
           titleTemplate="%s"
         />
         {/* Pass location to ensure header active links are updated. */}

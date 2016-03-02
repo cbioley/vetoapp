@@ -7,9 +7,10 @@ const lastVetosPageSize = 10;
 const InitialState = Record({
   lastVetos: null,
   lastVetosLimitToLast: lastVetosPageSize,
+  map: Map(),
   suggestVetoFormDisabled: false,
   suggestVetoFormError: null,
-  usersVetos: Map(),
+  usersVetos: Map()
 });
 const initialState = new InitialState;
 
@@ -28,16 +29,22 @@ export default function vetosReducer(state = initialState, action) {
         lastVetosLimitToLast + lastVetosPageSize);
     }
 
+    case actions.SET_LAST_VETOS: {
+      const { vetos } = action.payload;
+      const list = vetosToSortedByCreatedAtList(vetos);
+      return state.set('lastVetos', list);
+    }
+
     case actions.SET_USER_VETOS: {
       const { userId, vetos } = action.payload;
       const list = vetosToSortedByCreatedAtList(vetos);
       return state.setIn(['usersVetos', userId], list);
     }
 
-    case actions.SET_LAST_VETOS: {
-      const { vetos } = action.payload;
-      const list = vetosToSortedByCreatedAtList(vetos);
-      return state.set('lastVetos', list);
+    case actions.SET_VETO: {
+      const { id, json } = action.payload;
+      const veto = json ? new Veto(json) : null;
+      return state.setIn(['map', id], veto);
     }
 
     case actions.SUGGEST_VETO_START:

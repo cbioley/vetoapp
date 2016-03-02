@@ -1,54 +1,71 @@
-// import * as vetosActions from '../../common/vetos/actions';
+import * as vetosActions from '../../common/vetos/actions';
 import Component from 'react-pure-render/component';
-// import Helmet from 'react-helmet';
+import Helmet from 'react-helmet';
+import Loading from '../lib/Loading.react';
 import React, { PropTypes } from 'react';
-// import Textarea from 'react-textarea-autosize';
-// import countries from './countries';
-// import focusInvalidField from '../lib/focusInvalidField';
+import { Link } from 'react-router';
 import { connect } from 'react-redux';
-// import { fields } from '../../common/lib/redux-fields';
-
-// const CountriesOptions = countries.map(({ name, code }) =>
-//   <option key={code} value={code}>{name}</option>
-// );
+import { queryFirebase } from '../../common/lib/redux-firebase';
+import { replace } from 'react-router-redux';
 
 class Veto extends Component {
 
   static propTypes = {
-    veto: PropTypes.object
+    deleteVeto: PropTypes.func.isRequired,
+    replace: PropTypes.func.isRequired,
+    veto: PropTypes.object,
+    viewer: PropTypes.object
   };
 
-  // constructor(props) {
-  //   super(props);
-  //   // this.onFormSubmit = this.onFormSubmit.bind(this);
-  // }
+  constructor(props) {
+    super(props);
+    this.onDeleteClick = this.onDeleteClick.bind(this);
+  }
 
-  // async onFormSubmit(e) {
-  //   e.preventDefault();
-  //   const { fields, suggestVeto } = this.props;
-  //   const result = await suggestVeto(fields.$values()).payload.promise;
-  //   if (result.error) {
-  //     focusInvalidField(this, result.payload);
-  //   }
-  // }
+  onDeleteClick() {
+    const { deleteVeto, replace, veto } = this.props;
+    if (!confirm('Are you sure?')) return; // eslint-disable-line no-alert
+    deleteVeto(veto.id);
+    replace('vetos');
+  }
 
   render() {
+    const { veto, viewer } = this.props;
+    const isViewerVeto = veto && viewer && viewer.id === veto.creatorId;
+
     return (
       <div className="veto-detail">
-        Soon.
+        {veto === undefined ?
+          <Loading />
+        : !veto ?
+          <p>This veto doesn't exists. <Link to="/vetos">Other vetos</Link>.</p>
+        :
+          <div>
+            <Helmet title={veto.name} />
+            <h2>{veto.name}</h2>
+            <p>{veto.reason}</p>
+            {isViewerVeto &&
+              <button
+                className="btn btn-primary"
+                onClick={this.onDeleteClick}
+              >Delete</button>
+            }
+          </div>
+        }
       </div>
     );
   }
 
 }
 
-// SuggestVeto = fields(SuggestVeto, {
-//   path: 'suggestVeto',
-//   fields: ['name', 'reason', 'country'],
-//   getInitialState: () => ({ country: 'CZ' })
-// });
+Veto = queryFirebase(Veto, ({ setVeto, params: { vetoId } }) => ({
+  path: `vetos/${vetoId}`,
+  on: {
+    value: snapshot => setVeto(vetoId, snapshot.val())
+  }
+}));
 
-export default connect(state => ({
-  msg: state.intl.msg
-  // veto: state.vetos
-}))(Veto);
+export default connect((state, { params: { vetoId } }) => ({
+  veto: state.vetos.map.get(vetoId),
+  viewer: state.users.viewer
+}), { ...vetosActions, replace })(Veto);

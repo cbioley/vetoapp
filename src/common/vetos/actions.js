@@ -1,15 +1,36 @@
 import Veto from '../../common/vetos/veto';
 
+// Note there is no Firebase or whatever implementation leak in consts.
+export const DELETE_VETO = 'DELETE_VETO';
 export const MORE_LAST_VETOS = 'MORE_LAST_VETOS';
 export const SET_LAST_VETOS = 'SET_LAST_VETOS';
 export const SET_USER_VETOS = 'SET_USER_VETOS';
+export const SET_VETO = 'SET_VETO';
 export const SUGGEST_VETO_ERROR = 'SUGGEST_VETO_ERROR';
 export const SUGGEST_VETO_START = 'SUGGEST_VETO_START';
 export const SUGGEST_VETO_SUCCESS = 'SUGGEST_VETO_SUCCESS';
 
+export function deleteVeto(vetoId) {
+  return ({ firebase }) => {
+    // TODO: Move to vetos-archived via deep update.
+    const promise = firebase.child('vetos').child(vetoId).remove();
+    return {
+      type: DELETE_VETO,
+      payload: { promise }
+    };
+  };
+}
+
 export function moreLastVetos() {
   return {
     type: MORE_LAST_VETOS
+  };
+}
+
+export function setLastVetos(vetos) {
+  return {
+    type: SET_LAST_VETOS,
+    payload: { vetos }
   };
 }
 
@@ -20,10 +41,10 @@ export function setUserVetos(userId, vetos) {
   };
 }
 
-export function setLastVetos(vetos) {
+export function setVeto(id, json) {
   return {
-    type: SET_LAST_VETOS,
-    payload: { vetos }
+    type: SET_VETO,
+    payload: { id, json }
   };
 }
 

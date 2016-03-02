@@ -7,11 +7,11 @@ export default {
     },
     // Links should be pages titles as well.
     links: {
-      about: 'O Nás',
+      about: 'O nás',
       home: 'Přehled',
       login: 'Přihlášení',
       me: 'Já',
-      suggestVeto: 'Navrhnout Veto',
+      suggestVeto: 'Navrhnout veto',
       vetos: 'Veta'
     }
   },
