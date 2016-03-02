@@ -32,13 +32,17 @@ export default function vetosReducer(state = initialState, action) {
     case actions.SET_LAST_VETOS: {
       const { vetos } = action.payload;
       const list = vetosToSortedByCreatedAtList(vetos);
-      return state.set('lastVetos', list);
+      return state
+        .mergeIn(['map'], Map(vetos).map(json => new Veto(json)))
+        .set('lastVetos', list);
     }
 
     case actions.SET_USER_VETOS: {
       const { userId, vetos } = action.payload;
       const list = vetosToSortedByCreatedAtList(vetos);
-      return state.setIn(['usersVetos', userId], list);
+      return state
+        .mergeIn(['map'], Map(vetos).map(json => new Veto(json)))
+        .setIn(['usersVetos', userId], list);
     }
 
     case actions.SET_VETO: {
