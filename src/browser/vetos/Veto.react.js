@@ -4,8 +4,10 @@ import Helmet from 'react-helmet';
 import Linkify from 'react-linkify';
 import Loading from '../lib/Loading.react';
 import React, { PropTypes } from 'react';
-import { Link } from 'react-router';
+import Textarea from 'react-textarea-autosize';
+import focusInvalidField from '../lib/focusInvalidField';
 import { connect } from 'react-redux';
+import { fields } from '../../common/lib/redux-fields';
 import { queryFirebase } from '../../common/lib/redux-firebase';
 import { replace } from 'react-router-redux';
 
@@ -13,53 +15,165 @@ class Veto extends Component {
 
   static propTypes = {
     deleteVeto: PropTypes.func.isRequired,
+    fields: PropTypes.object.isRequired,
     replace: PropTypes.func.isRequired,
+    saveVeto: PropTypes.func.isRequired,
     veto: PropTypes.object,
     viewer: PropTypes.object
   };
 
   constructor(props) {
     super(props);
+    this.onCancelClick = this.onCancelClick.bind(this);
     this.onDeleteClick = this.onDeleteClick.bind(this);
+    this.onEditClick = this.onEditClick.bind(this);
+    this.onFormSubmit = this.onFormSubmit.bind(this);
+    this.onSaveClick = this.onSaveClick.bind(this);
+  }
+
+  onCancelClick() {
+    const { fields } = this.props;
+    if (!this.isDirty()) {
+      fields.$reset();
+      return;
+    }
+    if (confirm('You have unsaved changes. Are you sure?')) { // eslint-disable-line no-alert
+      fields.$reset();
+    }
   }
 
   onDeleteClick() {
     const { deleteVeto, replace, veto } = this.props;
     if (!confirm('Are you sure?')) return; // eslint-disable-line no-alert
-    deleteVeto(veto.id);
+    deleteVeto(veto.toJS());
     replace('vetos');
   }
 
+  onEditClick() {
+    const { fields } = this.props;
+    fields.isEdited.setValue(true);
+  }
+
+  onFormSubmit(e) {
+    e.preventDefault();
+  }
+
+  async onSaveClick() {
+    const { fields, saveVeto, veto } = this.props;
+    if (!this.isDirty()) {
+      fields.$reset();
+      return;
+    }
+    const { name, reason } = fields.$values();
+    const json = veto.merge({ name, reason }).toJS();
+    const result = await saveVeto(json).payload.promise;
+    if (result.error) {
+      fields.error.setValue(result.payload);
+      focusInvalidField(this, result.payload);
+      return;
+    }
+    fields.$reset();
+  }
+
+  isDirty() {
+    const { fields, veto } = this.props;
+    return !(
+      fields.name.value === veto.name &&
+      fields.reason.value === veto.reason
+    );
+  }
+
   render() {
-    const { veto, viewer } = this.props;
+    const { fields, veto, viewer } = this.props;
     const isViewerVeto = veto && viewer && viewer.id === veto.creatorId;
 
     return (
       <div className="veto-detail">
-        {veto === undefined ?
-          <Loading />
-        : !veto ?
-          <p>This veto doesn't exists. <Link to="/vetos">Other vetos</Link>.</p>
-        :
-          <div>
-            <Helmet title={veto.name} />
-            <h2>{veto.name}</h2>
-            <p>
-              <Linkify properties={{ target: '_blank'} }>{veto.reason}</Linkify>
-            </p>
-            {isViewerVeto &&
-              <button
-                className="btn btn-primary"
-                onClick={this.onDeleteClick}
-              >Delete</button>
+        <div className="row">
+          <div className="col-md-10">
+            {veto === undefined ?
+              <Loading />
+            : !veto ?
+              <p>This veto doesn't exists.</p>
+            :
+              <div>
+                <Helmet title={veto.name} />
+                {!fields.isEdited.value ?
+                  <div>
+                    <h2>{veto.name}</h2>
+                    <p>
+                      <Linkify properties={{ target: '_blank' } }>
+                        {veto.reason}
+                      </Linkify>
+                    </p>
+                    {isViewerVeto &&
+                      <button
+                        className="btn btn-primary"
+                        onClick={this.onEditClick}
+                      >Edit</button>
+                    }
+                  </div>
+                :
+                  <div>
+                    <form onSubmit={this.onFormSubmit}>
+                      <input
+                        className="form-control"
+                        maxLength="1000"
+                        {...fields.name}
+                      />
+                      <br />
+                      <Textarea
+                        // Important. When textarea is not inside a form, React
+                        // has a serious rendering problems.
+                        className="form-control"
+                        maxLength="10000"
+                        maxRows={100}
+                        minRows={3}
+                        useCacheForDOMMeasurements
+                        {...fields.reason}
+                      />
+                      <br />
+                      <button
+                        type="button"
+                        className="btn btn-primary"
+                        onClick={this.onSaveClick}
+                      >Save</button>
+                      {' '}
+                      <button
+                        type="button"
+                        className="btn btn-success"
+                        onClick={this.onCancelClick}
+                      >Cancel</button>
+                      {' '}
+                      <button
+                        type="button"
+                        className="btn btn-warning"
+                        onClick={this.onDeleteClick}
+                      >Delete</button>
+                    </form>
+                    <br />
+                    {fields.error.value &&
+                      <div className="alert alert-danger" role="alert">
+                        {fields.error.value.message}
+                      </div>
+                    }
+                  </div>
+                }
+              </div>
             }
           </div>
-        }
+        </div>
       </div>
     );
   }
 
 }
+
+Veto = fields(Veto, {
+  path: ({ params }) => ['vetos', params.vetoId],
+  fields: ['name', 'reason', 'isEdited', 'error'],
+  getInitialState: ({ veto }) => veto && veto.toJS()
+});
 
 Veto = queryFirebase(Veto, ({ setVeto, params: { vetoId } }) => ({
   path: `vetos/${vetoId}`,

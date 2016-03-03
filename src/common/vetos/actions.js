@@ -1,8 +1,8 @@
 import Veto from '../../common/vetos/veto';
 
-// Note there is no Firebase or whatever implementation leak in consts.
 export const DELETE_VETO = 'DELETE_VETO';
 export const MORE_LAST_VETOS = 'MORE_LAST_VETOS';
+export const SAVE_VETO = 'SAVE_VETO';
 export const SET_LAST_VETOS = 'SET_LAST_VETOS';
 export const SET_USER_VETOS = 'SET_USER_VETOS';
 export const SET_VETO = 'SET_VETO';
@@ -10,10 +10,18 @@ export const SUGGEST_VETO_ERROR = 'SUGGEST_VETO_ERROR';
 export const SUGGEST_VETO_START = 'SUGGEST_VETO_START';
 export const SUGGEST_VETO_SUCCESS = 'SUGGEST_VETO_SUCCESS';
 
-export function deleteVeto(vetoId) {
+// TODO: Localize name and reason.
+const validateVeto = (validate, veto) => validate(veto)
+  .prop('name').required()
+  .prop('reason').required().fewWordsAtLeast()
+  .promise;
+
+export function deleteVeto(veto) {
   return ({ firebase }) => {
-    // TODO: Move to vetos-archived via deep update.
-    const promise = firebase.child('vetos').child(vetoId).remove();
+    const promise = firebase.update({
+      [`vetos/${veto.id}`]: null,
+      [`vetos-archived/${veto.id}`]: veto
+    });
     return {
       type: DELETE_VETO,
       payload: { promise }
@@ -24,6 +32,18 @@ export function deleteVeto(vetoId) {
 export function moreLastVetos() {
   return {
     type: MORE_LAST_VETOS
+  };
+}
+
+export function saveVeto(veto) {
+  return ({ firebase, validate }) => {
+    veto = { ...veto, updatedAt: firebase.constructor.ServerValue.TIMESTAMP };
+    const promise = validateVeto(validate, veto)
+      .then(() => firebase.child('vetos').child(veto.id).set(veto));
+    return {
+      type: SAVE_VETO,
+      payload: { promise }
+    };
   };
 }
 
@@ -60,12 +80,7 @@ export function suggestVeto(fields) {
       id: getUid(),
       updatedAt: firebase.constructor.ServerValue.TIMESTAMP
     }).toJS();
-    // TODO: Localize name and reason.
-    const promise =
-      validate(veto)
-        .prop('name').required()
-        .prop('reason').required().fewWordsAtLeast()
-        .promise
+    const promise = validateVeto(validate, veto)
       .then(() => firebase.child('vetos').child(veto.id).set(veto))
       .then(() => veto);
     return {

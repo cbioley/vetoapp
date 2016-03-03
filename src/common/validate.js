@@ -19,10 +19,10 @@ export default function validate(getState) {
       }
       fewWordsAtLeast() {
         return this.custom((value, prop) => {
-          const minLength = 50;
+          const minLength = 30;
           if (value.length >= minLength) return;
           throw new ValidationError(
-            `Text is too short. Use at least 50 characters.
+            `Text is too short. Use at least ${minLength} characters.
               You entered ${value.length}.`,
             prop
           );
