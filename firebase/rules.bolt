@@ -82,7 +82,15 @@ path /vetos {
 
 path /vetos/{id} is Veto {
   // https://www.firebase.com/blog/2016-01-26-easier-write-rules-bolt.html
-  create() { isViewer(this.creatorId) }
+  create() { isViewer(this.creatorId) && this.id == id }
   delete() { isViewer(prior(this).creatorId) }
-  update() { isViewer(prior(this).creatorId) }
+  update() {
+    isViewer(this.creatorId) && this.id == id &&
+    isViewer(prior(this).creatorId)
+  }
+}
+
+path /vetos-archived/{id} is Veto {
+  create() { isViewer(this.creatorId) && this.id == id }
+  delete() { isViewer(prior(this).creatorId) }
 }
