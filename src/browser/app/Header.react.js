@@ -13,7 +13,7 @@ class Header extends Component {
 
   render() {
     const { msg, notFound, viewer } = this.props;
-    const showNavigation = viewer && !notFound;
+    const showNavigation = !notFound;
 
     return (
       <header>
@@ -29,7 +29,7 @@ class Header extends Component {
           <nav className="nav nav-tabs" role="navigation">
             <li className="nav-item">
               <IndexLink activeClassName="active" className="nav-link" to="/">
-                {msg.home}
+                {viewer ? 'Přehled' : 'Úvod'}
               </IndexLink>
             </li>
             <li className="nav-item">
