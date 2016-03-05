@@ -1,5 +1,5 @@
 import * as actions from './actions';
-import Veto from './veto';
+import Veto from './Veto';
 import { Map, Record, Seq } from 'immutable';
 
 const lastVetosPageSize = 10;

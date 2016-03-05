@@ -6,11 +6,13 @@ import Loading from '../lib/Loading.react';
 import React, { PropTypes } from 'react';
 import Textarea from 'react-textarea-autosize';
 import focusInvalidField from '../lib/focusInvalidField';
+import { Link } from 'react-router';
 import { connect } from 'react-redux';
 import { fields } from '../../common/lib/redux-fields';
 import { queryFirebase } from '../../common/lib/redux-firebase';
 import { replace } from 'react-router-redux';
 
+// TODO: Refactor to view and edit components.
 class Veto extends Component {
 
   static propTypes = {
@@ -19,7 +21,8 @@ class Veto extends Component {
     replace: PropTypes.func.isRequired,
     saveVeto: PropTypes.func.isRequired,
     veto: PropTypes.object,
-    viewer: PropTypes.object
+    viewer: PropTypes.object,
+    voteVeto: PropTypes.func.isRequired
   };
 
   constructor(props) {
@@ -29,6 +32,7 @@ class Veto extends Component {
     this.onEditClick = this.onEditClick.bind(this);
     this.onFormSubmit = this.onFormSubmit.bind(this);
     this.onSaveClick = this.onSaveClick.bind(this);
+    this.onVetoClick = this.onVetoClick.bind(this);
   }
 
   onCancelClick() {
@@ -75,6 +79,11 @@ class Veto extends Component {
     fields.$reset();
   }
 
+  onVetoClick() {
+    const { veto, viewer, voteVeto } = this.props;
+    voteVeto(veto.id, viewer.id, true);
+  }
+
   isDirty() {
     const { fields, veto } = this.props;
     return !(
@@ -86,6 +95,10 @@ class Veto extends Component {
   render() {
     const { fields, veto, viewer } = this.props;
     const isViewerVeto = veto && viewer && viewer.id === veto.creatorId;
+    const loginPath = {
+      pathname: '/login',
+      state: { nextPathname: `vetos/${veto.id}` }
+    };
 
     return (
       <div className="veto-detail">
@@ -99,22 +112,36 @@ class Veto extends Component {
               <div>
                 <Helmet title={veto.name} />
                 {!fields.isEdited.value ?
-                  <div>
+                  <div className="view">
                     <h2>{veto.name}</h2>
                     <p>
                       <Linkify properties={{ target: '_blank' } }>
                         {veto.reason}
                       </Linkify>
                     </p>
-                    {isViewerVeto &&
+                    {!viewer ?
+                      <div className="alert alert-info" role="alert">
+                        Pokud se chcete k zákonu vyjádřit, musíte se <b>
+                        <Link to={loginPath}>přihlásit</Link></b>.
+                      </div>
+                    : isViewerVeto ?
                       <button
-                        className="btn btn-primary"
+                        className="btn btn-secondary btn-sm"
                         onClick={this.onEditClick}
                       >Edit</button>
+                    : <div>
+                        <div className="alert alert-info" role="alert">
+                          Pokud si myslíte, že zákon je zbytečný, vetujte ho.
+                        </div>
+                        <button
+                          className="btn btn-primary"
+                          onClick={this.onVetoClick}
+                        >Vetovat zákon</button>
+                      </div>
                     }
                   </div>
                 :
-                  <div>
+                  <div className="edit">
                     <form onSubmit={this.onFormSubmit}>
                       <input
                         className="form-control"

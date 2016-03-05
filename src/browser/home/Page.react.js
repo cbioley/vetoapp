@@ -17,7 +17,7 @@ class Page extends Component {
 
     return (
       <div className="home-page">
-        <Helmet title={viewer ? 'Přehled' : msg.title} />
+        <Helmet title={viewer ? 'Přehled' : 'Úvod'} />
         <div className="row">
           <div className="col-md-8">
             {!viewer ?

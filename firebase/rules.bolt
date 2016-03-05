@@ -3,6 +3,7 @@
 
 // Functions
 
+isAdmin() { root.admins[auth.uid] }
 isSignedIn() { auth != null }
 isViewer(uid) { isSignedIn() && auth.uid == uid }
 
@@ -33,6 +34,24 @@ type ExtraLongRequiredString extends String {
   validate() { this.length > 0 && this.length <= 10000 }
 }
 
+// https://github.com/firebase/firebase-queue#queue-security
+type FirebaseQueueStateErrorState {
+  error: String,
+  error_stack: String,
+  previous_state: String,
+  original_task: Any,
+  attempts: Number
+}
+
+// https://github.com/firebase/firebase-queue#queue-security
+type FirebaseQueueState {
+  _state: String,
+  _state_changed: Number,
+  _owner: String,
+  _progress: Number,
+  _error_details: FirebaseQueueStateErrorState
+}
+
 type User {
   authenticatedAt: Number,
   displayName: LongString,
@@ -56,18 +75,27 @@ type Veto {
   name: LongRequiredString,
   reason: ExtraLongRequiredString,
   updatedAt: Number
+
+  validate() { isViewer(this.creatorId) }
 }
 
-// Paths. Can be nested.
-// https://www.firebase.com/blog/2016-01-12-whats-new-in-bolt-07.html
+type VetoVote {
+  createdAt: Number,
+  userId: ShortRequiredString,
+  vetoId: ShortRequiredString
+
+  validate() { isViewer(this.userId) && root.vetos[this.vetoId] != null }
+}
+
+// Paths.
 
 path /users {
   index() { ["authenticatedAt"] }
   read() { true }
-}
 
-path /users/{uid} is User {
-  write() { isViewer(uid) }
+  path /{uid} is User {
+    write() { isViewer(uid) }
+  }
 }
 
 path /users-emails/{uid} is Email {
@@ -78,19 +106,33 @@ path /users-emails/{uid} is Email {
 path /vetos {
   index() { ["createdAt", "creatorId"] }
   read() { true }
-}
 
-path /vetos/{id} is Veto {
-  // https://www.firebase.com/blog/2016-01-26-easier-write-rules-bolt.html
-  create() { isViewer(this.creatorId) && this.id == id }
-  delete() { isViewer(prior(this).creatorId) }
-  update() {
-    isViewer(this.creatorId) && this.id == id &&
-    isViewer(prior(this).creatorId)
+  path /{id} is Veto {
+    // https://www.firebase.com/blog/2016-01-26-easier-write-rules-bolt.html
+    // This security rules were manually verified.
+    create() { this.id == id }
+    delete() { isViewer(prior(this).creatorId) }
+    update() { this.id == id && isViewer(prior(this).creatorId) }
   }
 }
 
 path /vetos-archived/{id} is Veto {
-  create() { isViewer(this.creatorId) && this.id == id }
+  create() { this.id == id }
   delete() { isViewer(prior(this).creatorId) }
+}
+
+path /vetos-votes-queue {
+  path /tasks {
+    index() { ["_state"] }
+    read() { isAdmin() }
+    write() { isSignedIn() }
+    path /{id} is VetoVote | FirebaseQueueState { }
+  }
+  // TODO: Add specs.
+}
+
+path /vetos-votes/{id} is VetoVote {
+  index() { ["userId", "vetoId"] }
+  read() { true }
+  write() { isAdmin() }
 }

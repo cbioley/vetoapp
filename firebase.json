@@ -1,5 +1,5 @@
 {
-  "firebase": "vetoap",
+  "firebase": "vetoap-dev",
   "cleanUrls": true,
   "trailingSlash": false,
   "rules": "firebase/rules.bolt",

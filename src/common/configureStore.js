@@ -16,7 +16,7 @@ export default function configureStore(options) {
   } = options;
 
   // Use vetoap-dev for dev.
-  const firebase = new Firebase('https://vetoap.firebaseio.com');
+  const firebase = new Firebase('https://vetoap-dev.firebaseio.com');
   // // Check whether connection works.
   // firebase.child('hello-world').set({
   //   createdAt: Firebase.ServerValue.TIMESTAMP

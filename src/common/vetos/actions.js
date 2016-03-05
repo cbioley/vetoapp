@@ -1,4 +1,5 @@
-import Veto from '../../common/vetos/veto';
+import Veto from '../../common/vetos/Veto';
+import Vote from '../../common/vetos/Vote';
 
 export const DELETE_VETO = 'DELETE_VETO';
 export const MORE_LAST_VETOS = 'MORE_LAST_VETOS';
@@ -9,6 +10,7 @@ export const SET_VETO = 'SET_VETO';
 export const SUGGEST_VETO_ERROR = 'SUGGEST_VETO_ERROR';
 export const SUGGEST_VETO_START = 'SUGGEST_VETO_START';
 export const SUGGEST_VETO_SUCCESS = 'SUGGEST_VETO_SUCCESS';
+export const VOTE_VETO = 'VOTE_VETO';
 
 // TODO: Localize name and reason.
 const validateVeto = (validate, veto) => validate(veto)
@@ -86,6 +88,25 @@ export function suggestVeto(fields) {
     return {
       type: 'SUGGEST_VETO',
       payload: { promise }
+    };
+  };
+}
+
+export function voteVeto(vetoId, userId, yes) {
+  return ({ firebase }) => {
+    const vote = new Vote({
+      createdAt: firebase.constructor.ServerValue.TIMESTAMP,
+      userId,
+      vetoId,
+      yes
+    }).toJS();
+    // Note we don't use promise, because queue is processed on the server, and
+    // we don't want to wait for a response. Instead of that we prefer an
+    // optimistic update, which also works well for offline scenarios.
+    firebase.child('vetos-votes-queue/tasks').push(vote);
+    return {
+      type: VOTE_VETO,
+      payload: { vote }
     };
   };
 }
