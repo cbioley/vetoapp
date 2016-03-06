@@ -92,11 +92,12 @@ export function suggestVeto(fields) {
   };
 }
 
-export function voteVeto(vetoId, userId, yes) {
-  return ({ firebase }) => {
+export function voteVeto(vetoId, yes) {
+  return ({ firebase, getState }) => {
+    const { viewer } = getState().users;
     const vote = new Vote({
       createdAt: firebase.constructor.ServerValue.TIMESTAMP,
-      userId,
+      userId: viewer.id,
       vetoId,
       yes
     }).toJS();

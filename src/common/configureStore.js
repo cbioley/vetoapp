@@ -15,7 +15,8 @@ export default function configureStore(options) {
     platformMiddleware = []
   } = options;
 
-  // Use vetoap-dev for dev.
+  // Use vetoap-dev for dev. TODO: Use dev / production config.
+  // https://github.com/este/este/issues/758
   const firebase = new Firebase('https://vetoap-dev.firebaseio.com');
   // // Check whether connection works.
   // firebase.child('hello-world').set({

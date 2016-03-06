@@ -83,8 +83,12 @@ type VetoVote {
   createdAt: Number,
   userId: ShortRequiredString,
   vetoId: ShortRequiredString
+  yes: Boolean
 
-  validate() { isViewer(this.userId) && root.vetos[this.vetoId] != null }
+  validate() {
+    root.users[this.userId] != null &&
+    root.vetos[this.vetoId] != null
+  }
 }
 
 // Paths.
@@ -109,7 +113,6 @@ path /vetos {
 
   path /{id} is Veto {
     // https://www.firebase.com/blog/2016-01-26-easier-write-rules-bolt.html
-    // This security rules were manually verified.
     create() { this.id == id }
     delete() { isViewer(prior(this).creatorId) }
     update() { this.id == id && isViewer(prior(this).creatorId) }
@@ -125,14 +128,27 @@ path /vetos-votes-queue {
   path /tasks {
     index() { ["_state"] }
     read() { isAdmin() }
-    write() { isSignedIn() }
-    path /{id} is VetoVote | FirebaseQueueState { }
+
+    path /{id} is VetoVote | FirebaseQueueState {
+      write() { isViewer(this.userId) || isAdmin() }
+    }
   }
   // TODO: Add specs.
 }
 
-path /vetos-votes/{id} is VetoVote {
+path /vetos-votes-yes/{id} is VetoVote {
   index() { ["userId", "vetoId"] }
+  read() { true }
+  write() { isAdmin() }
+}
+
+path /vetos-votes-no/{id} is VetoVote {
+  index() { ["userId", "vetoId"] }
+  read() { true }
+  write() { isAdmin() }
+}
+
+path /vetos-votes-yes-total/{vetoId} is Number {
   read() { true }
   write() { isAdmin() }
 }

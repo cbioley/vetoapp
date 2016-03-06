@@ -1,5 +1,6 @@
 import * as actions from './actions';
 import Veto from './Veto';
+import Vote from './Vote';
 import { Map, Record, Seq } from 'immutable';
 
 const lastVetosPageSize = 10;
@@ -10,7 +11,8 @@ const InitialState = Record({
   map: Map(),
   suggestVetoFormDisabled: false,
   suggestVetoFormError: null,
-  usersVetos: Map()
+  usersVetos: Map(),
+  votes: Map()
 });
 const initialState = new InitialState;
 
@@ -66,6 +68,10 @@ export default function vetosReducer(state = initialState, action) {
         suggestVetoFormError: null
       });
 
+    case actions.VOTE_VETO: {
+      const vote = new Vote(action.payload.vote);
+      return state.setIn(['votes', vote.id], vote);
+    }
   }
 
   return state;

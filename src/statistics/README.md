@@ -1,2 +1,2 @@
-Separate service to compute statistics. Implemented as 
-classic Node.js app hosted in Heroku now. TODO: Use Amazon Lambda
+Separate service to compute statistics. It runs within Node.js in Heroku now.
+TODO: Use Amazon Lambda.

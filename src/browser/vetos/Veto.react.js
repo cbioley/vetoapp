@@ -5,6 +5,7 @@ import Linkify from 'react-linkify';
 import Loading from '../lib/Loading.react';
 import React, { PropTypes } from 'react';
 import Textarea from 'react-textarea-autosize';
+import Vote from '../../common/vetos/Vote';
 import focusInvalidField from '../lib/focusInvalidField';
 import { Link } from 'react-router';
 import { connect } from 'react-redux';
@@ -12,7 +13,7 @@ import { fields } from '../../common/lib/redux-fields';
 import { queryFirebase } from '../../common/lib/redux-firebase';
 import { replace } from 'react-router-redux';
 
-// TODO: Refactor to view and edit components.
+// TODO: Refactor to view, edit, vote etc components.
 class Veto extends Component {
 
   static propTypes = {
@@ -22,6 +23,7 @@ class Veto extends Component {
     saveVeto: PropTypes.func.isRequired,
     veto: PropTypes.object,
     viewer: PropTypes.object,
+    vote: PropTypes.object,
     voteVeto: PropTypes.func.isRequired
   };
 
@@ -32,6 +34,7 @@ class Veto extends Component {
     this.onEditClick = this.onEditClick.bind(this);
     this.onFormSubmit = this.onFormSubmit.bind(this);
     this.onSaveClick = this.onSaveClick.bind(this);
+    this.onVetoCancelClick = this.onVetoCancelClick.bind(this);
     this.onVetoClick = this.onVetoClick.bind(this);
   }
 
@@ -79,9 +82,14 @@ class Veto extends Component {
     fields.$reset();
   }
 
+  onVetoCancelClick() {
+    const { veto, voteVeto } = this.props;
+    voteVeto(veto.id, false);
+  }
+
   onVetoClick() {
-    const { veto, viewer, voteVeto } = this.props;
-    voteVeto(veto.id, viewer.id, true);
+    const { veto, voteVeto } = this.props;
+    voteVeto(veto.id, true);
   }
 
   isDirty() {
@@ -93,12 +101,8 @@ class Veto extends Component {
   }
 
   render() {
-    const { fields, veto, viewer } = this.props;
+    const { fields, veto, viewer, vote } = this.props;
     const isViewerVeto = veto && viewer && viewer.id === veto.creatorId;
-    const loginPath = {
-      pathname: '/login',
-      state: { nextPathname: `vetos/${veto.id}` }
-    };
 
     return (
       <div className="veto-detail">
@@ -122,13 +126,35 @@ class Veto extends Component {
                     {!viewer ?
                       <div className="alert alert-info" role="alert">
                         Pokud se chcete k zákonu vyjádřit, musíte se <b>
-                        <Link to={loginPath}>přihlásit</Link></b>.
+                        <Link to={{
+                          pathname: '/login',
+                          state: { nextPathname: `vetos/${veto.id}` }
+                        }}
+                        >přihlásit</Link></b>.
                       </div>
                     : isViewerVeto ?
                       <button
                         className="btn btn-secondary btn-sm"
                         onClick={this.onEditClick}
                       >Edit</button>
+                    : vote && vote.yes ?
+                      <div>
+                        <div className="alert alert-success" role="alert">
+                          <strong>Děkujeme!</strong> Hlasoval jste pro veto
+                          zákona.
+                        </div>
+                        <p>
+                          Pokud se nás zde sejde 50 tisíc, můžeme se bavit o tom,
+                          zda-li je zákon ještě <a
+                            target="_blank"
+                            href="https://cs.wikipedia.org/wiki/Legitimita#Legitimita_ve_filosofii"
+                          >legitimní</a>.
+                        </p>
+                        <button
+                          className="btn btn-secondary btn-sm"
+                          onClick={this.onVetoCancelClick}
+                        >Rozmyslel jsem si to.</button>
+                      </div>
                     : <div>
                         <div className="alert alert-info" role="alert">
                           Pokud si myslíte, že zákon je zbytečný, vetujte ho.
@@ -209,7 +235,15 @@ Veto = queryFirebase(Veto, ({ setVeto, params: { vetoId } }) => ({
   }
 }));
 
-export default connect((state, { params: { vetoId } }) => ({
-  veto: state.vetos.map.get(vetoId),
-  viewer: state.users.viewer
-}), { ...vetosActions, replace })(Veto);
+export default connect((state, ownProps) => {
+  const { users: { viewer }, vetos } = state;
+  const { params: { vetoId } } = ownProps;
+  const veto = vetos.map.get(vetoId);
+  return {
+    veto,
+    viewer,
+    vote: veto && viewer
+      ? vetos.votes.get(new Vote({ vetoId: veto.id, userId: viewer.id }).id)
+      : null
+  };
+}, { ...vetosActions, replace })(Veto);
