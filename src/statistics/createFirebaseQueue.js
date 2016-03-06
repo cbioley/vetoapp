@@ -2,12 +2,12 @@ import Firebase from 'firebase';
 import Queue from 'firebase-queue';
 import Vote from '../common/vetos/Vote';
 
-export default async function createFirebaseQueue(firebaseUrl) {
+export default async function createFirebaseQueue(firebaseUrl, firebaseQueuePass) {
   const firebase = new Firebase(firebaseUrl);
   // TODO: Use authWithToken. Remember authWithPassword has a session timeout.
   await firebase.authWithPassword({
     email: 'firebasequeue@vetoapp.com',
-    password: ''
+    password: firebaseQueuePass
   });
 
   const queues = [
@@ -20,8 +20,8 @@ export default async function createFirebaseQueue(firebaseUrl) {
           .then(snapshot => snapshot.val() || 0)
           .then(yesTotal => firebase
             .update({
-              // If vetos-votes-yes-total is accidentally deleted, we have to stop
-              // queue update, set correct value, then restart queue. Easy.
+              // If vetos-votes-yes-total is accidentally deleted, we can stop
+              // queue updating, set correct value, then restart it. Easy.
               [yesTotalPath]: vote.yes ? ++yesTotal : --yesTotal,
               [`vetos-votes-yes/${vote.id}`]: vote.yes ? vote.toJS() : null,
               [`vetos-votes-no/${vote.id}`]: vote.yes ? null : vote.toJS()

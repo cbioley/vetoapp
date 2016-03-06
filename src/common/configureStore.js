@@ -15,9 +15,7 @@ export default function configureStore(options) {
     platformMiddleware = []
   } = options;
 
-  // Use vetoap-dev for dev. TODO: Use dev / production config.
-  // https://github.com/este/este/issues/758
-  const firebase = new Firebase('https://vetoap-dev.firebaseio.com');
+  const firebase = new Firebase(initialState.config.firebaseUrl);
   // // Check whether connection works.
   // firebase.child('hello-world').set({
   //   createdAt: Firebase.ServerValue.TIMESTAMP
@@ -47,7 +45,7 @@ export default function configureStore(options) {
 
   // Enable logger only for browser and React Native development.
   const enableLogger = process.env.NODE_ENV !== 'production' &&
-    (process.env.IS_BROWSER || process.env.IS_REACT_NATIVE);
+    (process.env.IS_BROWSER);
 
   if (enableLogger) {
     const logger = createLogger({

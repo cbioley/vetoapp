@@ -1,4 +1,4 @@
-import config from './config';
+import config from '../common/config';
 import createFirebaseQueue from '../statistics/createFirebaseQueue';
 import errorHandler from './lib/errorHandler';
 import express from 'express';
@@ -15,6 +15,4 @@ app.listen(port, () => {
   console.log('Server started at port %d', port);
 });
 
-// TODO: Use config.
-const firebaseUrl = 'https://vetoap-dev.firebaseio.com';
-createFirebaseQueue(firebaseUrl);
+createFirebaseQueue(config.firebaseUrl, config.firebaseQueuePass);
