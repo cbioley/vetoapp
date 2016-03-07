@@ -102,8 +102,8 @@ class Veto extends Component {
 
   render() {
     const { fields, veto, viewer, vote } = this.props;
-    // undefined is absence of evidence, null is evidence of absence ;)
-    const isLoading = veto === undefined || vote === undefined;
+    // TODO: vote === undefined to prevent FOUC.
+    const isLoading = veto === undefined;
     const isViewerVeto = veto && viewer && viewer.id === veto.creatorId;
 
     return (
@@ -240,7 +240,7 @@ Veto = queryFirebase(Veto, ({ setVeto, params: { vetoId } }) => ({
 Veto = queryFirebase(Veto, ({ onVote, veto, viewer }) => ({
   path: `vetos-votes-yes/${Vote.id(veto, viewer)}`,
   on: {
-    value: snapshot => snapshot.exists() && onVote(snapshot.val())
+    value: snapshot => onVote(snapshot.val())
   }
 }));
 
