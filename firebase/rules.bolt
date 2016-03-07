@@ -3,9 +3,11 @@
 
 // Functions
 
-isAdmin() { root.admins[auth.uid] }
+isAdmin() { root.admins[auth.uid] != null }
 isSignedIn() { auth != null }
 isViewer(uid) { isSignedIn() && auth.uid == uid }
+userExits(uid) { root.users[uid] != null }
+vetoExits(id) { root.vetos[id] != null }
 
 // Types
 
@@ -39,7 +41,7 @@ type FirebaseQueueStateErrorState {
   error: String,
   error_stack: String,
   previous_state: String,
-  original_task: Any,
+  original_task: Any | Null,
   attempts: Number
 }
 
@@ -79,15 +81,14 @@ type Veto {
   validate() { isViewer(this.creatorId) }
 }
 
-type VetoVote {
+type Vote {
   createdAt: Number,
   userId: ShortRequiredString,
   vetoId: ShortRequiredString
   yes: Boolean
 
   validate() {
-    root.users[this.userId] != null &&
-    root.vetos[this.vetoId] != null
+    userExits(this.userId) && vetoExits(this.vetoId)
   }
 }
 
@@ -129,20 +130,20 @@ path /vetos-votes-queue {
     index() { ["_state"] }
     read() { isAdmin() }
 
-    path /{id} is VetoVote | FirebaseQueueState {
+    path /{id} is Vote | FirebaseQueueState {
       write() { isViewer(this.userId) || isAdmin() }
     }
   }
   // TODO: Add specs.
 }
 
-path /vetos-votes-yes/{id} is VetoVote {
+path /vetos-votes-yes/{id} is Vote {
   index() { ["userId", "vetoId"] }
   read() { true }
   write() { isAdmin() }
 }
 
-path /vetos-votes-no/{id} is VetoVote {
+path /vetos-votes-no/{id} is Vote {
   index() { ["userId", "vetoId"] }
   read() { true }
   write() { isAdmin() }

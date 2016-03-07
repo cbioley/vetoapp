@@ -235,6 +235,14 @@ Veto = queryFirebase(Veto, ({ setVeto, params: { vetoId } }) => ({
   }
 }));
 
+// // zjistit,
+// Veto = queryFirebase(Veto, ({ setVeto, params: { vetoId } }) => ({
+//   path: `vetos/${vetoId}`,
+//   on: {
+//     value: snapshot => setVeto(vetoId, snapshot.val())
+//   }
+// }));
+
 export default connect((state, ownProps) => {
   const { users: { viewer }, vetos } = state;
   const { params: { vetoId } } = ownProps;

@@ -2,6 +2,35 @@ import Firebase from 'firebase';
 import Queue from 'firebase-queue';
 import Vote from '../common/vetos/Vote';
 
+const createVetosVotesQueue = firebase => new Queue(
+  firebase.child('vetos-votes-queue'),
+  async (data, progress, resolve, reject) => {
+    try {
+      const vote = new Vote(data);
+      const previousVotePath = vote.yes
+        ? `vetos-votes-yes/${vote.id}`
+        : `vetos-votes-no/${vote.id}`;
+      const previousVote = await firebase.child(previousVotePath).once('value');
+      if (previousVote.exists()) {
+        resolve();
+        return;
+      }
+      const yesTotalPath = `vetos-votes-yes-total/${vote.vetoId}`;
+      const yesTotal = await firebase.child(yesTotalPath).once('value');
+      const yesTotalValue = yesTotal.val() || 0;
+      await firebase.update({
+        // If vetos-votes-yes-total is accidentally deleted, we can stop
+        // queue updating, set correct value, then restart it. Easy.
+        [yesTotalPath]: yesTotalValue + (vote.yes ? 1 : -1),
+        [`vetos-votes-yes/${vote.id}`]: vote.yes ? vote.toJS() : null,
+        [`vetos-votes-no/${vote.id}`]: vote.yes ? null : vote.toJS()
+      });
+      resolve();
+    } catch (e) {
+      reject(e);
+    }
+  });
+
 export default async function createFirebaseQueue(firebaseUrl, firebaseQueuePass) {
   const firebase = new Firebase(firebaseUrl);
   // TODO: Use authWithToken. Remember authWithPassword has a session timeout.
@@ -11,25 +40,7 @@ export default async function createFirebaseQueue(firebaseUrl, firebaseQueuePass
   });
 
   const queues = [
-    new Queue(firebase.child('vetos-votes-queue'),
-      (data, progress, resolve, reject) => {
-        const vote = new Vote(data);
-        const yesTotalPath = `vetos-votes-yes-total/${vote.vetoId}`;
-        firebase
-          .child(yesTotalPath).once('value')
-          .then(snapshot => snapshot.val() || 0)
-          .then(yesTotal => firebase
-            .update({
-              // If vetos-votes-yes-total is accidentally deleted, we can stop
-              // queue updating, set correct value, then restart it. Easy.
-              [yesTotalPath]: vote.yes ? ++yesTotal : --yesTotal,
-              [`vetos-votes-yes/${vote.id}`]: vote.yes ? vote.toJS() : null,
-              [`vetos-votes-no/${vote.id}`]: vote.yes ? null : vote.toJS()
-            })
-          )
-          .then(resolve)
-          .catch(reject);
-      })
+    createVetosVotesQueue(firebase)
   ];
 
   // https://github.com/firebase/firebase-queue#graceful-shutdown
