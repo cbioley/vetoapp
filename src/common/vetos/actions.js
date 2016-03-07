@@ -3,14 +3,15 @@ import Vote from '../../common/vetos/Vote';
 
 export const DELETE_VETO = 'DELETE_VETO';
 export const MORE_LAST_VETOS = 'MORE_LAST_VETOS';
+export const ON_VOTE = 'ON_VOTE';
 export const SAVE_VETO = 'SAVE_VETO';
 export const SET_LAST_VETOS = 'SET_LAST_VETOS';
 export const SET_USER_VETOS = 'SET_USER_VETOS';
 export const SET_VETO = 'SET_VETO';
+export const SET_VOTE = 'SET_VOTE';
 export const SUGGEST_VETO_ERROR = 'SUGGEST_VETO_ERROR';
 export const SUGGEST_VETO_START = 'SUGGEST_VETO_START';
 export const SUGGEST_VETO_SUCCESS = 'SUGGEST_VETO_SUCCESS';
-export const VOTE_VETO = 'VOTE_VETO';
 
 // TODO: Localize name and reason.
 const validateVeto = (validate, veto) => validate(veto)
@@ -34,6 +35,13 @@ export function deleteVeto(veto) {
 export function moreLastVetos() {
   return {
     type: MORE_LAST_VETOS
+  };
+}
+
+export function onVote(vote) {
+  return {
+    type: ON_VOTE,
+    payload: { vote }
   };
 }
 
@@ -70,6 +78,27 @@ export function setVeto(id, json) {
   };
 }
 
+export function setVote(vetoId, yes) {
+  return ({ firebase, getState }) => {
+    const { viewer } = getState().users;
+    const vote = new Vote({
+      createdAt: firebase.constructor.ServerValue.TIMESTAMP,
+      userId: viewer.id,
+      vetoId,
+      yes
+    }).toJS();
+    // Note we don't use promise, because queue is processed on the server, and
+    // we don't want to wait for a response. Instead of that we prefer an
+    // optimistic update, which also works well for offline scenarios.
+    // setVote is also called via queryFirebase.
+    firebase.child('vetos-votes-queue/tasks').push(vote);
+    return {
+      type: SET_VOTE,
+      payload: { vote }
+    };
+  };
+}
+
 export function suggestVeto(fields) {
   return ({ firebase, getState, getUid, validate }) => {
     const { viewer } = getState().users;
@@ -88,26 +117,6 @@ export function suggestVeto(fields) {
     return {
       type: 'SUGGEST_VETO',
       payload: { promise }
-    };
-  };
-}
-
-export function voteVeto(vetoId, yes) {
-  return ({ firebase, getState }) => {
-    const { viewer } = getState().users;
-    const vote = new Vote({
-      createdAt: firebase.constructor.ServerValue.TIMESTAMP,
-      userId: viewer.id,
-      vetoId,
-      yes
-    }).toJS();
-    // Note we don't use promise, because queue is processed on the server, and
-    // we don't want to wait for a response. Instead of that we prefer an
-    // optimistic update, which also works well for offline scenarios.
-    firebase.child('vetos-votes-queue/tasks').push(vote);
-    return {
-      type: VOTE_VETO,
-      payload: { vote }
     };
   };
 }

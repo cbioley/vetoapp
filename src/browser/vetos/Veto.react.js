@@ -21,10 +21,10 @@ class Veto extends Component {
     fields: PropTypes.object.isRequired,
     replace: PropTypes.func.isRequired,
     saveVeto: PropTypes.func.isRequired,
+    setVote: PropTypes.func.isRequired,
     veto: PropTypes.object,
     viewer: PropTypes.object,
-    vote: PropTypes.object,
-    voteVeto: PropTypes.func.isRequired
+    vote: PropTypes.object
   };
 
   constructor(props) {
@@ -83,13 +83,13 @@ class Veto extends Component {
   }
 
   onVetoCancelClick() {
-    const { veto, voteVeto } = this.props;
-    voteVeto(veto.id, false);
+    const { veto, setVote } = this.props;
+    setVote(veto.id, false);
   }
 
   onVetoClick() {
-    const { veto, voteVeto } = this.props;
-    voteVeto(veto.id, true);
+    const { veto, setVote } = this.props;
+    setVote(veto.id, true);
   }
 
   isDirty() {
@@ -102,13 +102,15 @@ class Veto extends Component {
 
   render() {
     const { fields, veto, viewer, vote } = this.props;
+    // undefined is absence of evidence, null is evidence of absence ;)
+    const isLoading = veto === undefined || vote === undefined;
     const isViewerVeto = veto && viewer && viewer.id === veto.creatorId;
 
     return (
       <div className="veto-detail">
         <div className="row">
           <div className="col-md-10">
-            {veto === undefined ?
+            {isLoading ?
               <Loading />
             : !veto ?
               <p>This veto doesn't exists.</p>
@@ -235,23 +237,16 @@ Veto = queryFirebase(Veto, ({ setVeto, params: { vetoId } }) => ({
   }
 }));
 
-// // zjistit,
-// Veto = queryFirebase(Veto, ({ setVeto, params: { vetoId } }) => ({
-//   path: `vetos/${vetoId}`,
-//   on: {
-//     value: snapshot => setVeto(vetoId, snapshot.val())
-//   }
-// }));
+Veto = queryFirebase(Veto, ({ onVote, veto, viewer }) => ({
+  path: `vetos-votes-yes/${Vote.id(veto, viewer)}`,
+  on: {
+    value: snapshot => snapshot.exists() && onVote(snapshot.val())
+  }
+}));
 
-export default connect((state, ownProps) => {
-  const { users: { viewer }, vetos } = state;
-  const { params: { vetoId } } = ownProps;
+export default connect(({ users, vetos }, { params: { vetoId } }) => {
   const veto = vetos.map.get(vetoId);
-  return {
-    veto,
-    viewer,
-    vote: veto && viewer
-      ? vetos.votes.get(new Vote({ vetoId: veto.id, userId: viewer.id }).id)
-      : null
-  };
+  const viewer = users.viewer;
+  const vote = vetos.votes.get(Vote.id(veto, viewer));
+  return { veto, viewer, vote };
 }, { ...vetosActions, replace })(Veto);

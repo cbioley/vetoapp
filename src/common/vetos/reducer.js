@@ -53,6 +53,12 @@ export default function vetosReducer(state = initialState, action) {
       return state.setIn(['map', id], veto);
     }
 
+    case actions.ON_VOTE:
+    case actions.SET_VOTE: {
+      const vote = new Vote(action.payload.vote);
+      return state.setIn(['votes', vote.id], vote);
+    }
+
     case actions.SUGGEST_VETO_START:
       return state.set('suggestVetoFormDisabled', true);
 
@@ -68,10 +74,6 @@ export default function vetosReducer(state = initialState, action) {
         suggestVetoFormError: null
       });
 
-    case actions.VOTE_VETO: {
-      const vote = new Vote(action.payload.vote);
-      return state.setIn(['votes', vote.id], vote);
-    }
   }
 
   return state;
