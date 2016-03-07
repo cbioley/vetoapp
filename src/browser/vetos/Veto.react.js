@@ -102,8 +102,9 @@ class Veto extends Component {
 
   render() {
     const { fields, veto, viewer, vote } = this.props;
-    // TODO: vote === undefined to prevent FOUC.
-    const isLoading = veto === undefined;
+    // undefined is absence of evidence, null is evidence of absence ;)
+    // isLoading prevents flash of unloaded content.
+    const isLoading = veto === undefined && vote === undefined;
     const isViewerVeto = veto && viewer && viewer.id === veto.creatorId;
 
     return (
