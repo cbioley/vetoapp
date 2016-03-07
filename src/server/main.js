@@ -15,4 +15,8 @@ app.listen(port, () => {
   console.log('Server started at port %d', port);
 });
 
-createFirebaseQueue(config.firebaseUrl, config.firebaseQueuePass);
+createFirebaseQueue(
+  config.firebaseQueueEmail,
+  config.firebaseQueuePassword,
+  config.firebaseUrl
+);

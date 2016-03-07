@@ -31,13 +31,10 @@ const createVetosVotesQueue = firebase => new Queue(
     }
   });
 
-export default async function createFirebaseQueue(firebaseUrl, firebaseQueuePass) {
-  const firebase = new Firebase(firebaseUrl);
+export default async function createFirebaseQueue(email, password, url) {
+  const firebase = new Firebase(url);
   // TODO: Use authWithToken. Remember authWithPassword has a session timeout.
-  await firebase.authWithPassword({
-    email: 'firebasequeue@vetoapp.com',
-    password: firebaseQueuePass
-  });
+  await firebase.authWithPassword({ email, password });
 
   const queues = [
     createVetosVotesQueue(firebase)

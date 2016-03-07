@@ -13,7 +13,8 @@ nconf.file('src/common/secrets.json');
 // Remember, never put secrets in this file. To override default values for
 // production, use environment variables.
 nconf.defaults({
-  firebaseQueuePass: 'XXXXXXX',
+  firebaseQueueEmail: 'XXXXXXX',
+  firebaseQueuePassword: 'XXXXXXX',
   firebaseUrl: 'https://vetoap.firebaseio.com',
   googleAnalyticsId: 'UA-XXXXXXX-X',
   isProduction,
