@@ -5,7 +5,8 @@ import Linkify from 'react-linkify';
 import Loading from '../lib/Loading.react';
 import React, { PropTypes } from 'react';
 import Textarea from 'react-textarea-autosize';
-import Vote from '../../common/vetos/Vote';
+import Vote from './Vote.react';
+import VoteRecord from '../../common/vetos/Vote';
 import focusInvalidField from '../lib/focusInvalidField';
 import { Link } from 'react-router';
 import { connect } from 'react-redux';
@@ -13,7 +14,7 @@ import { fields } from '../../common/lib/redux-fields';
 import { queryFirebase } from '../../common/lib/redux-firebase';
 import { replace } from 'react-router-redux';
 
-// TODO: Refactor to view, edit, vote etc components.
+// TODO: Refactor to view and edit components.
 class Veto extends Component {
 
   static propTypes = {
@@ -34,8 +35,6 @@ class Veto extends Component {
     this.onEditClick = this.onEditClick.bind(this);
     this.onFormSubmit = this.onFormSubmit.bind(this);
     this.onSaveClick = this.onSaveClick.bind(this);
-    this.onVetoCancelClick = this.onVetoCancelClick.bind(this);
-    this.onVetoClick = this.onVetoClick.bind(this);
   }
 
   onCancelClick() {
@@ -82,16 +81,6 @@ class Veto extends Component {
     fields.$reset();
   }
 
-  onVetoCancelClick() {
-    const { veto, setVote } = this.props;
-    setVote(veto.id, false);
-  }
-
-  onVetoClick() {
-    const { veto, setVote } = this.props;
-    setVote(veto.id, true);
-  }
-
   isDirty() {
     const { fields, veto } = this.props;
     return !(
@@ -101,10 +90,9 @@ class Veto extends Component {
   }
 
   render() {
-    const { fields, veto, viewer, vote } = this.props;
+    const { fields, setVote, veto, viewer, vote } = this.props;
     // undefined is absence of evidence, null is evidence of absence ;)
-    // isLoading prevents flash of unloaded content.
-    const isLoading = veto === undefined && vote === undefined;
+    const isLoading = veto === undefined || vote === undefined;
     const isViewerVeto = veto && viewer && viewer.id === veto.creatorId;
 
     return (
@@ -140,33 +128,13 @@ class Veto extends Component {
                         className="btn btn-secondary btn-sm"
                         onClick={this.onEditClick}
                       >Edit</button>
-                    : vote && vote.yes ?
-                      <div>
-                        <div className="alert alert-success" role="alert">
-                          <strong>Děkujeme!</strong> Hlasoval jste pro veto
-                          zákona.
-                        </div>
-                        <p>
-                          Pokud se nás zde sejde 50 tisíc, můžeme se bavit o tom,
-                          zda-li je zákon ještě <a
-                            target="_blank"
-                            href="https://cs.wikipedia.org/wiki/Legitimita#Legitimita_ve_filosofii"
-                          >legitimní</a>.
-                        </p>
-                        <button
-                          className="btn btn-secondary btn-sm"
-                          onClick={this.onVetoCancelClick}
-                        >Rozmyslel jsem si to.</button>
-                      </div>
-                    : <div>
-                        <div className="alert alert-info" role="alert">
-                          Pokud si myslíte, že zákon je zbytečný, vetujte ho.
-                        </div>
-                        <button
-                          className="btn btn-primary"
-                          onClick={this.onVetoClick}
-                        >Vetovat zákon</button>
-                      </div>
+                    :
+                      <Vote
+                        setVote={setVote}
+                        user={viewer}
+                        veto={veto}
+                        vote={vote}
+                      />
                     }
                   </div>
                 :
@@ -238,16 +206,17 @@ Veto = queryFirebase(Veto, ({ setVeto, params: { vetoId } }) => ({
   }
 }));
 
-Veto = queryFirebase(Veto, ({ onVote, veto, viewer }) => ({
-  path: `vetos-votes-yes/${Vote.id(veto, viewer)}`,
+Veto = queryFirebase(Veto, ({ onVote, viewer, veto }) => ({
+  path: viewer && veto && `vetos-votes-yes/${VoteRecord.id(viewer, veto)}`,
   on: {
-    value: snapshot => onVote(snapshot.val())
+    value: snapshot => onVote(snapshot.key(), snapshot.val())
   }
 }));
 
-export default connect(({ users, vetos }, { params: { vetoId } }) => {
-  const veto = vetos.map.get(vetoId);
-  const viewer = users.viewer;
-  const vote = vetos.votes.get(Vote.id(veto, viewer));
+export default connect((state, { params: { vetoId } }) => {
+  const veto = state.vetos.map.get(vetoId);
+  const viewer = state.users.viewer;
+  const vote = veto && viewer &&
+    state.vetos.votes.get(VoteRecord.id(viewer, veto));
   return { veto, viewer, vote };
 }, { ...vetosActions, replace })(Veto);

@@ -9,9 +9,8 @@ const VoteRecord = Record({
 
 export default class Vote extends VoteRecord {
 
-  static id(veto, user) {
-    if (!veto || !user) return null;
-    return new Vote({ vetoId: veto.id, userId: user.id }).id;
+  static id(user, veto) {
+    return new Vote({ userId: user.id, vetoId: veto.id }).id;
   }
 
   // Note compound key.

@@ -38,10 +38,10 @@ export function moreLastVetos() {
   };
 }
 
-export function onVote(vote) {
+export function onVote(voteId, vote) {
   return {
     type: ON_VOTE,
-    payload: { vote }
+    payload: { voteId, vote }
   };
 }
 

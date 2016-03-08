@@ -31,6 +31,15 @@ export default function vetosReducer(state = initialState, action) {
         lastVetosLimitToLast + lastVetosPageSize);
     }
 
+    case actions.ON_VOTE: {
+      const { voteId, vote } = action.payload;
+      // undefined is absence of evidence, null is evidence of absence :-)
+      // Because app state servers as data cache, we distinguish null and
+      // undefined in UI to show Loading component.
+      const value = vote ? new Vote(vote) : null;
+      return state.setIn(['votes', voteId], value);
+    }
+
     case actions.SET_LAST_VETOS: {
       const { vetos } = action.payload;
       const list = vetosToSortedByCreatedAtList(vetos);
@@ -53,7 +62,6 @@ export default function vetosReducer(state = initialState, action) {
       return state.setIn(['map', id], veto);
     }
 
-    case actions.ON_VOTE:
     case actions.SET_VOTE: {
       const vote = new Vote(action.payload.vote);
       return state.setIn(['votes', vote.id], vote);
