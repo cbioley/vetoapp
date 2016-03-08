@@ -92,9 +92,7 @@ gulp.task('to-html', done => {
 
   const urls = {
     '/': 'index.html',
-    '/about': 'about.html',
-    '/login': 'login.html',
-    '/this-is-not-the-web-page-you-are-looking-for': '404.html'
+    '/foo-bla-bar': '404.html'
   };
 
   const fetch = url => new Promise((resolve, reject) => {
