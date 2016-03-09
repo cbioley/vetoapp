@@ -12,7 +12,8 @@ const InitialState = Record({
   suggestVetoFormDisabled: false,
   suggestVetoFormError: null,
   usersVetos: Map(),
-  votes: Map()
+  votes: Map(),
+  votesYesTotal: Map()
 });
 const initialState = new InitialState;
 
@@ -38,6 +39,11 @@ export default function vetosReducer(state = initialState, action) {
       // undefined in UI to show Loading component.
       const value = vote ? new Vote(vote) : null;
       return state.setIn(['votes', voteId], value);
+    }
+
+    case actions.ON_VOTE_YES_TOTAL: {
+      const { vetoId, total } = action.payload;
+      return state.setIn(['votesYesTotal', vetoId], total);
     }
 
     case actions.SET_LAST_VETOS: {

@@ -1,9 +1,11 @@
 import Veto from '../../common/vetos/Veto';
 import Vote from '../../common/vetos/Vote';
 
+// TODO: Refactor votes to separate app feature (actions and reducer).
 export const DELETE_VETO = 'DELETE_VETO';
 export const MORE_LAST_VETOS = 'MORE_LAST_VETOS';
 export const ON_VOTE = 'ON_VOTE';
+export const ON_VOTE_YES_TOTAL = 'ON_VOTE_YES_TOTAL';
 export const SAVE_VETO = 'SAVE_VETO';
 export const SET_LAST_VETOS = 'SET_LAST_VETOS';
 export const SET_USER_VETOS = 'SET_USER_VETOS';
@@ -42,6 +44,13 @@ export function onVote(voteId, vote) {
   return {
     type: ON_VOTE,
     payload: { voteId, vote }
+  };
+}
+
+export function onVoteYesTotal(vetoId, total) {
+  return {
+    type: ON_VOTE_YES_TOTAL,
+    payload: { vetoId, total }
   };
 }
 

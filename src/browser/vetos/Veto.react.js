@@ -1,3 +1,4 @@
+import './Veto.scss';
 import * as vetosActions from '../../common/vetos/actions';
 import Component from 'react-pure-render/component';
 import Helmet from 'react-helmet';
@@ -25,7 +26,8 @@ class Veto extends Component {
     setVote: PropTypes.func.isRequired,
     veto: PropTypes.object,
     viewer: PropTypes.object,
-    vote: PropTypes.object
+    vote: PropTypes.object,
+    votesYesTotal: PropTypes.number
   };
 
   constructor(props) {
@@ -90,13 +92,16 @@ class Veto extends Component {
   }
 
   render() {
-    const { fields, setVote, veto, viewer, vote } = this.props;
+    const { fields, setVote, veto, viewer, vote, votesYesTotal } = this.props;
     // undefined is absence of evidence, null is evidence of absence ;)
-    const isLoading = veto === undefined || vote === undefined;
+    const isLoading =
+      veto === undefined ||
+      vote === undefined ||
+      votesYesTotal === undefined;
     const isViewerVeto = veto && viewer && viewer.id === veto.creatorId;
 
     return (
-      <div className="veto-detail">
+      <div className="veto-page">
         <div className="row">
           <div className="col-md-10">
             {isLoading ?
@@ -108,7 +113,14 @@ class Veto extends Component {
                 <Helmet title={veto.name} />
                 {!fields.isEdited.value ?
                   <div className="view">
-                    <h2>{veto.name}</h2>
+                    <h2>
+                      {veto.name}{' '}
+                      {!!votesYesTotal &&
+                        <sup className="label label-info">
+                          vetoed by {votesYesTotal} citizens
+                        </sup>
+                      }
+                    </h2>
                     <p>
                       <Linkify properties={{ target: '_blank' } }>
                         {veto.reason}
@@ -134,6 +146,7 @@ class Veto extends Component {
                         user={viewer}
                         veto={veto}
                         vote={vote}
+                        votesYesTotal={votesYesTotal}
                       />
                     }
                   </div>
@@ -213,10 +226,18 @@ Veto = queryFirebase(Veto, ({ onVote, viewer, veto }) => ({
   }
 }));
 
+Veto = queryFirebase(Veto, ({ onVoteYesTotal, params: { vetoId } }) => ({
+  path: `vetos-votes-yes-total/${vetoId}`,
+  on: {
+    value: snapshot => onVoteYesTotal(vetoId, snapshot.val())
+  }
+}));
+
 export default connect((state, { params: { vetoId } }) => {
   const veto = state.vetos.map.get(vetoId);
   const viewer = state.users.viewer;
   const vote = veto && viewer &&
     state.vetos.votes.get(VoteRecord.id(viewer, veto));
-  return { veto, viewer, vote };
+  const votesYesTotal = state.vetos.votesYesTotal.get(vetoId);
+  return { veto, viewer, vote, votesYesTotal };
 }, { ...vetosActions, replace })(Veto);

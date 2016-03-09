@@ -1,5 +1,8 @@
 import Component from 'react-pure-render/component';
 import React, { PropTypes } from 'react';
+import { FormattedNumber } from 'react-intl';
+
+const ignoreLawThreshold = 50000;
 
 export default class Vote extends Component {
 
@@ -7,7 +10,8 @@ export default class Vote extends Component {
     setVote: PropTypes.func.isRequired,
     user: PropTypes.object.isRequired,
     veto: PropTypes.object.isRequired,
-    vote: PropTypes.object
+    vote: PropTypes.object,
+    votesYesTotal: PropTypes.number.isRequired,
   };
 
   constructor(props) {
@@ -27,7 +31,8 @@ export default class Vote extends Component {
   }
 
   render() {
-    const { vote } = this.props;
+    const { vote, votesYesTotal } = this.props;
+    const remainingVotes = ignoreLawThreshold - votesYesTotal;
 
     return (
       vote && vote.yes ?
@@ -37,8 +42,9 @@ export default class Vote extends Component {
             zákona.
           </div>
           <p>
-            Pokud se nás zde sejde 50 tisíc, můžeme se bavit o tom,
-            zda-li je zákon ještě <a
+            Pokud se nás zde sejde ještě{' '}
+            <FormattedNumber value={remainingVotes} />, můžeme se bavit o tom,
+            zda-li je zákon <a
               target="_blank"
               href="https://cs.wikipedia.org/wiki/Legitimita#Legitimita_ve_filosofii"
             >legitimní</a>.
