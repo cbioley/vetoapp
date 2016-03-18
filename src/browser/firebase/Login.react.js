@@ -1,10 +1,46 @@
 import './Login.scss';
 import Component from 'react-pure-render/component';
 import React, { PropTypes } from 'react';
+import { FormattedMessage, defineMessages } from 'react-intl';
 import { connect } from 'react-redux';
 import { fields } from '../../common/lib/redux-fields';
 import { firebaseActions } from '../../common/lib/redux-firebase';
 import { replace } from 'react-router-redux';
+
+const messages = defineMessages({
+  facebookLogin: {
+    defaultMessage: 'Login via Facebook',
+    id: 'firebase.login.facebookLogin'
+  },
+  emailLoginSignup: {
+    defaultMessage: 'Email Login / Sign Up',
+    id: 'firebase.login.emailLoginSignup'
+  },
+  forgotPassword: {
+    defaultMessage: 'Reset Password',
+    id: 'firebase.login.forgotPassword'
+  },
+  login: {
+    defaultMessage: 'Login',
+    id: 'firebase.login.login'
+  },
+  signUp: {
+    defaultMessage: 'Sign Up',
+    id: 'firebase.login.signUp'
+  },
+  resetPassword: {
+    defaultMessage: 'Reset Password',
+    id: 'firebase.login.resetPassword'
+  },
+  dismiss: {
+    defaultMessage: 'Dismiss',
+    id: 'firebase.login.dismiss'
+  },
+  recoveryEmailHasBeenSent: {
+    defaultMessage: 'Password reset email sent successfully!',
+    id: 'firebase.login.recoveryEmailHasBeenSent'
+  },
+});
 
 class Login extends Component {
 
@@ -13,7 +49,6 @@ class Login extends Component {
     fields: PropTypes.object.isRequired,
     location: PropTypes.object.isRequired,
     login: PropTypes.func.isRequired,
-    msg: PropTypes.object.isRequired,
     replace: PropTypes.func.isRequired,
     resetPassword: PropTypes.func.isRequired,
     signUp: PropTypes.func.isRequired
@@ -48,8 +83,7 @@ class Login extends Component {
     replace(nextPathname);
   }
 
-  onSocialLoginClick(e) {
-    const { provider } = e.target.dataset;
+  onSocialLoginClick(provider) {
     const { fields, login } = this.props;
     this.redirectOnSuccess(login(provider, fields.$values()));
   }
@@ -77,7 +111,7 @@ class Login extends Component {
   }
 
   render() {
-    const { auth, fields, msg } = this.props;
+    const { auth, fields } = this.props;
     const { forgetPasswordIsShown, recoveryEmailSent } = this.state;
 
     return (
@@ -87,23 +121,24 @@ class Login extends Component {
             <div className="social-auth-providers">
               <button
                 className="btn btn-primary"
-                data-provider="facebook"
                 disabled={auth.formDisabled}
-                onClick={this.onSocialLoginClick}
-              >{msg.facebookLogin}</button>
+                onClick={() => this.onSocialLoginClick('facebook')} // eslint-disable-line react/jsx-no-bind
+              ><FormattedMessage {...messages.facebookLogin} /></button>
             </div>
             {/* https://github.com/steida/vetoapp/issues/8 */}
             <form onSubmit={this.onFormSubmit}>
               <fieldset className="form-group" disabled={auth.formDisabled}>
-                {!this.state.forgetPasswordIsShown ?
-                  <legend>{msg.emailLoginSignup}</legend>
-                :
-                  <legend>{msg.forgotPassword}</legend>
-                }
+                <legend>
+                  {!this.state.forgetPasswordIsShown ?
+                    <FormattedMessage {...messages.emailLoginSignup} />
+                  :
+                    <FormattedMessage {...messages.forgotPassword} />
+                  }
+                </legend>
                 <input
                   className="form-control"
                   maxLength="100"
-                  placeholder="your@email.com"
+                  placeholder="your@email.com" // TODO: Localize via intl props
                   {...fields.email}
                 />
                 {!forgetPasswordIsShown &&
@@ -111,7 +146,7 @@ class Login extends Component {
                     className="form-control"
                     disabled={forgetPasswordIsShown}
                     maxLength="1000"
-                    placeholder="password"
+                    placeholder="password" // TODO: Localize via intl props
                     type="password"
                     {...fields.password}
                   />
@@ -120,17 +155,17 @@ class Login extends Component {
                   <div className="buttons">
                     <button
                       className="btn btn-primary btn-sm"
-                    >{msg.login}</button>{' '}
+                    ><FormattedMessage {...messages.login} /></button>{' '}
                     <button
                       className="btn btn-success btn-sm"
                       onClick={this.onSignUpClick}
                       type="button"
-                    >{msg.signUp}</button>{' '}
+                    ><FormattedMessage {...messages.signUp} /></button>{' '}
                     <button
                       className="btn btn-warning btn-sm"
                       onClick={this.toggleForgetPassword}
                       type="button"
-                    >{msg.forgotPassword}</button>
+                    ><FormattedMessage {...messages.forgotPassword} /></button>
                   </div>
                 :
                   <div className="buttons">
@@ -138,12 +173,12 @@ class Login extends Component {
                       className="btn btn-danger btn-sm"
                       onClick={this.onResetPasswordClick}
                       type="button"
-                    >{msg.resetPassword}</button>{' '}
+                    ><FormattedMessage {...messages.forgotPassword} /></button>{' '}
                     <button
                       className="btn btn-secondary btn-sm"
                       onClick={this.toggleForgetPassword}
                       type="button"
-                    >{msg.dismiss}</button>
+                    ><FormattedMessage {...messages.dismiss} /></button>
                   </div>
                 }
               </fieldset>
@@ -156,7 +191,7 @@ class Login extends Component {
             }
             {recoveryEmailSent &&
               <div className="alert alert-success" role="alert">
-                {msg.recoveryEmailHasBeenSent}
+                <FormattedMessage {...messages.recoveryEmailHasBeenSent} />
               </div>
             }
           </div>
@@ -173,6 +208,5 @@ Login = fields(Login, {
 });
 
 export default connect(state => ({
-  auth: state.auth,
-  msg: state.intl.msg.auth
+  auth: state.auth
 }), { ...firebaseActions, replace })(Login);

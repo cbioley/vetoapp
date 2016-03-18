@@ -3,31 +3,18 @@ import Component from 'react-pure-render/component';
 import Footer from './Footer.react';
 import Header from './Header.react';
 import Helmet from 'react-helmet';
-import NotFound from '../notfound/Page.react';
 import React, { PropTypes } from 'react';
-import { connect } from 'react-redux';
-import { onAppComponentDidMount } from '../../common/app/actions';
+import start from '../../common/app/start';
 
 class App extends Component {
 
   static propTypes = {
     children: PropTypes.object.isRequired,
-    dispatch: PropTypes.func.isRequired,
     location: PropTypes.object.isRequired
   };
 
-  // Note pattern how actions related to app start are dispatched.
-  // componentDidMount is not called in ReactDOMServer.renderToString, so it's
-  // the right place to dispatch client only (e.g. Firebase) actions.
-  // Firebase can be used on the server as well, but it's over of this example.
-  componentDidMount() {
-    const { dispatch } = this.props;
-    dispatch(onAppComponentDidMount());
-  }
-
   render() {
     const { children, location } = this.props;
-    const notFound = children.type === NotFound;
 
     return (
       <div className="container">
@@ -43,14 +30,13 @@ class App extends Component {
             { href: require('./favicon.ico'), rel: 'shortcut icon' }
           ]}
           meta={[{
-            name: 'description',
-            content: 'Dev stack and starter kit for functional and universal React web apps'
+            content: 'Jury nullification as a service',
+            name: 'description'
           }]}
-          // TODO: Add Vetoapp if nothing is defined somehow for async loading.
-          titleTemplate="%s"
+          titleTemplate="%s - Vetoapp"
         />
         {/* Pass location to ensure header active links are updated. */}
-        <Header location={location} notFound={notFound} />
+        <Header location={location} />
         {children}
         <Footer />
       </div>
@@ -59,5 +45,4 @@ class App extends Component {
 
 }
 
-// Just inject dispatch.
-export default connect()(App);
+export default start(App);

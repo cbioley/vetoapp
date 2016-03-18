@@ -9,7 +9,7 @@ import intl from '../intl/reducer';
 import users from '../users/reducer';
 import vetos from '../vetos/reducer';
 
-const appReducer = combineReducers({
+export default combineReducers({
   auth,
   config,
   device,
@@ -19,5 +19,3 @@ const appReducer = combineReducers({
   users,
   vetos
 });
-
-export default appReducer;

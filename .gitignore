@@ -1,5 +1,8 @@
 # Este
 *.sublime-workspace
+src/common/secrets.json
+src/native/config.js
+src/native/messages.js
 
 # OSX
 .DS_Store
@@ -35,5 +38,3 @@ webpack-assets.json
 
 # firebase
 firebase/rules.json
-
-src/common/secrets.json

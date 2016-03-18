@@ -3,29 +3,34 @@ import AuthLogout from '../auth/Logout.react';
 import Component from 'react-pure-render/component';
 import Helmet from 'react-helmet';
 import React, { PropTypes } from 'react';
-import { FormattedMessage } from 'react-intl';
+import linksMessages from '../../common/app/linksMessages';
+import { FormattedMessage, defineMessages, injectIntl, intlShape } from 'react-intl';
 import { connect } from 'react-redux';
+
+const messages = defineMessages({
+  h2: {
+    defaultMessage: '{displayName}',
+    id: 'me.page.h2'
+  }
+});
 
 class Page extends Component {
 
   static propTypes = {
-    msg: PropTypes.object,
+    intl: intlShape.isRequired,
     viewer: PropTypes.object
   };
 
   render() {
-    const { msg, viewer } = this.props;
+    const { intl, viewer } = this.props;
+    const title = intl.formatMessage(linksMessages.me);
     const displayName = viewer.displayName || viewer.email;
 
     return (
       <div className="me-page">
-        <Helmet title={msg.title} />
+        <Helmet title={title} />
         <h2>
-          <FormattedMessage
-            defaultMessage={msg.h2}
-            id={'msg.me.h2'}
-            values={{ displayName }}
-          />
+          <FormattedMessage {...messages.h2} values={{ displayName }} />
         </h2>
         {viewer.profileImageURL &&
           <img
@@ -40,7 +45,8 @@ class Page extends Component {
 
 }
 
+Page = injectIntl(Page);
+
 export default connect(state => ({
-  msg: state.intl.msg.me,
   viewer: state.users.viewer
 }))(Page);

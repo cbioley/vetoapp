@@ -6,9 +6,10 @@ import Linkify from 'react-linkify';
 import Loading from '../lib/Loading.react';
 import React, { PropTypes } from 'react';
 import Textarea from 'react-textarea-autosize';
+import ValidationError from '../../common/app/ValidationError.react';
 import Vote from './Vote.react';
 import VoteRecord from '../../common/vetos/Vote';
-import focusInvalidField from '../lib/focusInvalidField';
+import focusInvalidField from '../../common/lib/validation/focusInvalidField';
 import { Link } from 'react-router';
 import { connect } from 'react-redux';
 import { fields } from '../../common/lib/redux-fields';
@@ -190,9 +191,7 @@ class Veto extends Component {
                     </form>
                     <br />
                     {fields.error.value &&
-                      <div className="alert alert-danger" role="alert">
-                        {fields.error.value.message}
-                      </div>
+                      <ValidationError error={fields.error.value} />
                     }
                   </div>
                 }

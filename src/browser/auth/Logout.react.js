@@ -2,12 +2,19 @@ import * as authActions from '../../common/auth/actions';
 import Component from 'react-pure-render/component';
 import React, { PropTypes } from 'react';
 import { connect } from 'react-redux';
+import { FormattedMessage, defineMessages } from 'react-intl';
+
+const messages = defineMessages({
+  logout: {
+    defaultMessage: 'Logout',
+    id: 'auth.logout.logout'
+  }
+});
 
 class Logout extends Component {
 
   static propTypes = {
-    logout: PropTypes.func.isRequired,
-    msg: PropTypes.object.isRequired
+    logout: PropTypes.func.isRequired
   };
 
   static contextTypes = {
@@ -27,20 +34,16 @@ class Logout extends Component {
   }
 
   render() {
-    const { msg } = this.props;
-
     return (
       <div className="logout">
         <button
           className="btn btn-danger-outline btn-sm"
           onClick={this.logout}
-        >{msg.logout}</button>
+        ><FormattedMessage {...messages.logout} /></button>
       </div>
     );
   }
 
 }
 
-export default connect(state => ({
-  msg: state.intl.msg.auth
-}), authActions)(Logout);
+export default connect(null, authActions)(Logout);
