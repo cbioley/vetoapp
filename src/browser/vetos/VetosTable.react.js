@@ -2,8 +2,15 @@ import './VetosTable.scss';
 import Component from 'react-pure-render/component';
 import Loading from '../lib/Loading.react';
 import React, { PropTypes } from 'react';
-import { FormattedRelative } from 'react-intl';
+import { FormattedMessage, FormattedRelative, defineMessages } from 'react-intl';
 import { Link } from 'react-router';
+
+const messages = defineMessages({
+  empty: {
+    defaultMessage: 'Empty',
+    id: 'vetos.table.empty'
+  }
+});
 
 export default class VetosTable extends Component {
 
@@ -20,7 +27,9 @@ export default class VetosTable extends Component {
         {!vetos ?
           <Loading />
         : !vetos.size ?
-          <p>Zatím si žádné veto nenavrhnul.</p>
+          <p>
+            <FormattedMessage {...messages.empty} />
+          </p>
         :
           <table className="table">
             <tbody>

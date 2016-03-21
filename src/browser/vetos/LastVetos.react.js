@@ -3,8 +3,16 @@ import * as vetosActions from '../../common/vetos/actions';
 import Component from 'react-pure-render/component';
 import React, { PropTypes } from 'react';
 import VetosTable from './VetosTable.react';
+import { FormattedMessage, defineMessages } from 'react-intl';
 import { connect } from 'react-redux';
 import { queryFirebase } from '../../common/lib/redux-firebase';
+
+const messages = defineMessages({
+  lastVetos: {
+    defaultMessage: 'Last vetos',
+    id: 'vetos.page.lastVetos'
+  }
+});
 
 class LastVetos extends Component {
 
@@ -19,7 +27,9 @@ class LastVetos extends Component {
 
     return (
       <div className="last-vetos">
-        <h2>Poslední navržená veta</h2>
+        <h2>
+          <FormattedMessage {...messages.lastVetos} />
+        </h2>
         <VetosTable vetos={lastVetos} />
         {lastVetos &&
           <button

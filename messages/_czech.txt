@@ -1,0 +1,18 @@
+<strong>Děkujeme!</strong> Hlasoval jste pro veto
+            zákona.
+
+Pokud se nás zde sejde ještě{' '}
+  <FormattedNumber value={remainingVotes} />, můžeme se bavit o tom,
+  zda-li je zákon <a
+    target="_blank"
+    href="https://cs.wikipedia.org/wiki/Legitimita#Legitimita_ve_filosofii"
+  >legitimní</a>.
+
+<button
+  className="btn btn-secondary btn-sm"
+  onClick={this.onVetoCancelClick}
+>Rozmyslel jsem si to.</button>
+
+Pokud si myslíte, že zákon je zbytečný, vetujte ho.
+
+Vetovat zákon

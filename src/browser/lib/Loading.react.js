@@ -13,6 +13,7 @@
 import './Loading.scss';
 import Component from 'react-pure-render/component';
 import React, { PropTypes } from 'react';
+import Helmet from 'react-helmet';
 
 export default class Loading extends Component {
 
@@ -51,6 +52,7 @@ export default class Loading extends Component {
   render() {
     return (
       <div className="este-loading">
+        <Helmet title={this.state.currentText} />
         {this.state.currentText}
       </div>
     );

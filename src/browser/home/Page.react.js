@@ -1,19 +1,11 @@
 import Component from 'react-pure-render/component';
 import Helmet from 'react-helmet';
 import React, { PropTypes } from 'react';
-import { FormattedHTMLMessage, defineMessages, injectIntl, intlShape } from 'react-intl';
+import { FormattedHTMLMessage, defineMessages } from 'react-intl';
 import { Link } from 'react-router';
 import { connect } from 'react-redux';
 
 export const messages = defineMessages({
-  title: {
-    defaultMessage: 'Home',
-    id: 'home.title'
-  },
-  titleLoggedIn: {
-    defaultMessage: 'Overview',
-    id: 'home.titleLoggedIn'
-  },
   intro: {
     defaultMessage: `
       <p>Zákonů je tak strašný množství, že se v nich nevyznají už ani
@@ -35,18 +27,15 @@ export const messages = defineMessages({
 class Page extends Component {
 
   static propTypes = {
-    intl: intlShape.isRequired,
     viewer: PropTypes.object
   };
 
   render() {
-    const { intl, viewer } = this.props;
-    const titleMessage = viewer ? messages.titleLoggedIn : messages.title;
-    const title = intl.formatMessage(titleMessage);
+    const { viewer } = this.props;
 
     return (
       <div className="home-page">
-        <Helmet title={title} />
+        <Helmet title="Vetoapp" />
         <div className="row">
           <div className="col-md-8">
             {!viewer ?
@@ -68,8 +57,6 @@ class Page extends Component {
   }
 
 }
-
-Page = injectIntl(Page);
 
 export default connect(state => ({
   viewer: state.users.viewer

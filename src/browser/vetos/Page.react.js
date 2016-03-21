@@ -3,24 +3,40 @@ import Helmet from 'react-helmet';
 import LastVetos from './LastVetos.react';
 import React, { PropTypes } from 'react';
 import UserVetos from './UserVetos.react';
+import linksMessages from '../../common/app/linksMessages';
+import { FormattedMessage, defineMessages, injectIntl, intlShape } from 'react-intl';
 import { connect } from 'react-redux';
+
+const messages = defineMessages({
+  yourVetos: {
+    defaultMessage: 'Your vetos',
+    id: 'vetos.page.yourVetos'
+  }
+});
 
 class Page extends Component {
 
   static propTypes = {
+    intl: intlShape.isRequired,
     viewer: PropTypes.object
   }
 
   render() {
-    const { viewer } = this.props;
+    const { intl, viewer } = this.props;
+    const title = intl.formatMessage(linksMessages.vetos);
 
     return (
       <div className="vetos-page">
-        <Helmet title="Veta" />
+        <Helmet title={title} />
         <div className="row">
           <div className="col-md-10">
             {viewer &&
-              <UserVetos h2="Tebou navržená veta" userId={viewer.id} />
+              <div>
+                <h2>
+                  <FormattedMessage {...messages.yourVetos} />
+                </h2>
+                <UserVetos userId={viewer.id} />
+              </div>
             }
             <LastVetos />
           </div>
@@ -30,6 +46,8 @@ class Page extends Component {
   }
 
 }
+
+Page = injectIntl(Page);
 
 export default connect(state => ({
   viewer: state.users.viewer

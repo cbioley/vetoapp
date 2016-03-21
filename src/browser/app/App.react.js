@@ -33,7 +33,7 @@ class App extends Component {
             content: 'Jury nullification as a service',
             name: 'description'
           }]}
-          titleTemplate="%s - Vetoapp"
+          titleTemplate="%s"
         />
         {/* Pass location to ensure header active links are updated. */}
         <Header location={location} />

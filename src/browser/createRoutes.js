@@ -1,12 +1,13 @@
 import About from './about/Page.react';
 import App from './app/App.react';
 import Auth from './auth/Page.react';
+import EditVeto from './vetos/EditVetoPage.react';
 import Home from './home/Page.react';
 import Me from './me/Page.react';
 import NotFound from './notfound/Page.react';
 import React from 'react';
-import SuggestVeto from './vetos/SuggestVeto.react';
-import Veto from './vetos/Veto.react';
+import SuggestVeto from './vetos/SuggestVetoPage.react';
+import Veto from './vetos/VetoPage.react';
 import Vetos from './vetos/Page.react';
 import { IndexRoute, Route } from 'react-router';
 
@@ -26,6 +27,7 @@ export default function createRoutes(getState) {
       <IndexRoute component={Home} />
       <Route component={About} path="about" />
       <Route component={Auth} path="login" />
+      <Route component={EditVeto} path="vetos/:vetoId/edit" />
       <Route component={Me} path="me" onEnter={requireAuth} />
       <Route component={SuggestVeto} path="suggest-veto" />
       <Route component={Vetos} path="vetos" />

@@ -41,7 +41,7 @@ const messages = defineMessages({
   }
 });
 
-class SuggestVeto extends Component {
+class SuggestVetoPage extends Component {
 
   static propTypes = {
     currentLocale: PropTypes.string.isRequired,
@@ -73,10 +73,11 @@ class SuggestVeto extends Component {
 
   render() {
     const { currentLocale, fields, intl, vetos, viewer } = this.props;
+    const title = intl.formatMessage(linksMessages.suggestVeto);
 
     return (
       <div className="suggest-veto">
-        <Helmet title={intl.formatMessage(linksMessages.suggestVeto)} />
+        <Helmet title={title} />
         <div className="row">
           <div className="col-md-10">
             <form onSubmit={this.onFormSubmit}>
@@ -133,8 +134,14 @@ class SuggestVeto extends Component {
                     className="btn btn-primary"
                   ><FormattedMessage {...buttonsMessages.submit} /></button>
                 :
-                  <Link className="btn btn-info btn-lg m-b-1" to="/login">
-                    <FormattedMessage {...buttonsMessages.login} />
+                  <Link
+                    className="btn btn-primary"
+                    to={{
+                      pathname: '/login',
+                      state: { nextPathname: 'suggest-veto' }
+                    }}
+                  >
+                    <FormattedMessage {...buttonsMessages.submit} />
                   </Link>
                 }
               </fieldset>
@@ -148,16 +155,17 @@ class SuggestVeto extends Component {
 
 }
 
-SuggestVeto = fields(SuggestVeto, {
+SuggestVetoPage = fields(SuggestVetoPage, {
   path: 'suggestVeto',
-  fields: ['name', 'reason'/* , 'country' */],
+  fields: ['name', 'reason', 'country'],
+  // TODO: Detect from intl.currentLocale.
   getInitialState: () => ({ country: 'CZ' })
 });
 
-SuggestVeto = injectIntl(SuggestVeto);
+SuggestVetoPage = injectIntl(SuggestVetoPage);
 
 export default connect(state => ({
   currentLocale: state.intl.currentLocale,
   vetos: state.vetos,
   viewer: state.users.viewer
-}), { ...vetosActions, replace })(SuggestVeto);
+}), { ...vetosActions, replace })(SuggestVetoPage);

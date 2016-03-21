@@ -9,17 +9,15 @@ import { queryFirebase } from '../../common/lib/redux-firebase';
 class UserVetos extends Component {
 
   static propTypes = {
-    h2: PropTypes.string.isRequired,
     userId: PropTypes.string.isRequired,
     userVetos: PropTypes.object
   };
 
   render() {
-    const { h2, userVetos } = this.props;
+    const { userVetos } = this.props;
 
     return (
       <div className="user-vetos">
-        <h2>{h2}</h2>
         <VetosTable hideCreator vetos={userVetos} />
       </div>
     );
