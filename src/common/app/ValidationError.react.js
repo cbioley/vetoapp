@@ -11,7 +11,7 @@ const messages = defineMessages({
     defaultMessage: `Text is too short. Use at least {minLength} characters.
       You entered {length}.
     `,
-    id: 'app.validationError.required'
+    id: 'app.validationError.fewWordsAtLeast'
   }
 });
 
