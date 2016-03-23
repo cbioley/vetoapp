@@ -29,6 +29,7 @@ class VetoPage extends Component {
       veto === undefined ||
       vote === undefined ||
       votesYesTotal === undefined;
+    const countryCode = veto && veto.country.toLowerCase();
 
     return (
       <div className="veto-page">
@@ -43,6 +44,10 @@ class VetoPage extends Component {
                 <Helmet title={veto.name} />
                 <h2>
                   {veto.name}{' '}
+                  <span
+                    className={`flag flag-icon flag-icon-${countryCode}`}
+                    title={countryCode}
+                  />{' '}
                   <VotesYesTotal count={votesYesTotal} />
                 </h2>
                 <p>

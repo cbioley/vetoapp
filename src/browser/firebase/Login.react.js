@@ -17,7 +17,7 @@ const messages = defineMessages({
     id: 'firebase.login.emailLoginSignup'
   },
   forgotPassword: {
-    defaultMessage: 'Reset Password',
+    defaultMessage: 'Forgot Password',
     id: 'firebase.login.forgotPassword'
   },
   login: {

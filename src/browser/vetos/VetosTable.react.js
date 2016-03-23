@@ -7,7 +7,7 @@ import { Link } from 'react-router';
 
 const messages = defineMessages({
   empty: {
-    defaultMessage: 'Empty',
+    defaultMessage: 'You did not suggest any veto yet.',
     id: 'vetos.table.empty'
   }
 });

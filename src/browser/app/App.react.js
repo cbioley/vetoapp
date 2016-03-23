@@ -27,7 +27,11 @@ class App extends Component {
               type: 'image/png',
               sizes
             })),
-            { href: require('./favicon.ico'), rel: 'shortcut icon' }
+            { href: require('./favicon.ico'), rel: 'shortcut icon' },
+            {
+              href: 'https://cdnjs.cloudflare.com/ajax/libs/flag-icon-css/1.4.0/css/flag-icon.min.css',
+              rel: 'stylesheet'
+            }
           ]}
           meta={[{
             content: 'Jury nullification as a service',

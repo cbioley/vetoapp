@@ -23,7 +23,7 @@ nconf.defaults({
   firebaseUrl: 'https://vetoap.firebaseio.com',
   googleAnalyticsId: 'UA-XXXXXXX-X',
   isProduction,
-  locales: ['cs', 'en', 'fr', 'ro'],
+  locales: ['cs', 'en'],
   port: process.env.PORT || 8000
 });
 

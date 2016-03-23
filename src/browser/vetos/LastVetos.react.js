@@ -11,6 +11,10 @@ const messages = defineMessages({
   lastVetos: {
     defaultMessage: 'Last vetos',
     id: 'vetos.page.lastVetos'
+  },
+  moreVetos: {
+    defaultMessage: 'More',
+    id: 'vetos.page.moreVetos'
   }
 });
 
@@ -37,7 +41,7 @@ class LastVetos extends Component {
             // Disable load more button during loading more vetos.
             disabled={lastVetosLimitToLast !== lastVetos.size}
             onClick={moreLastVetos}
-          >more</button>
+          ><FormattedMessage {...messages.moreVetos} /></button>
         }
       </div>
     );

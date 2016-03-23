@@ -62,18 +62,32 @@ class SuggestVetoPage extends Component {
     e.preventDefault();
     const { fields, replace, suggestVeto } = this.props;
     const values = fields.$values();
+    values.country = values.country || this.getCountryByCurrentLocale();
     const result = await suggestVeto(values).payload.promise;
     if (result.error) {
       focusInvalidField(this, result.payload);
       return;
     }
     fields.$reset();
-    replace(`vetos/${result.payload.id}`);
+    replace(`/vetos/${result.payload.id}`);
+  }
+
+  // Preselect country by current locale. TODO: Should be automatic somehow.
+  getCountryByCurrentLocale() {
+    const { currentLocale, fields } = this.props;
+    return fields.country.value || {
+      cs: 'CZ',
+      en: 'US'
+    }[currentLocale] || 'US';
   }
 
   render() {
     const { currentLocale, fields, intl, vetos, viewer } = this.props;
     const title = intl.formatMessage(linksMessages.suggestVeto);
+    const countryField = {
+      ...fields.country,
+      value: this.getCountryByCurrentLocale()
+    };
 
     return (
       <div className="suggest-veto">
@@ -121,11 +135,10 @@ class SuggestVetoPage extends Component {
                     <FormattedMessage {...messages.whichCountry} />
                   </label>
                   <select
-                    // TODO: Use value for preselect country.
                     className="form-control c-select"
                     style={{ display: 'block', maxWidth: '25em' }}
                     id="suggest-veto-country"
-                    {...fields.country}
+                    {...countryField}
                   >{CountriesOptions}</select>
                 </fieldset>
                 {viewer ?
@@ -157,9 +170,7 @@ class SuggestVetoPage extends Component {
 
 SuggestVetoPage = fields(SuggestVetoPage, {
   path: 'suggestVeto',
-  fields: ['name', 'reason', 'country'],
-  // TODO: Detect from intl.currentLocale.
-  getInitialState: () => ({ country: 'CZ' })
+  fields: ['name', 'reason', 'country']
 });
 
 SuggestVetoPage = injectIntl(SuggestVetoPage);

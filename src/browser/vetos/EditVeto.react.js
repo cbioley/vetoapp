@@ -49,7 +49,7 @@ class EditVeto extends Component {
     if (!confirm(areYouSure)) return; // eslint-disable-line no-alert
     deleteVeto(veto.toJS());
     fields.$reset();
-    replace('vetos');
+    replace('/vetos');
   }
 
   onFormSubmit(e) {
@@ -76,7 +76,7 @@ class EditVeto extends Component {
   cancelEdit() {
     const { fields, replace, veto } = this.props;
     fields.$reset();
-    replace(`vetos/${veto.id}`);
+    replace(`/vetos/${veto.id}`);
   }
 
   isDirty() {
