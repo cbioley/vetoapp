@@ -7,7 +7,13 @@ import { connect } from 'react-redux';
 
 export const messages = defineMessages({
   intro: {
-    defaultMessage: '<p>Jury nullification as a service.</p>',
+    defaultMessage: `Luckily, we can help ourselves. The Constitution of the
+      Czech Republic states: The people are the source of all power in the
+      State. Freer countries like Switzerland know the people’s veto. We can
+      have it, too. Let’s not wait for elections, change things now. There are
+      so many laws that not even lawyers can make sense of them. We cannot put
+      our trust in politicians – they have so much work drafting new laws that
+      they have no time left to repeal old ones.`,
     id: 'home.intro'
   },
   callToAction: {
