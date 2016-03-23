@@ -193,7 +193,7 @@ export default [
   {
     "id": "home.intro",
     "defaultMessage": `
-      <p>Zákonů je tak strašný množství, že se v nich nevyznají už ani
+      <p>Zákonů je tak strašné množství, že se v nich nevyznají už ani
       právníci. Na poslance spoléhat nemůžeme, mají tolik práce s psaním
       zákonů nových, že na rušení starých jim už nezbývá čas.</p><p>Naštěstí si
       můžeme pomoci sami. V Ústavě ČR je kouzelná věta: <b>Lid je zdrojem veškeré
