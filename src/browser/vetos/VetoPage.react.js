@@ -9,10 +9,17 @@ import Vote from './Vote.react';
 import VoteRecord from '../../common/vetos/Vote';
 import VotesYesTotal from './VotesYesTotal.react';
 import buttonsMessages from '../../common/app/buttonsMessages';
-import { FormattedMessage } from 'react-intl';
+import { FormattedMessage, defineMessages } from 'react-intl';
 import { Link } from 'react-router';
 import { connect } from 'react-redux';
 import { queryFirebase } from '../../common/lib/redux-firebase';
+
+const messages = defineMessages({
+  suggestedBy: {
+    defaultMessage: 'Suggested by {creatorDisplayName}',
+    id: 'vetos.vetoPage.suggestedBy'
+  }
+});
 
 class VetoPage extends Component {
 
@@ -30,6 +37,7 @@ class VetoPage extends Component {
       vote === undefined ||
       votesYesTotal === undefined;
     const countryCode = veto && veto.country.toLowerCase();
+    const viewerIsCreator = veto && viewer && viewer.id === veto.creatorId;
 
     return (
       <div className="veto-page">
@@ -50,12 +58,22 @@ class VetoPage extends Component {
                   />{' '}
                   <VotesYesTotal count={votesYesTotal} />
                 </h2>
+                {!viewerIsCreator &&
+                  <p>
+                    <Link to={`/users/${veto.creatorId}`}>
+                      <FormattedMessage
+                        {...messages.suggestedBy}
+                        values={{ creatorDisplayName: veto.creatorDisplayName }}
+                      />
+                    </Link>
+                  </p>
+                }
                 <p>
                   <Linkify properties={{ target: '_blank' } }>
                     {veto.reason}
                   </Linkify>
                 </p>
-                {viewer && viewer.id === veto.creatorId &&
+                {viewerIsCreator &&
                   <p>
                     <Link to={`/vetos/${veto.id}/edit`}>
                       <FormattedMessage {...buttonsMessages.edit} />
