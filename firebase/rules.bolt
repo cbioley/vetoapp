@@ -3,7 +3,8 @@
 
 // Functions
 
-isAdmin() { root.admins[auth.uid] != null }
+isAdmin() { root.roles.admins[auth.uid] != null }
+isServerQueue() { root.roles.queues[auth.uid] != null }
 isSignedIn() { auth != null }
 isViewer(uid) { isSignedIn() && auth.uid == uid }
 userExits(uid) { root.users[uid] != null }
@@ -128,10 +129,10 @@ path /vetos-archived/{id} is Veto {
 path /vetos-votes-queue {
   path /tasks {
     index() { ["_state"] }
-    read() { isAdmin() }
+    read() { isServerQueue() }
 
     path /{id} is Vote | FirebaseQueueState {
-      write() { isViewer(this.userId) || isAdmin() }
+      write() { isViewer(this.userId) || isServerQueue() }
     }
   }
   // TODO: Add specs.
@@ -140,16 +141,16 @@ path /vetos-votes-queue {
 path /vetos-votes-yes/{id} is Vote {
   index() { ["userId", "vetoId"] }
   read() { true }
-  write() { isAdmin() }
+  write() { isServerQueue() }
 }
 
 path /vetos-votes-no/{id} is Vote {
   index() { ["userId", "vetoId"] }
   read() { true }
-  write() { isAdmin() }
+  write() { isServerQueue() }
 }
 
 path /vetos-votes-yes-total/{vetoId} is Number {
   read() { true }
-  write() { isAdmin() }
+  write() { isServerQueue() }
 }
