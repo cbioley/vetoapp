@@ -1,3 +1,4 @@
+import './VetoPage.scss';
 import * as vetosActions from '../../common/vetos/actions';
 import Component from 'react-pure-render/component';
 import Helmet from 'react-helmet';
@@ -26,18 +27,20 @@ class VetoPage extends Component {
   static propTypes = {
     veto: PropTypes.object,
     viewer: PropTypes.object,
+    viewerIsAdmin: PropTypes.bool,
     vote: PropTypes.object,
     votesYesTotal: PropTypes.number
   };
 
   render() {
-    const { veto, viewer, vote, votesYesTotal } = this.props;
+    const { veto, viewer, viewerIsAdmin, vote, votesYesTotal } = this.props;
     const isLoading =
       veto === undefined ||
       vote === undefined ||
       votesYesTotal === undefined;
     const countryCode = veto && veto.country.toLowerCase();
     const viewerIsCreator = veto && viewer && viewer.id === veto.creatorId;
+    const showEdit = viewerIsAdmin || viewerIsCreator;
 
     return (
       <div className="veto-page">
@@ -58,28 +61,26 @@ class VetoPage extends Component {
                   />{' '}
                   <VotesYesTotal count={votesYesTotal} />
                 </h2>
-                {!viewerIsCreator &&
-                  <p>
+                <nav className="nav nav-inline">
+                  {!viewerIsCreator &&
                     <Link to={`/users/${veto.creatorId}`}>
                       <FormattedMessage
                         {...messages.suggestedBy}
                         values={{ creatorDisplayName: veto.creatorDisplayName }}
                       />
                     </Link>
-                  </p>
-                }
+                  }
+                  {showEdit &&
+                    <Link to={`/vetos/${veto.id}/edit`}>
+                      <FormattedMessage {...buttonsMessages.edit} />
+                    </Link>
+                  }
+                </nav>
                 <p>
                   <Linkify properties={{ target: '_blank' } }>
                     {veto.reason}
                   </Linkify>
                 </p>
-                {viewerIsCreator &&
-                  <p>
-                    <Link to={`/vetos/${veto.id}/edit`}>
-                      <FormattedMessage {...buttonsMessages.edit} />
-                    </Link>
-                  </p>
-                }
                 <Vote {...{ veto, vote, votesYesTotal }} />
               </div>
             }
@@ -116,7 +117,11 @@ export default connect(({ users, vetos }, { params: { vetoId } }) => {
   const veto = vetos.map.get(vetoId);
   const viewer = users.viewer;
   const voteId = veto && viewer && VoteRecord.id(viewer, veto);
-  const vote = veto && viewer && vetos.votes.get(voteId) || null;
-  const votesYesTotal = vetos.votesYesTotal.get(vetoId);
-  return { veto, viewer, vote, votesYesTotal };
+  return {
+    veto,
+    viewer,
+    viewerIsAdmin: users.viewerIsAdmin,
+    vote: vetos.votes.get(voteId) || null,
+    votesYesTotal: vetos.votesYesTotal.get(vetoId)
+  };
 }, vetosActions)(VetoPage);

@@ -1,5 +1,4 @@
-// An example of Firebase security and modeling language.
-// https://github.com/firebase/bolt/blob/master/docs/guide.md
+//https://github.com/firebase/bolt/blob/master/docs/language.md
 
 // Functions
 
@@ -79,7 +78,7 @@ type Veto {
   reason: ExtraLongRequiredString,
   updatedAt: Number
 
-  validate() { isViewer(this.creatorId) }
+  validate() { isAdmin() || isViewer(this.creatorId) }
 }
 
 type Vote {
@@ -94,6 +93,10 @@ type Vote {
 }
 
 // Paths.
+
+path /roles/admins/{uid} {
+  read() { isViewer(uid) }
+}
 
 path /users {
   index() { ["authenticatedAt"] }
@@ -116,8 +119,8 @@ path /vetos {
   path /{id} is Veto {
     // https://www.firebase.com/blog/2016-01-26-easier-write-rules-bolt.html
     create() { this.id == id }
-    delete() { isViewer(prior(this).creatorId) }
-    update() { this.id == id && isViewer(prior(this).creatorId) }
+    delete() { isAdmin() || isViewer(prior(this).creatorId) }
+    update() { this.id == id && (isAdmin() || isViewer(prior(this).creatorId)) }
   }
 }
 

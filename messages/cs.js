@@ -203,6 +203,10 @@ export default [
     `
   },
   {
+    "id": "me.page.admin",
+    "defaultMessage": "admin"
+  },
+  {
     "id": "me.page.h2",
     "defaultMessage": "{displayName}"
   },

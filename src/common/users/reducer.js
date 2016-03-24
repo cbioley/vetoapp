@@ -7,7 +7,8 @@ import { mapAuthToUser } from '../lib/redux-firebase';
 
 const InitialState = Record({
   list: undefined,
-  viewer: undefined
+  viewer: undefined,
+  viewerIsAdmin: undefined
 });
 const initialState = new InitialState;
 
@@ -46,6 +47,11 @@ export default function usersReducer(state = initialState, action) {
         .reverse()
         .toList();
       return state.set('list', list);
+    }
+
+    case actions.SET_VIEWER_IS_ADMIN: {
+      const { isAdmin } = action.payload;
+      return state.set('viewerIsAdmin', isAdmin);
     }
 
   }

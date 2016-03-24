@@ -125,6 +125,10 @@ export default [
     "defaultMessage": "<p>Luckily, we can help ourselves. The Constitution of the\n      Czech Republic states: The people are the source of all power in the\n      State. Freer countries like Switzerland know the people’s veto. We can\n      have it, too. Let’s not wait for elections, change things now. There are\n      so many laws that not even lawyers can make sense of them. We cannot put\n      our trust in politicians – they have so much work drafting new laws that\n      they have no time left to repeal old ones.</p>"
   },
   {
+    "id": "me.page.admin",
+    "defaultMessage": "admin"
+  },
+  {
     "id": "me.page.h2",
     "defaultMessage": "{displayName}"
   },

@@ -12,6 +12,10 @@ const messages = defineMessages({
   h2: {
     defaultMessage: '{displayName}',
     id: 'me.page.h2'
+  },
+  admin: {
+    defaultMessage: 'admin',
+    id: 'me.page.admin'
   }
 });
 
@@ -19,11 +23,12 @@ class Page extends Component {
 
   static propTypes = {
     intl: intlShape.isRequired,
-    viewer: PropTypes.object
+    viewer: PropTypes.object,
+    viewerIsAdmin: PropTypes.bool
   };
 
   render() {
-    const { intl, viewer } = this.props;
+    const { intl, viewer, viewerIsAdmin } = this.props;
     const title = intl.formatMessage(linksMessages.me);
     const displayName = viewer.displayName || viewer.email;
 
@@ -31,7 +36,12 @@ class Page extends Component {
       <div className="me-page">
         <Helmet title={title} />
         <h2>
-          <FormattedMessage {...messages.h2} values={{ displayName }} />
+          <FormattedMessage {...messages.h2} values={{ displayName }} />{' '}
+          {viewerIsAdmin &&
+            <sup className="label label-info">
+              <FormattedMessage {...messages.admin} />
+            </sup>
+          }
         </h2>
         {viewer.profileImageURL &&
           <img
@@ -50,5 +60,6 @@ class Page extends Component {
 Page = injectIntl(Page);
 
 export default connect(state => ({
-  viewer: state.users.viewer
+  viewer: state.users.viewer,
+  viewerIsAdmin: state.users.viewerIsAdmin
 }))(Page);
