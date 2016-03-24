@@ -259,6 +259,10 @@ export default [
     "defaultMessage": "Zatím jste žádné veto nenavrhnul."
   },
   {
+    "id": "vetos.vetoPage.suggestedBy",
+    "defaultMessage": "Navrhnul {creatorDisplayName}"
+  },
+  {
     "id": "vetos.vote.changedMind",
     "defaultMessage": "Rozmyslel jsem si to"
   },
