@@ -21,7 +21,7 @@ nconf.defaults({
   firebaseQueueEmail: 'XXXXXXX',
   firebaseQueuePassword: 'XXXXXXX',
   firebaseUrl: 'https://vetoap.firebaseio.com',
-  googleAnalyticsId: 'UA-XXXXXXX-X',
+  googleAnalyticsId: 'UA-75621697-1',
   isProduction,
   locales: ['cs', 'en'],
   port: process.env.PORT || 8000
