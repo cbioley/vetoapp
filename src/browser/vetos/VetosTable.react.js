@@ -36,7 +36,7 @@ export default class VetosTable extends Component {
               {vetos.map(({ id, createdAt, name, creatorDisplayName }) =>
                 <tr key={id}>
                   <td className="name">
-                    <Link to={`vetos/${id}`}>{name}</Link>
+                    <Link to={`/vetos/${id}`}>{name}</Link>
                   </td>
                   {!hideCreator &&
                     <td>{creatorDisplayName}</td>
