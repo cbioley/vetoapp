@@ -263,6 +263,10 @@ export default [
     "defaultMessage": "Zatím jste žádné veto nenavrhnul."
   },
   {
+    "id": "vetos.totalVotes.h2",
+    "defaultMessage": "Nejvíc vetované zákony"
+  },
+  {
     "id": "vetos.vetoPage.suggestedBy",
     "defaultMessage": "Navrhnul {creatorDisplayName}"
   },

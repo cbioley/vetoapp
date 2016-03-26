@@ -47,10 +47,10 @@ export function onVote(voteId, vote) {
   };
 }
 
-export function onVoteYesTotal(vetoId, total) {
+export function onVoteYesTotal(vetoId, voteTotal) {
   return {
     type: ON_VOTE_YES_TOTAL,
-    payload: { vetoId, total }
+    payload: { vetoId, voteTotal }
   };
 }
 
@@ -87,19 +87,25 @@ export function setVeto(id, json) {
   };
 }
 
-export function setVote(vetoId, yes) {
+export function setVote(veto, yes) {
   return ({ firebase, getState }) => {
     const { viewer } = getState().users;
     const vote = new Vote({
       createdAt: firebase.constructor.ServerValue.TIMESTAMP,
       userId: viewer.id,
-      vetoId,
+      vetoCountry: veto.country,
+      vetoCreatorDisplayName: veto.creatorDisplayName,
+      vetoCreatorId: veto.creatorId,
+      vetoId: veto.id,
+      vetoMunicipality: veto.municipality,
+      vetoName: veto.name,
       yes
     }).toJS();
     // Note we don't use promise, because queue is processed on the server, and
     // we don't want to wait for a response. Instead of that we prefer an
     // optimistic update, which also works well for offline scenarios.
     // setVote is also called via queryFirebase.
+    // TODO: Handle error.
     firebase.child('vetos-votes-queue/tasks').push(vote);
     return {
       type: SET_VOTE,

@@ -122,7 +122,7 @@ export default [
   },
   {
     "id": "home.intro",
-    "defaultMessage": "<p>Luckily, we can help ourselves. The Constitution of the\n      Czech Republic states: The people are the source of all power in the\n      State. Freer countries like Switzerland know the people’s veto. We can\n      have it, too. Let’s not wait for elections, change things now. There are\n      so many laws that not even lawyers can make sense of them. We cannot put\n      our trust in politicians – they have so much work drafting new laws that\n      they have no time left to repeal old ones.</p>"
+    "defaultMessage": "<p>\n        There are so many laws that not even lawyers can make sense of them.\n        We cannot put our trust in politicians – they have so much work drafting\n        new laws that they have no time left to repeal old ones.\n      </p>\n      <p>\n        Luckily, we can help ourselves. Constitutions of almost all countries\n        over the world states: <b>The people are the source of all power in the\n        State.</b> Freer countries like Switzerland know the people’s veto.\n        We can have it, too. Let’s not wait for elections, change things now.\n      </p>"
   },
   {
     "id": "me.page.admin",
@@ -183,6 +183,10 @@ export default [
   {
     "id": "vetos.table.empty",
     "defaultMessage": "You did not suggest any veto yet."
+  },
+  {
+    "id": "vetos.totalVotes.h2",
+    "defaultMessage": "The most vetoed laws"
   },
   {
     "id": "vetos.vetoPage.suggestedBy",

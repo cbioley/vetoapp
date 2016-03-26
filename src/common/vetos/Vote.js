@@ -3,7 +3,12 @@ import { Record } from 'immutable';
 const VoteRecord = Record({
   createdAt: null,
   userId: null,
+  vetoCountry: '',
+  vetoCreatorDisplayName: '',
+  vetoCreatorId: null,
   vetoId: null,
+  vetoMunicipality: '',
+  vetoName: '',
   yes: false
 });
 

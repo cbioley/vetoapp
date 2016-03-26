@@ -7,6 +7,7 @@ import ValidationError from '../../common/app/ValidationError.react';
 import buttonsMessages from '../../common/app/buttonsMessages';
 import countries from './countries';
 import focusInvalidField from '../../common/lib/validation/focusInvalidField';
+import getDefaultCountryByLocale from '../../common/countries/getDefaultCountryByLocale';
 import linksMessages from '../../common/app/linksMessages';
 import { FormattedMessage, defineMessages, injectIntl, intlShape } from 'react-intl';
 import { Link } from 'react-router';
@@ -14,9 +15,17 @@ import { connect } from 'react-redux';
 import { fields } from '../../common/lib/redux-fields';
 import { replace } from 'react-router-redux';
 
-const CountriesOptions = countries.map(({ name, code }) =>
-  <option key={code} value={code}>{name}</option>
-);
+const CountriesOptions = countries
+  // Only CZ and US is supported right now.
+  // For another country we have to add:
+  // 1) Firebase index
+  // 2) Add app locale (config and browser intl)
+  // 3) Switcher
+  // TODO: Fix locale and country with storage persistence ofc.
+  .filter(country => country.code === 'US' || country.code === 'CZ')
+  .map(({ name, code }) =>
+    <option key={code} value={code}>{name}</option>
+  );
 
 const messages = defineMessages({
   nameLabel: {
@@ -72,13 +81,9 @@ class SuggestVetoPage extends Component {
     replace(`/vetos/${result.payload.id}`);
   }
 
-  // Preselect country by current locale. TODO: Should be automatic somehow.
   getCountryByCurrentLocale() {
     const { currentLocale, fields } = this.props;
-    return fields.country.value || {
-      cs: 'CZ',
-      en: 'US'
-    }[currentLocale] || 'US';
+    return fields.country.value || getDefaultCountryByLocale(currentLocale);
   }
 
   render() {

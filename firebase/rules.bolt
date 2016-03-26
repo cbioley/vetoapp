@@ -1,9 +1,9 @@
-//https://github.com/firebase/bolt/blob/master/docs/language.md
+// https://github.com/firebase/bolt/blob/master/docs/language.md
 
 // Functions
 
 isAdmin() { root.roles.admins[auth.uid] != null }
-isServerQueue() { root.roles.queues[auth.uid] != null }
+isQueue() { root.roles.queues[auth.uid] != null }
 isSignedIn() { auth != null }
 isViewer(uid) { isSignedIn() && auth.uid == uid }
 userExits(uid) { root.users[uid] != null }
@@ -84,12 +84,28 @@ type Veto {
 type Vote {
   createdAt: Number,
   userId: ShortRequiredString,
-  vetoId: ShortRequiredString
+  vetoCountry: ShortRequiredString,
+  vetoCreatorDisplayName: ShortRequiredString,
+  vetoCreatorId: ShortRequiredString,
+  vetoId: ShortRequiredString,
+  vetoMunicipality: ShortString,
+  vetoName: LongRequiredString,
   yes: Boolean
 
   validate() {
     userExits(this.userId) && vetoExits(this.vetoId)
   }
+}
+
+type VoteTotal {
+  total: Number,
+  updatedAt: Number,
+  vetoCountry: ShortRequiredString,
+  vetoCreatorDisplayName: ShortRequiredString,
+  vetoCreatorId: ShortRequiredString,
+  vetoId: ShortRequiredString,
+  vetoMunicipality: ShortString,
+  vetoName: LongRequiredString
 }
 
 // Paths.
@@ -132,10 +148,10 @@ path /vetos-archived/{id} is Veto {
 path /vetos-votes-queue {
   path /tasks {
     index() { ["_state"] }
-    read() { isServerQueue() }
+    read() { isQueue() }
 
     path /{id} is Vote | FirebaseQueueState {
-      write() { isViewer(this.userId) || isServerQueue() }
+      write() { isViewer(this.userId) || isQueue() }
     }
   }
   // TODO: Add specs.
@@ -144,16 +160,35 @@ path /vetos-votes-queue {
 path /vetos-votes-yes/{id} is Vote {
   index() { ["userId", "vetoId"] }
   read() { true }
-  write() { isServerQueue() }
+  write() { isQueue() }
 }
 
 path /vetos-votes-no/{id} is Vote {
   index() { ["userId", "vetoId"] }
   read() { true }
-  write() { isServerQueue() }
+  write() { isQueue() }
 }
 
-path /vetos-votes-yes-total/{vetoId} is Number {
+path /vetos-votes-yes-total {
   read() { true }
-  write() { isServerQueue() }
+
+  //// This should be enough, but it doesn't work.
+  //// Probably https://github.com/firebase/bolt/issues/58
+  //path /{vetoCountryOrAll}/{vetoId} is VoteTotal {
+  //  write() { isQueue() }
+  //}
+
+  path /CZ/{vetoId} is VoteTotal {
+    write() { isQueue() }
+  }
+  path /US/{vetoId} is VoteTotal {
+    write() { isQueue() }
+  }
+  path /_all/{vetoId} is VoteTotal {
+    write() { isQueue() }
+  }
+
+  path /CZ { index() { ["total"] } }
+  path /US { index() { ["total"] } }
+  path /_all { index() { ["total"] } }
 }

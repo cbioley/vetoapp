@@ -59,12 +59,12 @@ class Vote extends Component {
 
   onVetoCancelClick() {
     const { setVote, veto } = this.props;
-    setVote(veto.id, false);
+    setVote(veto, false);
   }
 
   onVetoClick() {
     const { setVote, veto } = this.props;
-    setVote(veto.id, true);
+    setVote(veto, true);
   }
 
   render() {

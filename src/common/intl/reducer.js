@@ -2,6 +2,7 @@ import * as actions from './actions';
 import { Record } from 'immutable';
 
 const InitialState = Record({
+  // currentCountry: 'US',
   currentLocale: null, // Autodetected on the server/frontend/render.js
   locales: null, // Defined in server/config.js
   messages: {} // Created from messages/ files.

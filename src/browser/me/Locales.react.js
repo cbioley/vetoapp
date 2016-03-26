@@ -21,18 +21,6 @@ class Locales extends Component {
         <button
           className="btn btn-secondary"
           type="button"
-          disabled={currentLocale === 'cs'}
-          onClick={() => setCurrentLocale('cs')} // eslint-disable-line react/jsx-no-bind
-        >
-          <div
-            style={{ width: 50, height: 50 }}
-            className="flag flag-icon-background flag-icon-cz"
-            title="cz"
-          ></div>
-        </button>
-        <button
-          className="btn btn-secondary"
-          type="button"
           disabled={currentLocale === 'en'}
           onClick={() => setCurrentLocale('en')} // eslint-disable-line react/jsx-no-bind
         >
@@ -40,6 +28,18 @@ class Locales extends Component {
             style={{ width: 50, height: 50 }}
             className="flag flag-icon-background flag-icon-us"
             title="us"
+          ></div>
+        </button>
+        <button
+          className="btn btn-secondary"
+          type="button"
+          disabled={currentLocale === 'cs'}
+          onClick={() => setCurrentLocale('cs')} // eslint-disable-line react/jsx-no-bind
+        >
+          <div
+            style={{ width: 50, height: 50 }}
+            className="flag flag-icon-background flag-icon-cz"
+            title="cz"
           ></div>
         </button>
       </div>

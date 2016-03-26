@@ -1,6 +1,7 @@
 import './VetoPage.scss';
 import * as vetosActions from '../../common/vetos/actions';
 import Component from 'react-pure-render/component';
+import Flag from '../countries/Flag.react';
 import Helmet from 'react-helmet';
 import Linkify from 'react-linkify';
 import Loading from '../lib/Loading.react';
@@ -29,7 +30,7 @@ class VetoPage extends Component {
     viewer: PropTypes.object,
     viewerIsAdmin: PropTypes.bool,
     vote: PropTypes.object,
-    votesYesTotal: PropTypes.number
+    votesYesTotal: PropTypes.object
   };
 
   render() {
@@ -38,9 +39,9 @@ class VetoPage extends Component {
       veto === undefined ||
       vote === undefined ||
       votesYesTotal === undefined;
-    const countryCode = veto && veto.country.toLowerCase();
     const viewerIsCreator = veto && viewer && viewer.id === veto.creatorId;
     const showEdit = viewerIsAdmin || viewerIsCreator;
+    const yesTotal = votesYesTotal && votesYesTotal.total || 0;
 
     return (
       <div className="veto-page">
@@ -55,11 +56,9 @@ class VetoPage extends Component {
                 <Helmet title={veto.name} />
                 <h2>
                   {veto.name}{' '}
-                  <span
-                    className={`flag flag-icon flag-icon-${countryCode}`}
-                    title={countryCode}
-                  />{' '}
-                  <VotesYesTotal count={votesYesTotal} />
+                  <Flag country={veto.country} />
+                  {' '}
+                  <VotesYesTotal count={yesTotal} />
                 </h2>
                 <nav className="nav nav-inline">
                   {!viewerIsCreator &&
@@ -81,7 +80,7 @@ class VetoPage extends Component {
                     {veto.reason}
                   </Linkify>
                 </p>
-                <Vote {...{ veto, vote, votesYesTotal }} />
+                <Vote {...{ veto, vote }} votesYesTotal={yesTotal} />
               </div>
             }
           </div>
@@ -107,7 +106,7 @@ VetoPage = queryFirebase(VetoPage, ({ onVote, viewer, veto }) => ({
 }));
 
 VetoPage = queryFirebase(VetoPage, ({ onVoteYesTotal, params: { vetoId } }) => ({
-  path: `vetos-votes-yes-total/${vetoId}`,
+  path: `vetos-votes-yes-total/_all/${vetoId}`,
   on: {
     value: snapshot => onVoteYesTotal(vetoId, snapshot.val())
   }
@@ -122,6 +121,6 @@ export default connect(({ users, vetos }, { params: { vetoId } }) => {
     viewer,
     viewerIsAdmin: users.viewerIsAdmin,
     vote: vetos.votes.get(voteId) || null,
-    votesYesTotal: vetos.votesYesTotal.get(vetoId)
+    votesYesTotal: vetos.votesYesTotals.get(vetoId)
   };
 }, vetosActions)(VetoPage);

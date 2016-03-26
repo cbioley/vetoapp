@@ -69,20 +69,6 @@ class Login extends Component {
     };
   }
 
-  toggleForgetPassword() {
-    this.setState(({ forgetPasswordIsShown }) => ({
-      forgetPasswordIsShown: !forgetPasswordIsShown
-    }));
-  }
-
-  async redirectOnSuccess(action) {
-    const result = await action.payload.promise;
-    if (result.error) return;
-    const { location, replace } = this.props;
-    const nextPathname = location.state && location.state.nextPathname || '/';
-    replace(nextPathname);
-  }
-
   onSocialLoginClick(provider) {
     const { fields, login } = this.props;
     this.redirectOnSuccess(login(provider, fields.$values()));
@@ -110,6 +96,20 @@ class Login extends Component {
     });
   }
 
+  async redirectOnSuccess(action) {
+    const result = await action.payload.promise;
+    if (result.error) return;
+    const { location, replace } = this.props;
+    const nextPathname = location.state && location.state.nextPathname || '/';
+    replace(nextPathname);
+  }
+
+  toggleForgetPassword() {
+    this.setState(({ forgetPasswordIsShown }) => ({
+      forgetPasswordIsShown: !forgetPasswordIsShown
+    }));
+  }
+
   render() {
     const { auth, fields } = this.props;
     const { forgetPasswordIsShown, recoveryEmailSent } = this.state;
@@ -122,7 +122,7 @@ class Login extends Component {
               <button
                 className="btn btn-primary"
                 disabled={auth.formDisabled}
-                onClick={() => this.onSocialLoginClick('facebook')} // eslint-disable-line react/jsx-no-bind
+                onClick={() => this.onSocialLoginClick('facebook')}
               ><FormattedMessage {...messages.facebookLogin} /></button>
             </div>
             {/* https://github.com/steida/vetoapp/issues/8 */}
