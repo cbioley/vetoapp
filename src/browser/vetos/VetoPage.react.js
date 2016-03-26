@@ -37,11 +37,10 @@ class VetoPage extends Component {
     const { veto, viewer, viewerIsAdmin, vote, votesYesTotal } = this.props;
     const isLoading =
       veto === undefined ||
-      vote === undefined ||
+      (viewer && vote === undefined) || // Waiting for vote only for viewer.
       votesYesTotal === undefined;
     const viewerIsCreator = veto && viewer && viewer.id === veto.creatorId;
     const showEdit = viewerIsAdmin || viewerIsCreator;
-    const yesTotal = votesYesTotal && votesYesTotal.total || 0;
 
     return (
       <div className="veto-page">
@@ -58,7 +57,7 @@ class VetoPage extends Component {
                   {veto.name}{' '}
                   <Flag country={veto.country} />
                   {' '}
-                  <VotesYesTotal count={yesTotal} />
+                  <VotesYesTotal count={votesYesTotal.total} />
                 </h2>
                 <nav className="nav nav-inline">
                   {!viewerIsCreator &&
@@ -80,7 +79,7 @@ class VetoPage extends Component {
                     {veto.reason}
                   </Linkify>
                 </p>
-                <Vote {...{ veto, vote }} votesYesTotal={yesTotal} />
+                <Vote {...{ veto, vote }} yesTotal={votesYesTotal.total} />
               </div>
             }
           </div>
@@ -120,7 +119,7 @@ export default connect(({ users, vetos }, { params: { vetoId } }) => {
     veto,
     viewer,
     viewerIsAdmin: users.viewerIsAdmin,
-    vote: vetos.votes.get(voteId) || null,
+    vote: vetos.votes.get(voteId),
     votesYesTotal: vetos.votesYesTotals.get(vetoId)
   };
 }, vetosActions)(VetoPage);

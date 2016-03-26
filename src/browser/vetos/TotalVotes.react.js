@@ -1,3 +1,4 @@
+import './TotalVotes.scss';
 import * as countriesActions from '../../common/countries/actions';
 import Component from 'react-pure-render/component';
 import Flag from '../countries/Flag.react';
@@ -26,7 +27,7 @@ class TotalVotes extends Component {
     const { country, totalVotes } = this.props;
 
     return (
-      <div className="the-most-vetoed-laws">
+      <div className="total-votes">
         <h2>
           <FormattedMessage {...messages.h2} />
           {' '}

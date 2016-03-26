@@ -48,7 +48,7 @@ class Vote extends Component {
     veto: PropTypes.object.isRequired,
     viewer: PropTypes.object,
     vote: PropTypes.object,
-    votesYesTotal: PropTypes.number
+    yesTotal: PropTypes.number
   };
 
   constructor(props) {
@@ -68,8 +68,8 @@ class Vote extends Component {
   }
 
   render() {
-    const { intl, veto, viewer, vote, votesYesTotal } = this.props;
-    const remainingVotes = ignoreLawThreshold - votesYesTotal;
+    const { intl, veto, viewer, vote, yesTotal } = this.props;
+    const remainingVotes = ignoreLawThreshold - yesTotal;
 
     return (
       vote && vote.yes ?

@@ -45,18 +45,15 @@ class Page extends Component {
         <Helmet title="Vetoapp" />
         <div className="row">
           <div className="col-md-8">
-            {!viewer ?
+            {!viewer &&
               <div className="no-viewer">
                 <FormattedHTMLMessage {...messages.intro} />
                 <Link className="btn btn-info btn-lg m-b-1" to="/login">
                   <FormattedHTMLMessage {...messages.callToAction} />
                 </Link>
               </div>
-            :
-              <div className="viewer">
-                <TotalVotes country={country} />
-              </div>
             }
+            <TotalVotes country={country} />
           </div>
         </div>
       </div>
