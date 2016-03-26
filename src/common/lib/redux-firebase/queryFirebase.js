@@ -11,7 +11,7 @@
 //     ['limitToFirst', props.limitToFirst]
 //   ],
 //   on: {
-//     value: (snapshot) => props.setUsersList(snapshot.val())
+//     value: (snapshot) => props.onUsersList(snapshot.val())
 //   }
 // }));
 // Something doesn't work? Note how we can handle error:

@@ -1,9 +1,9 @@
-export const SET_USERS_LIST = 'SET_USERS_LIST';
+export const ON_USERS_LIST = 'ON_USERS_LIST';
 export const SET_VIEWER_IS_ADMIN = 'SET_VIEWER_IS_ADMIN';
 
-export function setUsersList(users) {
+export function onUsersList(users) {
   return {
-    type: SET_USERS_LIST,
+    type: ON_USERS_LIST,
     payload: { users }
   };
 }

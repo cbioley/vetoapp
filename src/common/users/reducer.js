@@ -38,9 +38,8 @@ export default function usersReducer(state = initialState, action) {
       return state.set('viewer', user);
     }
 
-    case actions.SET_USERS_LIST: {
+    case actions.ON_USERS_LIST: {
       const { users } = action.payload;
-      // TODO: We can reuse current list, merge existing, etc. for better perf.
       const list = Seq(users)
         .map(json => new User(json))
         .sortBy(user => user.authenticatedAt)
