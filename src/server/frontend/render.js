@@ -30,6 +30,7 @@ const getInitialState = req => {
     },
     intl: {
       currentLocale,
+      initialNow: Date.now(),
       locales: config.locales,
       messages
     },

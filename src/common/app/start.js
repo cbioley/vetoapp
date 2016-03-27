@@ -14,6 +14,7 @@ export default function start(Wrapped) {
     static propTypes = {
       currentLocale: PropTypes.string.isRequired,
       dispatch: PropTypes.func.isRequired,
+      initialNow: PropTypes.number.isRequired,
       messages: PropTypes.object.isRequired
     };
 
@@ -25,9 +26,10 @@ export default function start(Wrapped) {
     }
 
     render() {
-      const { currentLocale, messages } = this.props;
+      const { currentLocale, initialNow, messages } = this.props;
       return (
         <IntlProvider
+          initialNow={initialNow}
           key={currentLocale} // https://github.com/yahoo/react-intl/issues/234
           locale={currentLocale}
           messages={messages[currentLocale]}
@@ -49,6 +51,7 @@ export default function start(Wrapped) {
 
   Start = connect(state => ({
     currentLocale: state.intl.currentLocale,
+    initialNow: state.intl.initialNow,
     messages: state.intl.messages,
     viewer: state.users.viewer
   }))(Start);
