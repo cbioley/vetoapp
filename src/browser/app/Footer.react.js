@@ -7,8 +7,8 @@ import { FormattedHTMLMessage, defineMessages } from 'react-intl';
 const messages = defineMessages({
   madeByHtml: {
     defaultMessage: `
-      made by <a target="_blank" href="https://twitter.com/steida">steida</a>,
-      report an <a target="_blank" href="https://github.com/steida/vetoapp/issues/new">issue</a>
+      made by <a href="https://twitter.com/steida">steida</a>,
+      report an <a href="https://github.com/steida/vetoapp/issues/new">issue</a>
     `,
     id: 'footer.madeByHtml'
   }

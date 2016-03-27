@@ -115,9 +115,9 @@ export default function render(req, res, next) {
 
     try {
       await queryFirebaseServer(() => {
-        // Explicit renderApp before renderPage to call componentWillMount's.
-        // It's pretty fast, under 10ms generally, because no data loaded yet.
-        // With this approach we don't have to rely on react-router routes.
+        // Render app calls componentWillMount on every rendered component, so
+        // we don't have to rely on react-router routes only. It's pretty fast,
+        // under 10ms generally, because view has no data yet.
         renderApp(store, renderProps);
       });
       const html = renderPage(store, renderProps, req);

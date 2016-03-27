@@ -76,7 +76,7 @@ class VetoPage extends Component {
                   }
                 </nav>
                 <p>
-                  <Linkify properties={{ target: '_blank' } }>
+                  <Linkify>
                     {veto.reason}
                   </Linkify>
                 </p>

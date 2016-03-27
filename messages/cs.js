@@ -184,7 +184,7 @@ export default [
   },
   {
     "id": "footer.madeByHtml",
-    "defaultMessage": "made by <a target=\"_blank\" href=\"https://twitter.com/steida\">steida</a>,\n      report an <a target=\"_blank\" href=\"https://github.com/steida/vetoapp/issues/new\">issue</a>"
+    "defaultMessage": "made by <a href=\"https://twitter.com/steida\">steida</a>,\n      report an <a href=\"https://github.com/steida/vetoapp/issues/new\">issue</a>"
   },
   {
     "id": "home.callToAction",
@@ -198,7 +198,7 @@ export default [
       zákonů nových, že na rušení starých jim už nezbývá čas.</p><p>Naštěstí si
       můžeme pomoci sami. V Ústavě ČR je kouzelná věta: <b>Lid je zdrojem veškeré
       státní moci</b>. Svobodnější země jako je třeba Švýcarsko, znají
-      <a target="_blank" href="http://mmister.com/lidove-veto-co-to-je-a-proc-to-funguje">lidové veto</a>.
+      <a href="http://mmister.com/lidove-veto-co-to-je-a-proc-to-funguje">lidové veto</a>.
       My ho můžeme mít také. <b>Nečekejme na volby, měňme věci teď</b>.</p>
     `
   },

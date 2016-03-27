@@ -114,7 +114,7 @@ class SuggestVetoPage extends Component {
                   />
                   {currentLocale === 'cs' &&
                     <small className="text-muted">
-                      <a target="_blank" href="http://www.zakonyprolidi.cz">
+                      <a href="http://www.zakonyprolidi.cz">
                         zakonyprolidi.cz
                       </a>
                     </small>
