@@ -17,13 +17,24 @@ const InitialState = Record({
 });
 const initialState = new InitialState;
 
-const vetosToSortedByCreatedAtList = vetos => Seq(vetos)
+const vetosJsonToSortedByCreatedAtList = vetos => Seq(vetos)
   .map(json => new Veto(json))
   .sortBy(veto => -veto.createdAt)
   .toList();
+const vetosJsonToMap = vetos => Seq(vetos).map(json => new Veto(json)).toMap();
+const voteJsonToVote = json => (json ? new Vote(json) : null);
+
+const revive = state => initialState.merge({
+  lastVetos: vetosJsonToSortedByCreatedAtList(state.lastVetos),
+  lastVetosLimitToLast: state.lastVetosLimitToLast,
+  map: vetosJsonToMap(state.map),
+  // usersVetos // Don't revive usersVetos because user is not server authed.
+  votes: Seq(state.votes).map(voteJsonToVote).toMap(),
+  votesYesTotals: Seq(state.votesYesTotals).toMap()
+});
 
 export default function vetosReducer(state = initialState, action) {
-  if (!(state instanceof InitialState)) return initialState;
+  if (!(state instanceof InitialState)) return revive(state);
 
   switch (action.type) {
 
@@ -34,11 +45,7 @@ export default function vetosReducer(state = initialState, action) {
 
     case actions.ON_VOTE: {
       const { voteId, vote } = action.payload;
-      // undefined is absence of evidence, null is evidence of absence :-)
-      // Because app state servers as data cache, we distinguish null and
-      // undefined in UI to show Loading component.
-      const value = vote ? new Vote(vote) : null;
-      return state.setIn(['votes', voteId], value);
+      return state.setIn(['votes', voteId], voteJsonToVote(vote));
     }
 
     case actions.ON_VOTE_YES_TOTAL: {
@@ -46,19 +53,21 @@ export default function vetosReducer(state = initialState, action) {
       return state.setIn(['votesYesTotals', vetoId], voteTotal);
     }
 
+    // TODO: Rename to ON_
     case actions.SET_LAST_VETOS: {
       const { vetos } = action.payload;
-      const list = vetosToSortedByCreatedAtList(vetos);
+      const list = vetosJsonToSortedByCreatedAtList(vetos);
       return state
-        .mergeIn(['map'], Map(vetos).map(json => new Veto(json)))
+        .mergeIn(['map'], vetosJsonToMap(vetos))
         .set('lastVetos', list);
     }
 
+    // TODO: Rename to ON_
     case actions.SET_USER_VETOS: {
       const { userId, vetos } = action.payload;
-      const list = vetosToSortedByCreatedAtList(vetos);
+      const list = vetosJsonToSortedByCreatedAtList(vetos);
       return state
-        .mergeIn(['map'], Map(vetos).map(json => new Veto(json)))
+        .mergeIn(['map'], vetosJsonToMap(vetos))
         .setIn(['usersVetos', userId], list);
     }
 

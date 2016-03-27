@@ -30,6 +30,8 @@ class Page extends Component {
         <Helmet title={title} />
         <div className="row">
           <div className="col-md-10">
+            <LastVetos />
+            <br />
             {viewer &&
               <div>
                 <h2>
@@ -38,7 +40,6 @@ class Page extends Component {
                 <UserVetos userId={viewer.id} />
               </div>
             }
-            <LastVetos />
           </div>
         </div>
       </div>

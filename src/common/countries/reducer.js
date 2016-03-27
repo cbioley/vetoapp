@@ -7,23 +7,24 @@ const InitialState = Record({
 });
 const initialState = new InitialState;
 
-// const revive = ({ totalVotesPerCountry }) => initialState.merge({
-//   // TODO: Revive state.totalVotesPerCountry.
-//   // totalVotesPerCountry: Map(totalVotesPerCountry)
-// });
+const totalVotesToList = totalVotes => Seq(totalVotes)
+  .map(json => new VoteTotal(json))
+  .sortBy(voteTotal => -voteTotal.total)
+  .toList();
+
+const revive = ({ totalVotesPerCountry }) => initialState.merge({
+  totalVotesPerCountry: Map(totalVotesPerCountry)
+    .map(totalVotes => totalVotesToList(totalVotes))
+});
 
 export default function usersReducer(state = initialState, action) {
-  if (!(state instanceof InitialState)) return initialState; // revive(state);
+  if (!(state instanceof InitialState)) return revive(state);
 
   switch (action.type) {
 
     case actions.ON_TOTAL_VOTES: {
       const { country, totalVotes } = action.payload;
-      const list = Seq(totalVotes)
-        .map(json => new VoteTotal(json))
-        .sortBy(voteTotal => voteTotal.total)
-        .reverse()
-        .toList();
+      const list = totalVotesToList(totalVotes);
       return state.setIn(['totalVotesPerCountry', country], list);
     }
 

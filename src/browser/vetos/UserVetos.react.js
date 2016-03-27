@@ -1,4 +1,3 @@
-// import './UserVetos.scss';
 import * as vetosActions from '../../common/vetos/actions';
 import Component from 'react-pure-render/component';
 import React, { PropTypes } from 'react';

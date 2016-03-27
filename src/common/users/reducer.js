@@ -42,8 +42,7 @@ export default function usersReducer(state = initialState, action) {
       const { users } = action.payload;
       const list = Seq(users)
         .map(json => new User(json))
-        .sortBy(user => user.authenticatedAt)
-        .reverse()
+        .sortBy(user => -user.authenticatedAt)
         .toList();
       return state.set('list', list);
     }
