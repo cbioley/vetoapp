@@ -41,6 +41,7 @@ class VetoPage extends Component {
       votesYesTotal === undefined;
     const viewerIsCreator = veto && viewer && viewer.id === veto.creatorId;
     const showEdit = viewerIsAdmin || viewerIsCreator;
+    const yesTotal = votesYesTotal && votesYesTotal.total || 0;
 
     return (
       <div className="veto-page">
@@ -57,7 +58,7 @@ class VetoPage extends Component {
                   {veto.name}{' '}
                   <Flag country={veto.country} />
                   {' '}
-                  <VotesYesTotal count={votesYesTotal.total} />
+                  <VotesYesTotal count={yesTotal} />
                 </h2>
                 <nav className="nav nav-inline">
                   {!viewerIsCreator &&
@@ -79,7 +80,7 @@ class VetoPage extends Component {
                     {veto.reason}
                   </Linkify>
                 </p>
-                <Vote {...{ veto, vote }} yesTotal={votesYesTotal.total} />
+                <Vote {...{ veto, vote, yesTotal }} />
               </div>
             }
           </div>
