@@ -1,5 +1,4 @@
 import * as actions from './actions';
-import * as authActions from '../auth/actions';
 import User from './user';
 import { Record, Seq } from 'immutable';
 import { firebaseActions } from '../lib/redux-firebase';
@@ -21,12 +20,6 @@ export default function usersReducer(state = initialState, action) {
   if (!(state instanceof InitialState)) return revive(state);
 
   switch (action.type) {
-
-    case authActions.LOGIN_SUCCESS: {
-      const { email, id } = action.payload;
-      const user = new User({ email, id });
-      return state.set('viewer', user);
-    }
 
     case firebaseActions.REDUX_FIREBASE_ON_AUTH: {
       const { authData } = action.payload;

@@ -52,21 +52,21 @@ const renderApp = (store, renderProps) => {
 const renderScripts = (state, headers, hostname, appJsFilename) =>
   // https://github.com/yahoo/serialize-javascript#user-content-automatic-escaping-of-html-characters
   // https://github.com/andyearnshaw/Intl.js/#intljs-and-ft-polyfill-service
-  // TODO: Content Security Policy https://github.com/este/este/pull/731
+  // TODO: Switch to CSP, https://github.com/este/este/pull/731
   `
     <script src="https://cdn.polyfill.io/v2/polyfill.min.js?features=${
       intlPolyfillFeatures
     }"></script>
     <script>
-      window.__INITIAL_STATE__ = ${serialize(state, config.isProduction ? 0 : 2)};
+      window.__INITIAL_STATE__ = ${serialize(state)};
     </script>
     <script src="${appJsFilename}"></script>
   `;
 
 const renderPage = (store, renderProps, req) => {
   const state = store.getState();
+  // No server routing for server-less apps.
   if (process.env.IS_SERVERLESS) {
-    // No server routing for server-less apps.
     delete state.routing;
   }
   const { headers, hostname } = req;
@@ -99,7 +99,6 @@ export default function render(req, res, next) {
     platformMiddleware: [routerMiddleware(memoryHistory)]
   });
   const history = syncHistoryWithStore(memoryHistory, store);
-  // Fetch and dispatch current user here because routes may need it.
   const routes = createRoutes(store.getState);
   const location = req.url;
 
@@ -108,25 +107,17 @@ export default function render(req, res, next) {
       res.redirect(301, redirectLocation.pathname + redirectLocation.search);
       return;
     }
-
     if (error) {
       next(error);
       return;
     }
-
     try {
-      await queryFirebaseServer(() => {
-        // Render app calls componentWillMount on every rendered component, so
-        // we don't have to rely on react-router routes only. It's pretty fast,
-        // under 10ms generally, because view has no data yet.
-        renderApp(store, renderProps);
-      });
+      if (!process.env.IS_SERVERLESS) {
+        await queryFirebaseServer(() => renderApp(store, renderProps));
+      }
       const html = renderPage(store, renderProps, req);
-      // renderProps are always defined with * route.
-      // https://github.com/rackt/react-router/blob/master/docs/guides/advanced/ServerRendering.md
-      const status = renderProps.routes.some(route => route.path === '*')
-        ? 404
-        : 200;
+      const status = renderProps.routes
+        .some(route => route.path === '*') ? 404 : 200;
       res.status(status).send(html);
     } catch (e) {
       next(e);
