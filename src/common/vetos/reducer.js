@@ -46,7 +46,10 @@ export default function vetosReducer(state = initialState, action) {
 
     case actions.ON_USER_YES_VOTES: {
       const { userId, votes } = action.payload;
-      const list = votes && Seq(votes).map(voteJsonToVote).toList();
+      const list = votes && Seq(votes)
+        .map(voteJsonToVote)
+        .sortBy(vote => -vote.createdAt)
+        .toList();
       return state.setIn(['usersYesVotes', userId], list);
     }
 
