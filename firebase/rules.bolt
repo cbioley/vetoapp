@@ -56,10 +56,10 @@ type FirebaseQueueState {
 
 type User {
   authenticatedAt: Number,
-  displayName: LongString,
+  displayName: LongRequiredString,
   id: ShortRequiredString,
   profileImageURL: LongString,
-  provider: LongString
+  provider: ShortRequiredString
 }
 
 type Email {
@@ -157,16 +157,20 @@ path /vetos-votes-queue {
   // TODO: Add specs.
 }
 
-path /vetos-votes-yes/{id} is Vote {
+path /vetos-votes-yes {
   index() { ["userId", "vetoId"] }
   read() { true }
-  write() { isQueue() }
+  path /{id} is Vote {
+    write() { isQueue() }
+  }
 }
 
-path /vetos-votes-no/{id} is Vote {
+path /vetos-votes-no {
   index() { ["userId", "vetoId"] }
   read() { true }
-  write() { isQueue() }
+  path /{id} is Vote {
+    write() { isQueue() }
+  }
 }
 
 path /vetos-votes-yes-total {

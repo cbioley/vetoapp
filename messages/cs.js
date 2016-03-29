@@ -235,10 +235,6 @@ export default [
     "defaultMessage": "Víc"
   },
   {
-    "id": "vetos.page.yourVetos",
-    "defaultMessage": "Tebou navržená veta"
-  },
-  {
     "id": "vetos.suggestVeto.nameLabel",
     "defaultMessage": "Který zákon je tak strašný, že je třeba jej vetovat?"
   },
@@ -260,11 +256,19 @@ export default [
   },
   {
     "id": "vetos.table.empty",
-    "defaultMessage": "Zatím jste žádné veto nenavrhnul."
+    "defaultMessage": "Nic."
   },
   {
     "id": "vetos.totalVotes.h2",
     "defaultMessage": "Nejvíc vetované zákony"
+  },
+  {
+    "id": "vetos.userVetos.heading",
+    "defaultMessage": "Navržená veta"
+  },
+  {
+    "id": "vetos.vetoedVetos.heading",
+    "defaultMessage": "Vetováno"
   },
   {
     "id": "vetos.vetoPage.suggestedBy",

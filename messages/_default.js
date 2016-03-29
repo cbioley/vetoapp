@@ -114,7 +114,7 @@ export default [
   },
   {
     "id": "footer.madeByHtml",
-    "defaultMessage": "made by <a target=\"_blank\" href=\"https://twitter.com/steida\">steida</a>,\n      report an <a target=\"_blank\" href=\"https://github.com/steida/vetoapp/issues/new\">issue</a>"
+    "defaultMessage": "made by <a href=\"https://twitter.com/steida\">steida</a>,\n      report an <a href=\"https://github.com/steida/vetoapp/issues/new\">issue</a>"
   },
   {
     "id": "home.callToAction",
@@ -157,10 +157,6 @@ export default [
     "defaultMessage": "More"
   },
   {
-    "id": "vetos.page.yourVetos",
-    "defaultMessage": "Your vetos"
-  },
-  {
     "id": "vetos.suggestVeto.nameLabel",
     "defaultMessage": "Which the law is so bad it should be vetoed?"
   },
@@ -182,11 +178,19 @@ export default [
   },
   {
     "id": "vetos.table.empty",
-    "defaultMessage": "You did not suggest any veto yet."
+    "defaultMessage": "Empty."
   },
   {
     "id": "vetos.totalVotes.h2",
     "defaultMessage": "The most vetoed laws"
+  },
+  {
+    "id": "vetos.userVetos.heading",
+    "defaultMessage": "Suggested vetos"
+  },
+  {
+    "id": "vetos.vetoedVetos.heading",
+    "defaultMessage": "Vetoed"
   },
   {
     "id": "vetos.vetoPage.suggestedBy",

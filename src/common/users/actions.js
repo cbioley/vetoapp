@@ -1,10 +1,10 @@
-export const ON_USERS_LIST = 'ON_USERS_LIST';
+export const ON_USER = 'ON_USER';
 export const SET_VIEWER_IS_ADMIN = 'SET_VIEWER_IS_ADMIN';
 
-export function onUsersList(users) {
+export function onUser(userId, user) {
   return {
-    type: ON_USERS_LIST,
-    payload: { users }
+    type: ON_USER,
+    payload: { userId, user }
   };
 }
 

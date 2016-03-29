@@ -36,7 +36,7 @@ class TotalVotes extends Component {
         {!totalVotes ?
           <Loading />
         :
-          <table className="table">
+          <table className="table table-sm">
             <tbody>
               {totalVotes.map(({ total, vetoId, vetoName }) =>
                 <tr key={vetoId}>

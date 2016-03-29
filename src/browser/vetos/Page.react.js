@@ -1,28 +1,18 @@
 import Component from 'react-pure-render/component';
 import Helmet from 'react-helmet';
 import LastVetos from './LastVetos.react';
-import React, { PropTypes } from 'react';
-import UserVetos from './UserVetos.react';
+import React from 'react';
 import linksMessages from '../../common/app/linksMessages';
-import { FormattedMessage, defineMessages, injectIntl, intlShape } from 'react-intl';
-import { connect } from 'react-redux';
-
-const messages = defineMessages({
-  yourVetos: {
-    defaultMessage: 'Your vetos',
-    id: 'vetos.page.yourVetos'
-  }
-});
+import { injectIntl, intlShape } from 'react-intl';
 
 class Page extends Component {
 
   static propTypes = {
-    intl: intlShape.isRequired,
-    viewer: PropTypes.object
+    intl: intlShape.isRequired
   }
 
   render() {
-    const { intl, viewer } = this.props;
+    const { intl } = this.props;
     const title = intl.formatMessage(linksMessages.vetos);
 
     return (
@@ -31,15 +21,6 @@ class Page extends Component {
         <div className="row">
           <div className="col-md-10">
             <LastVetos />
-            <br />
-            {viewer &&
-              <div>
-                <h2>
-                  <FormattedMessage {...messages.yourVetos} />
-                </h2>
-                <UserVetos userId={viewer.id} />
-              </div>
-            }
           </div>
         </div>
       </div>
@@ -48,8 +29,4 @@ class Page extends Component {
 
 }
 
-Page = injectIntl(Page);
-
-export default connect(state => ({
-  viewer: state.users.viewer
-}))(Page);
+export default injectIntl(Page);

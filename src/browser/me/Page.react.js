@@ -3,9 +3,11 @@ import AuthLogout from '../auth/Logout.react';
 import Component from 'react-pure-render/component';
 import Helmet from 'react-helmet';
 import Locales from './Locales.react';
+import ProfileImage from '../users/ProfileImage.react';
 import React, { PropTypes } from 'react';
 import linksMessages from '../../common/app/linksMessages';
 import { FormattedMessage, defineMessages, injectIntl, intlShape } from 'react-intl';
+import { Link } from 'react-router';
 import { connect } from 'react-redux';
 
 const messages = defineMessages({
@@ -30,25 +32,23 @@ class Page extends Component {
   render() {
     const { intl, viewer, viewerIsAdmin } = this.props;
     const title = intl.formatMessage(linksMessages.me);
-    const displayName = viewer.displayName || viewer.email;
+    const displayName = viewer.displayName;
 
     return (
       <div className="me-page">
         <Helmet title={title} />
         <h2>
-          <FormattedMessage {...messages.h2} values={{ displayName }} />{' '}
+          <Link to={`/users/${viewer.id}`}>
+            <FormattedMessage {...messages.h2} values={{ displayName }} />
+          </Link>
+          {' '}
           {viewerIsAdmin &&
             <sup className="label label-info">
               <FormattedMessage {...messages.admin} />
             </sup>
           }
         </h2>
-        {viewer.profileImageURL &&
-          <img
-            className="profile-image-url img-circle"
-            src={viewer.profileImageURL}
-          />
-        }
+        <ProfileImage url={viewer.profileImageURL} />
         <Locales />
         <AuthLogout />
       </div>

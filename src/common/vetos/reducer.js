@@ -12,6 +12,7 @@ const InitialState = Record({
   suggestVetoFormDisabled: false,
   suggestVetoFormError: null,
   usersVetos: Map(),
+  usersYesVotes: Map(),
   votes: Map(),
   votesYesTotals: Map()
 });
@@ -24,11 +25,11 @@ const vetosJsonToSortedByCreatedAtList = vetos => Seq(vetos)
 const vetosJsonToMap = vetos => Seq(vetos).map(json => new Veto(json)).toMap();
 const voteJsonToVote = json => (json ? new Vote(json) : null);
 
+// Don't revive usersVetos and usersYesVotes because user isn't server authed.
 const revive = state => initialState.merge({
   lastVetos: vetosJsonToSortedByCreatedAtList(state.lastVetos),
   lastVetosLimitToLast: state.lastVetosLimitToLast,
   map: vetosJsonToMap(state.map),
-  // usersVetos // Don't revive usersVetos because user is not server authed.
   votes: Seq(state.votes).map(voteJsonToVote).toMap(),
   votesYesTotals: Seq(state.votesYesTotals).toMap()
 });
@@ -41,6 +42,12 @@ export default function vetosReducer(state = initialState, action) {
     case actions.MORE_LAST_VETOS: {
       return state.update('lastVetosLimitToLast', lastVetosLimitToLast =>
         lastVetosLimitToLast + lastVetosPageSize);
+    }
+
+    case actions.ON_USER_YES_VOTES: {
+      const { userId, votes } = action.payload;
+      const list = votes && Seq(votes).map(voteJsonToVote).toList();
+      return state.setIn(['usersYesVotes', userId], list);
     }
 
     case actions.ON_VOTE: {

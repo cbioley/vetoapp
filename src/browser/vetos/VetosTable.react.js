@@ -1,4 +1,3 @@
-import './VetosTable.scss';
 import Component from 'react-pure-render/component';
 import Loading from '../lib/Loading.react';
 import React, { PropTypes } from 'react';
@@ -7,7 +6,7 @@ import { Link } from 'react-router';
 
 const messages = defineMessages({
   empty: {
-    defaultMessage: 'You did not suggest any veto yet.',
+    defaultMessage: 'Empty.',
     id: 'vetos.table.empty'
   }
 });
@@ -24,25 +23,29 @@ export default class VetosTable extends Component {
 
     return (
       <div className="vetos-table">
-        {!vetos ?
+        {!vetos ? // TODO: Use loading HOC.
           <Loading />
         : !vetos.size ?
           <p>
             <FormattedMessage {...messages.empty} />
           </p>
         :
-          <table className="table">
+          <table className="table table-sm">
             <tbody>
-              {vetos.map(({ id, createdAt, name, creatorDisplayName }) =>
-                <tr key={id}>
-                  <td className="name">
-                    <Link to={`/vetos/${id}`}>{name}</Link>
+              {vetos.map(veto =>
+                <tr key={veto.id}>
+                  <td>
+                    <Link to={`/vetos/${veto.id}`}>{veto.name}</Link>
                   </td>
                   {!hideCreator &&
-                    <td>{creatorDisplayName}</td>
+                    <td>
+                      <Link to={`/users/${veto.creatorId}`}>
+                        {veto.creatorDisplayName}
+                      </Link>
+                    </td>
                   }
                   <td>
-                    <FormattedRelative value={createdAt} />
+                    <FormattedRelative value={veto.createdAt} />
                   </td>
                 </tr>
               )}

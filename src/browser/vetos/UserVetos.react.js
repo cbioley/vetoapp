@@ -4,11 +4,19 @@ import React, { PropTypes } from 'react';
 import VetosTable from './VetosTable.react';
 import { connect } from 'react-redux';
 import { queryFirebase } from '../../common/lib/redux-firebase';
+import { FormattedMessage, defineMessages } from 'react-intl';
+
+const messages = defineMessages({
+  heading: {
+    defaultMessage: 'Suggested vetos',
+    id: 'vetos.userVetos.heading'
+  }
+});
 
 class UserVetos extends Component {
 
   static propTypes = {
-    userId: PropTypes.string.isRequired,
+    user: PropTypes.object.isRequired,
     userVetos: PropTypes.object
   };
 
@@ -17,6 +25,9 @@ class UserVetos extends Component {
 
     return (
       <div className="user-vetos">
+        <h2>
+          <FormattedMessage {...messages.heading} />
+        </h2>
         <VetosTable hideCreator vetos={userVetos} />
       </div>
     );
@@ -24,17 +35,17 @@ class UserVetos extends Component {
 
 }
 
-UserVetos = queryFirebase(UserVetos, ({ setUserVetos, userId }) => ({
+UserVetos = queryFirebase(UserVetos, ({ setUserVetos, user }) => ({
   path: 'vetos',
   params: [
     ['orderByChild', 'creatorId'],
-    ['equalTo', userId]
+    ['equalTo', user.id]
   ],
   on: {
-    value: snapshot => setUserVetos(userId, snapshot.val())
+    value: snapshot => setUserVetos(user.id, snapshot.val())
   }
 }));
 
-export default connect((state, ownProps) => ({
-  userVetos: state.vetos.usersVetos.get(ownProps.userId)
+export default connect((state, { user }) => ({
+  userVetos: state.vetos.usersVetos.get(user.id)
 }), vetosActions)(UserVetos);

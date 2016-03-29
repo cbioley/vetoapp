@@ -14,6 +14,7 @@ const VoteRecord = Record({
 
 export default class Vote extends VoteRecord {
 
+  // TODO: Remove it.
   static id(user, veto) {
     return new Vote({ userId: user.id, vetoId: veto.id }).id;
   }
