@@ -207,7 +207,7 @@ export default [
     "defaultMessage": "admin"
   },
   {
-    "id": "me.page.h2",
+    "id": "me.page.heading",
     "defaultMessage": "{displayName}"
   },
   {

@@ -11,9 +11,9 @@ import { Link } from 'react-router';
 import { connect } from 'react-redux';
 
 const messages = defineMessages({
-  h2: {
+  heading: {
     defaultMessage: '{displayName}',
-    id: 'me.page.h2'
+    id: 'me.page.heading'
   },
   admin: {
     defaultMessage: 'admin',
@@ -32,14 +32,14 @@ class Page extends Component {
   render() {
     const { intl, viewer, viewerIsAdmin } = this.props;
     const title = intl.formatMessage(linksMessages.me);
-    const displayName = viewer.displayName;
+    const displayName = viewer.displayName || viewer.email;
 
     return (
       <div className="me-page">
         <Helmet title={title} />
         <h2>
           <Link to={`/users/${viewer.id}`}>
-            <FormattedMessage {...messages.h2} values={{ displayName }} />
+            <FormattedMessage {...messages.heading} values={{ displayName }} />
           </Link>
           {' '}
           {viewerIsAdmin &&
