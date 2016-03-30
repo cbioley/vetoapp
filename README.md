@@ -5,4 +5,4 @@
 
 http://mmister.com/lidove-veto-co-to-je-a-proc-to-funguje
 
-Synced with [Este 4ac17d9ae88cf74d08bb8bc286d00faabe703a69](https://github.com/este/este/commit/4ac17d9ae88cf74d08bb8bc286d00faabe703a69)
+Synced with [Este 625e19a6560dc955e799c6cf143901ed0c56bb82](https://github.com/este/este/commit/625e19a6560dc955e799c6cf143901ed0c56bb82)

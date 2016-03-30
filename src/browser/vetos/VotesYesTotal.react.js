@@ -16,19 +16,19 @@ const messages = defineMessages({
 export default class VotesYesTotal extends Component {
 
   static propTypes = {
-    count: PropTypes.number
+    value: PropTypes.object
   };
 
   render() {
-    const { count } = this.props;
+    const { value } = this.props;
 
-    if (!count) return null;
+    if (!value || !value.total) return null;
 
     return (
       <sup className="label label-info votes-yes-total">
         <FormattedMessage
           {...messages.votesYesTotal}
-          values={{ count }}
+          values={{ count: value.total }}
         />
       </sup>
     );

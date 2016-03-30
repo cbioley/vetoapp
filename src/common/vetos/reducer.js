@@ -18,12 +18,12 @@ const InitialState = Record({
 });
 const initialState = new InitialState;
 
-const vetosJsonToSortedByCreatedAtList = vetos => Seq(vetos)
-  .map(json => new Veto(json))
+const vetoJsonToVeto = json => json && new Veto(json);
+const vetosJsonToMap = json => Seq(json).map(vetoJsonToVeto).toMap();
+const vetosJsonToSortedByCreatedAtList = json => vetosJsonToMap(json)
   .sortBy(veto => -veto.createdAt)
   .toList();
-const vetosJsonToMap = vetos => Seq(vetos).map(json => new Veto(json)).toMap();
-const voteJsonToVote = json => (json ? new Vote(json) : null);
+const voteJsonToVote = json => json && new Vote(json);
 
 // Don't revive usersVetos and usersYesVotes because user isn't server authed.
 const revive = state => initialState.merge({
@@ -53,7 +53,8 @@ export default function vetosReducer(state = initialState, action) {
       return state.setIn(['usersYesVotes', userId], list);
     }
 
-    case actions.ON_VOTE: {
+    case actions.ON_VOTE:
+    case actions.SET_VOTE: {
       const { voteId, vote } = action.payload;
       return state.setIn(['votes', voteId], voteJsonToVote(vote));
     }
@@ -85,11 +86,6 @@ export default function vetosReducer(state = initialState, action) {
       const { id, json } = action.payload;
       const veto = json ? new Veto(json) : null;
       return state.setIn(['map', id], veto);
-    }
-
-    case actions.SET_VOTE: {
-      const vote = new Vote(action.payload.vote);
-      return state.setIn(['votes', vote.id], vote);
     }
 
     case actions.SUGGEST_VETO_START:

@@ -7,34 +7,42 @@ export default firebase => new Queue(
   firebase.child('vetos-votes-queue'),
   async (data, progress, resolve, reject) => {
     try {
-      const vote = new Vote(data);
-      const previousVotePath = vote.yes
-        ? `vetos-votes-yes/${vote.id}`
-        : `vetos-votes-no/${vote.id}`;
-      const previousVote = await firebase.child(previousVotePath).once('value');
+      const vote = new Vote(data).toJS();
+      const { vetoId, userId } = vote;
+      const previousVote = await firebase
+        .child('vetos-votes')
+        .child(vote.yes ? 'yes' : 'no')
+        .child('vetos').child(vetoId).child(userId)
+        .once('value');
       if (previousVote.exists()) {
         resolve();
         return;
       }
+
       const yesTotalPath = 'vetos-votes-yes-total';
       const yesTotal = await firebase
-        .child(`${yesTotalPath}/_all/${vote.vetoId}/total`).once('value');
+        .child(`${yesTotalPath}/_all/${vetoId}/total`).once('value');
       const yesVoteTotal = new VoteTotal({
         total: (yesTotal.val() || 0) + (vote.yes ? 1 : -1),
         updatedAt: Firebase.ServerValue.TIMESTAMP,
         vetoCountry: vote.vetoCountry,
         vetoCreatorDisplayName: vote.vetoCreatorDisplayName,
         vetoCreatorId: vote.vetoCreatorId,
-        vetoId: vote.vetoId,
+        vetoId,
         vetoMunicipality: vote.vetoMunicipality,
         vetoName: vote.vetoName
       }).toJS();
+
+      const yesVoteValue = vote.yes ? vote : null;
+      const noVoteValue = vote.yes ? null : vote;
       await firebase.update({
-        // Denormalization for fast complex queries.
-        [`${yesTotalPath}/_all/${vote.vetoId}`]: yesVoteTotal,
-        [`${yesTotalPath}/${vote.vetoCountry}/${vote.vetoId}`]: yesVoteTotal,
-        [`vetos-votes-yes/${vote.id}`]: vote.yes ? vote.toJS() : null,
-        [`vetos-votes-no/${vote.id}`]: vote.yes ? null : vote.toJS()
+        // Denormalize for fast complex queries.
+        [`${yesTotalPath}/_all/${vetoId}`]: yesVoteTotal,
+        [`${yesTotalPath}/${vote.vetoCountry}/${vetoId}`]: yesVoteTotal,
+        [`vetos-votes/yes/vetos/${vetoId}/${userId}`]: yesVoteValue,
+        [`vetos-votes/yes/votes/${userId}/${vetoId}`]: yesVoteValue,
+        [`vetos-votes/no/vetos/${vetoId}/${userId}`]: noVoteValue,
+        [`vetos-votes/no/votes/${userId}/${vetoId}`]: noVoteValue
       });
       resolve();
     } catch (e) {

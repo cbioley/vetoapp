@@ -107,16 +107,17 @@ export function setVote(veto, yes) {
       vetoMunicipality: veto.municipality,
       vetoName: veto.name,
       yes
-    }).toJS();
+    });
+    const voteId = vote.id;
+    const voteJson = vote.toJS();
     // Note we don't use promise, because queue is processed on the server, and
     // we don't want to wait for a response. Instead of that we prefer an
     // optimistic update, which also works well for offline scenarios.
-    // setVote is also called via queryFirebase.
     // TODO: Handle error.
-    firebase.child('vetos-votes-queue/tasks').push(vote);
+    firebase.child('vetos-votes-queue/tasks').push(voteJson);
     return {
       type: SET_VOTE,
-      payload: { vote }
+      payload: { voteId, vote: voteJson }
     };
   };
 }

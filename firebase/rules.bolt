@@ -37,21 +37,22 @@ type ExtraLongRequiredString extends String {
 }
 
 // https://github.com/firebase/firebase-queue#queue-security
-type FirebaseQueueStateErrorState {
+type FirebaseQueueStateErrorDetails {
+  attempts: Number,
   error: String,
   error_stack: String,
-  previous_state: String,
   original_task: Any | Null,
-  attempts: Number
+  previous_state: String
 }
 
 // https://github.com/firebase/firebase-queue#queue-security
 type FirebaseQueueState {
-  _state: String,
-  _state_changed: Number,
+  _error_details: FirebaseQueueStateErrorDetails,
+  _id: String,
   _owner: String,
   _progress: Number,
-  _error_details: FirebaseQueueStateErrorState
+  _state: String,
+  _state_changed: Number
 }
 
 type User {
@@ -157,40 +158,28 @@ path /vetos-votes-queue {
   // TODO: Add specs.
 }
 
-path /vetos-votes-yes {
+path /vetos-votes {
   index() { ["userId", "vetoId"] }
   read() { true }
-  path /{id} is Vote {
-    write() { isQueue() }
-  }
-}
+  write() { isQueue() }
 
-path /vetos-votes-no {
-  index() { ["userId", "vetoId"] }
-  read() { true }
-  path /{id} is Vote {
-    write() { isQueue() }
+  path /yes {
+    path /vetos/{vetoId}/{userId} is Vote {}
+    path /votes/{userId}/{vetoId} is Vote {}
+  }
+  path /no {
+    path /vetos/{vetoId}/{userId} is Vote {}
+    path /votes/{userId}/{vetoId} is Vote {}
   }
 }
 
 path /vetos-votes-yes-total {
   read() { true }
+  write() { isQueue() }
 
-  //// This should be enough, but it doesn't work.
-  //// Probably https://github.com/firebase/bolt/issues/58
-  //path /{vetoCountryOrAll}/{vetoId} is VoteTotal {
-  //  write() { isQueue() }
-  //}
-
-  path /CZ/{vetoId} is VoteTotal {
-    write() { isQueue() }
-  }
-  path /US/{vetoId} is VoteTotal {
-    write() { isQueue() }
-  }
-  path /_all/{vetoId} is VoteTotal {
-    write() { isQueue() }
-  }
+  path /CZ/{vetoId} is VoteTotal {}
+  path /US/{vetoId} is VoteTotal {}
+  path /_all/{vetoId} is VoteTotal {}
 
   path /CZ { index() { ["total"] } }
   path /US { index() { ["total"] } }

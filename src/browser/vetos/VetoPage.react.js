@@ -4,13 +4,12 @@ import Component from 'react-pure-render/component';
 import Flag from '../countries/Flag.react';
 import Helmet from 'react-helmet';
 import Linkify from 'react-linkify';
-import Loading from '../lib/Loading.react';
-import NotFound from '../notfound/Page.react';
 import React, { PropTypes } from 'react';
 import Vote from './Vote.react';
 import VoteRecord from '../../common/vetos/Vote';
 import VotesYesTotal from './VotesYesTotal.react';
 import buttonsMessages from '../../common/app/buttonsMessages';
+import loading from '../lib/loading';
 import { FormattedMessage, defineMessages } from 'react-intl';
 import { Link } from 'react-router';
 import { connect } from 'react-redux';
@@ -26,7 +25,7 @@ const messages = defineMessages({
 class VetoPage extends Component {
 
   static propTypes = {
-    veto: PropTypes.object,
+    veto: PropTypes.object.isRequired,
     viewer: PropTypes.object,
     viewerIsAdmin: PropTypes.bool,
     vote: PropTypes.object,
@@ -35,54 +34,40 @@ class VetoPage extends Component {
 
   render() {
     const { veto, viewer, viewerIsAdmin, vote, votesYesTotal } = this.props;
-    const isLoading =
-      veto === undefined ||
-      (viewer && vote === undefined) || // Waiting for vote only for viewer.
-      votesYesTotal === undefined;
-    const viewerIsCreator = veto && viewer && viewer.id === veto.creatorId;
-    const showEdit = viewerIsAdmin || viewerIsCreator;
-    const yesTotal = votesYesTotal && votesYesTotal.total || 0;
+    const showEdit = viewerIsAdmin || viewer && viewer.id === veto.creatorId;
 
     return (
       <div className="veto-page">
         <div className="row">
           <div className="col-md-10">
-            {isLoading ?
-              <Loading />
-            : !veto ?
-              <NotFound />
-            :
-              <div className="view">
-                <Helmet title={veto.name} />
-                <h2>
-                  {veto.name}{' '}
-                  <Flag country={veto.country} />
-                  {' '}
-                  <VotesYesTotal count={yesTotal} />
-                </h2>
-                <nav className="nav nav-inline">
-                  {!viewerIsCreator &&
-                    <Link to={`/users/${veto.creatorId}`}>
-                      <FormattedMessage
-                        {...messages.suggestedBy}
-                        values={{ creatorDisplayName: veto.creatorDisplayName }}
-                      />
-                    </Link>
-                  }
-                  {showEdit &&
-                    <Link to={`/vetos/${veto.id}/edit`}>
-                      <FormattedMessage {...buttonsMessages.edit} />
-                    </Link>
-                  }
-                </nav>
-                <p>
-                  <Linkify>
-                    {veto.reason}
-                  </Linkify>
-                </p>
-                <Vote {...{ veto, vote, yesTotal }} />
-              </div>
-            }
+            <div className="view">
+              <Helmet title={veto.name} />
+              <h2>
+                {veto.name}{' '}
+                <Flag country={veto.country} />
+                {' '}
+                <VotesYesTotal value={votesYesTotal} />
+              </h2>
+              <nav className="nav nav-inline">
+                <Link to={`/users/${veto.creatorId}`}>
+                  <FormattedMessage
+                    {...messages.suggestedBy}
+                    values={{ creatorDisplayName: veto.creatorDisplayName }}
+                  />
+                </Link>
+                {showEdit &&
+                  <Link to={`/vetos/${veto.id}/edit`}>
+                    <FormattedMessage {...buttonsMessages.edit} />
+                  </Link>
+                }
+              </nav>
+              <p>
+                <Linkify>
+                  {veto.reason}
+                </Linkify>
+              </p>
+              <Vote {...{ veto, vote, votesYesTotal }} />
+            </div>
           </div>
         </div>
       </div>
@@ -91,6 +76,11 @@ class VetoPage extends Component {
 
 }
 
+VetoPage = loading(VetoPage, ['veto'], ({ viewer, vote, votesYesTotal }) =>
+  votesYesTotal === undefined ||
+  (viewer && vote === undefined) // We fetch vote only for viewer.
+);
+
 VetoPage = queryFirebase(VetoPage, ({ setVeto, params: { vetoId } }) => ({
   path: `vetos/${vetoId}`,
   on: {
@@ -98,29 +88,27 @@ VetoPage = queryFirebase(VetoPage, ({ setVeto, params: { vetoId } }) => ({
   }
 }));
 
-VetoPage = queryFirebase(VetoPage, ({ onVote, viewer, veto }) => ({
-  path: viewer && veto && `vetos-votes-yes/${VoteRecord.id(viewer, veto)}`,
+VetoPage = queryFirebase(VetoPage, ({ onVote, veto, viewer }) => ({
+  path: viewer && veto && `vetos-votes/yes/votes/${viewer.id}/${veto.id}}`,
   on: {
-    value: snapshot => onVote(snapshot.key(), snapshot.val())
+    value: snapshot => onVote(VoteRecord.id(veto, viewer), snapshot.val())
   }
 }));
 
-VetoPage = queryFirebase(VetoPage, ({ onVoteYesTotal, params: { vetoId } }) => ({
-  path: `vetos-votes-yes-total/_all/${vetoId}`,
+VetoPage = queryFirebase(VetoPage, ({ onVoteYesTotal, params }) => ({
+  path: `vetos-votes-yes-total/_all/${params.vetoId}`,
   on: {
-    value: snapshot => onVoteYesTotal(vetoId, snapshot.val())
+    value: snapshot => onVoteYesTotal(params.vetoId, snapshot.val())
   }
 }));
 
 export default connect(({ users, vetos }, { params: { vetoId } }) => {
   const veto = vetos.map.get(vetoId);
-  const viewer = users.viewer;
-  const voteId = veto && viewer && VoteRecord.id(viewer, veto);
   return {
     veto,
-    viewer,
+    viewer: users.viewer,
     viewerIsAdmin: users.viewerIsAdmin,
-    vote: vetos.votes.get(voteId),
+    vote: vetos.votes.get(VoteRecord.id(veto, users.viewer)),
     votesYesTotal: vetos.votesYesTotals.get(vetoId)
   };
 }, vetosActions)(VetoPage);

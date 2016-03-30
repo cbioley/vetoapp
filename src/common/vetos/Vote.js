@@ -1,6 +1,6 @@
 import { Record } from 'immutable';
 
-const VoteRecord = Record({
+const Vote = Record({
   createdAt: null,
   userId: null,
   vetoCountry: '',
@@ -12,14 +12,13 @@ const VoteRecord = Record({
   yes: false
 });
 
-export default class Vote extends VoteRecord {
+// Subclass Vote to add en.wikipedia.org/wiki/Compound_key
+export default class extends Vote {
 
-  // TODO: Remove it.
-  static id(user, veto) {
-    return new Vote({ userId: user.id, vetoId: veto.id }).id;
+  static id(veto, user) {
+    return [veto && veto.id, user && user.id].join();
   }
 
-  // Note compound key.
   get id() {
     return [this.vetoId, this.userId].join();
   }
