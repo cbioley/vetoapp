@@ -184,7 +184,8 @@ export default [
   },
   {
     "id": "footer.madeByHtml",
-    "defaultMessage": "made by <a href=\"https://twitter.com/steida\">steida</a>,\n      report an <a href=\"https://github.com/steida/vetoapp/issues/new\">issue</a>"
+    "defaultMessage": `stvořil <a href="https://twitter.com/steida">steida</a>,
+      nahlásit <a href="https://github.com/steida/vetoapp/issues/new">chybu</a>`
   },
   {
     "id": "home.callToAction",
