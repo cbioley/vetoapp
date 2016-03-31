@@ -89,7 +89,7 @@ VetoPage = queryFirebase(VetoPage, ({ setVeto, params: { vetoId } }) => ({
 }));
 
 VetoPage = queryFirebase(VetoPage, ({ onVote, veto, viewer }) => ({
-  path: viewer && veto && `vetos-votes/yes/votes/${viewer.id}/${veto.id}}`,
+  path: viewer && veto && `vetos-votes/yes/votes/${viewer.id}/${veto.id}`,
   on: {
     value: snapshot => onVote(VoteRecord.id(veto, viewer), snapshot.val())
   }

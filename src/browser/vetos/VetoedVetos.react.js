@@ -51,10 +51,10 @@ class VetoedVetos extends Component {
 }
 
 VetoedVetos = queryFirebase(VetoedVetos, ({ onUserYesVotes, user }) => ({
-  path: 'vetos-votes-yes',
+  path: `vetos-votes/yes/votes/${user.id}`,
   params: [
-    ['orderByChild', 'userId'],
-    ['equalTo', user.id]
+    ['orderByChild', 'createdAt'],
+    ['limitToLast', 100]
   ],
   on: {
     value: snapshot => onUserYesVotes(user.id, snapshot.val())
