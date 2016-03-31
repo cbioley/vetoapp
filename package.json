@@ -109,7 +109,6 @@
     "sinon-chai": "^2.8.0",
     "style-loader": "^0.13.0",
     "through2": "^2.0.1",
-    "touch-action": "^1.0.1",
     "url-loader": "^0.5.5",
     "validator": "^5.0.0",
     "webpack": "^1.12.3",

@@ -7,7 +7,6 @@ import createEngine from 'redux-storage-engine-localstorage';
 import createRoutes from './createRoutes';
 import cs from 'react-intl/locale-data/cs';
 import en from 'react-intl/locale-data/en';
-import touchAction from 'touch-action';
 import { Provider } from 'react-redux';
 import { Router } from 'react-router';
 import { addLocaleData } from 'react-intl';
@@ -36,7 +35,3 @@ ReactDOM.render(
   </Provider>
   , document.getElementById('app')
 );
-
-// This is here just for testing, and should be removed on Safari 9.3 release.
-// Don't set whole document, because bootstrap uses touch-action.
-touchAction({ val: 'auto' });
