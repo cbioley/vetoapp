@@ -44,6 +44,22 @@ export default function vetosReducer(state = initialState, action) {
         lastVetosLimitToLast + lastVetosPageSize);
     }
 
+    case actions.ON_LAST_VETOS: {
+      const { vetos } = action.payload;
+      const list = vetosJsonToSortedByCreatedAtList(vetos);
+      return state
+        .mergeIn(['map'], vetosJsonToMap(vetos))
+        .set('lastVetos', list);
+    }
+
+    case actions.ON_USER_VETOS: {
+      const { userId, vetos } = action.payload;
+      const list = vetosJsonToSortedByCreatedAtList(vetos);
+      return state
+        .mergeIn(['map'], vetosJsonToMap(vetos))
+        .setIn(['usersVetos', userId], list);
+    }
+
     case actions.ON_USER_YES_VOTES: {
       const { userId, votes } = action.payload;
       const list = votes && Seq(votes)
@@ -62,24 +78,6 @@ export default function vetosReducer(state = initialState, action) {
     case actions.ON_VOTE_YES_TOTAL: {
       const { vetoId, voteTotal } = action.payload;
       return state.setIn(['votesYesTotals', vetoId], voteTotal);
-    }
-
-    // TODO: Rename to ON_
-    case actions.SET_LAST_VETOS: {
-      const { vetos } = action.payload;
-      const list = vetosJsonToSortedByCreatedAtList(vetos);
-      return state
-        .mergeIn(['map'], vetosJsonToMap(vetos))
-        .set('lastVetos', list);
-    }
-
-    // TODO: Rename to ON_
-    case actions.SET_USER_VETOS: {
-      const { userId, vetos } = action.payload;
-      const list = vetosJsonToSortedByCreatedAtList(vetos);
-      return state
-        .mergeIn(['map'], vetosJsonToMap(vetos))
-        .setIn(['usersVetos', userId], list);
     }
 
     case actions.SET_VETO: {

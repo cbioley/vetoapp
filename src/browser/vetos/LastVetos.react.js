@@ -56,7 +56,7 @@ LastVetos = queryFirebase(LastVetos, props => ({
     ['limitToLast', props.lastVetosLimitToLast]
   ],
   on: {
-    value: snapshot => props.setLastVetos(snapshot.val())
+    value: snapshot => props.onLastVetos(snapshot.val())
   }
 }));
 

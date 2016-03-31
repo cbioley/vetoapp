@@ -35,14 +35,14 @@ class UserVetos extends Component {
 
 }
 
-UserVetos = queryFirebase(UserVetos, ({ setUserVetos, user }) => ({
+UserVetos = queryFirebase(UserVetos, ({ onUserVetos, user }) => ({
   path: 'vetos',
   params: [
     ['orderByChild', 'creatorId'],
     ['equalTo', user.id]
   ],
   on: {
-    value: snapshot => setUserVetos(user.id, snapshot.val())
+    value: snapshot => onUserVetos(user.id, snapshot.val())
   }
 }));
 

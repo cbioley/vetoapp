@@ -3,12 +3,12 @@ import Vote from '../../common/vetos/Vote';
 
 export const DELETE_VETO = 'DELETE_VETO';
 export const MORE_LAST_VETOS = 'MORE_LAST_VETOS';
+export const ON_LAST_VETOS = 'ON_LAST_VETOS';
+export const ON_USER_VETOS = 'ON_USER_VETOS';
 export const ON_USER_YES_VOTES = 'ON_USER_YES_VOTES';
 export const ON_VOTE = 'ON_VOTE';
 export const ON_VOTE_YES_TOTAL = 'ON_VOTE_YES_TOTAL';
 export const SAVE_VETO = 'SAVE_VETO';
-export const SET_LAST_VETOS = 'SET_LAST_VETOS';
-export const SET_USER_VETOS = 'SET_USER_VETOS';
 export const SET_VETO = 'SET_VETO';
 export const SET_VOTE = 'SET_VOTE';
 export const SUGGEST_VETO_ERROR = 'SUGGEST_VETO_ERROR';
@@ -37,6 +37,20 @@ export function deleteVeto(veto) {
 export function moreLastVetos() {
   return {
     type: MORE_LAST_VETOS
+  };
+}
+
+export function onLastVetos(vetos) {
+  return {
+    type: ON_LAST_VETOS,
+    payload: { vetos }
+  };
+}
+
+export function onUserVetos(userId, vetos) {
+  return {
+    type: ON_USER_VETOS,
+    payload: { userId, vetos }
   };
 }
 
@@ -70,20 +84,6 @@ export function saveVeto(veto) {
       type: SAVE_VETO,
       payload: { promise }
     };
-  };
-}
-
-export function setLastVetos(vetos) {
-  return {
-    type: SET_LAST_VETOS,
-    payload: { vetos }
-  };
-}
-
-export function setUserVetos(userId, vetos) {
-  return {
-    type: SET_USER_VETOS,
-    payload: { userId, vetos }
   };
 }
 
