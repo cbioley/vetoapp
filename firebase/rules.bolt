@@ -161,27 +161,22 @@ path /vetos-votes-queue {
 path /vetos-votes {
   index() { ["userId", "vetoId"] }
   read() { true }
-  write() { isQueue() }
 
-  path /yes {
-    path /vetos/{vetoId}/{userId} is Vote {}
-    path /votes/{userId}/{vetoId} is Vote {}
-  }
-  path /no {
-    path /vetos/{vetoId}/{userId} is Vote {}
-    path /votes/{userId}/{vetoId} is Vote {}
+  path /{yesOrNo}/{vetosOrVotes}/{vetoIdOrUserId} {
+    index() { ["createdAt"] }
+    path /{userIdOrVetoId} is Vote {
+      write() { isQueue() }
+    }
   }
 }
 
 path /vetos-votes-yes-total {
   read() { true }
-  write() { isQueue() }
 
-  path /CZ/{vetoId} is VoteTotal {}
-  path /US/{vetoId} is VoteTotal {}
-  path /_all/{vetoId} is VoteTotal {}
-
-  path /CZ { index() { ["total"] } }
-  path /US { index() { ["total"] } }
-  path /_all { index() { ["total"] } }
+  path /{vetoCountryOrAll} {
+    index() { ["total"] }
+    path /{vetoId} is VoteTotal {
+      write() { isQueue() }
+    }
+  }
 }
