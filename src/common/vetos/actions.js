@@ -23,6 +23,8 @@ const validateVeto = (validate, veto) => validate(veto)
 
 export function deleteVeto(veto) {
   return ({ firebase }) => {
+    // Yes, complex update from the client, but Firebase security rules ensure
+    // viewer can change only own data, so it's safe.
     const promise = firebase.update({
       [`vetos/${veto.id}`]: null,
       [`vetos-archived/${veto.id}`]: veto

@@ -109,6 +109,10 @@ type VoteTotal {
   vetoId: ShortRequiredString,
   vetoMunicipality: ShortString,
   vetoName: LongRequiredString
+
+  validate() {
+    userExits(this.vetoCreatorId) && vetoExits(this.vetoId)
+  }
 }
 
 // Paths.
@@ -143,8 +147,7 @@ path /vetos {
 }
 
 path /vetos-archived/{id} is Veto {
-  create() { this.id == id }
-  delete() { isViewer(prior(this).creatorId) }
+  create() { isViewer(this.creatorId) }
 }
 
 path /vetos-votes-queue {
