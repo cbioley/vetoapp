@@ -16,7 +16,7 @@ class UserPage extends Component {
 
   static propTypes = {
     user: PropTypes.object.isRequired,
-    viewer: PropTypes.object.isRequired
+    viewer: PropTypes.object
   };
 
   render() {
