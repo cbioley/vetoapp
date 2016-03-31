@@ -42,6 +42,12 @@ $font-family-sans-serif: "Segoe UI", "Lucida Grande", Ubuntu, sans-serif;
 .container {
   padding-top: 1em;
 
+  h2 {
+    .label {
+      font-size: .375em;
+    }
+  }
+
   header {
     padding: 1em 0;
     .img-fluid {

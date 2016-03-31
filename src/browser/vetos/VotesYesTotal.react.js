@@ -1,4 +1,3 @@
-import './VotesYesTotal.scss';
 import Component from 'react-pure-render/component';
 import React, { PropTypes } from 'react';
 import { FormattedMessage, defineMessages } from 'react-intl';
