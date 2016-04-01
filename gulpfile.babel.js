@@ -155,8 +155,9 @@ gulp.task('clear-react-packager-cache', () => {
 
 // No mocha right now, because app has no tests yet. Testing is overrated.
 gulp.task('deploy', ['eslint-ci'], shell.task([
-  'firebase deploy',
-  'git push heroku master'
+  // TODO: This should be atomic somehow to prevent queues fails.
+  'git push heroku master',
+  'firebase deploy'
 ]));
 
 gulp.task('extractDefaultMessages', () => {
