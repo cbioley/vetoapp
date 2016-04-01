@@ -55,11 +55,11 @@ class Header extends Component {
               <FormattedMessage {...linksMessages.suggestVeto} />
             </Link>
           </li>
-          <li className="nav-item">
+          {/*<li className="nav-item">
             <Link activeClassName="active" className="nav-link" to="/vetos">
               <FormattedMessage {...linksMessages.vetos} />
             </Link>
-          </li>
+          </li>*/}
           <li className="nav-item">
             <Link activeClassName="active" className="nav-link" to="/about">
               <FormattedMessage {...linksMessages.about} />

@@ -1,5 +1,6 @@
 import Component from 'react-pure-render/component';
 import Helmet from 'react-helmet';
+import LastVetos from '../vetos/LastVetos.react';
 import React, { PropTypes } from 'react';
 import TotalVotes from '../vetos/TotalVotes.react';
 import getDefaultCountryByLocale from '../../common/countries/getDefaultCountryByLocale';
@@ -54,6 +55,7 @@ class Page extends Component {
               </div>
             }
             <TotalVotes country={country} />
+            <LastVetos />
           </div>
         </div>
       </div>

@@ -9,7 +9,7 @@ import React from 'react';
 import SuggestVeto from './vetos/SuggestVetoPage.react';
 import User from './users/UserPage.react';
 import Veto from './vetos/VetoPage.react';
-import Vetos from './vetos/Page.react';
+// import Vetos from './vetos/Page.react';
 import { IndexRoute, Route } from 'react-router';
 
 export default function createRoutes(getState) {
@@ -32,7 +32,7 @@ export default function createRoutes(getState) {
       <Route component={Me} path="me" onEnter={requireAuth} />
       <Route component={SuggestVeto} path="suggest-veto" />
       <Route component={User} path="users/:userId" />
-      <Route component={Vetos} path="vetos" />
+      {/*<Route component={Vetos} path="vetos" />*/}
       <Route component={Veto} path="vetos/:vetoId" />
       <Route component={NotFound} path="*" />
     </Route>
