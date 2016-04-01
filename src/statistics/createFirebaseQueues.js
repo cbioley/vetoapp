@@ -1,4 +1,5 @@
 import Firebase from 'firebase';
+import vetosArchiveQueue from './queues/vetosArchiveQueue';
 import vetosVotesQueue from './queues/vetosVotesQueue';
 
 export default async function createFirebaseQueues(email, password, url) {
@@ -7,6 +8,7 @@ export default async function createFirebaseQueues(email, password, url) {
   await firebase.authWithPassword({ email, password });
 
   const queues = [
+    vetosArchiveQueue(firebase),
     vetosVotesQueue(firebase)
   ];
 

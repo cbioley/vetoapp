@@ -39,6 +39,11 @@ export default function vetosReducer(state = initialState, action) {
 
   switch (action.type) {
 
+    case actions.DELETE_VETO: {
+      const { veto } = action.payload;
+      return state.deleteIn(['map', veto.id]);
+    }
+
     case actions.MORE_LAST_VETOS: {
       return state.update('lastVetosLimitToLast', lastVetosLimitToLast =>
         lastVetosLimitToLast + lastVetosPageSize);

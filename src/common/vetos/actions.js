@@ -21,17 +21,14 @@ const validateVeto = (validate, veto) => validate(veto)
   .prop('reason').required().fewWordsAtLeast()
   .promise;
 
+// TODO: Rename to archiveVeto.
 export function deleteVeto(veto) {
   return ({ firebase }) => {
-    // Yes, complex update from the client, but Firebase security rules ensure
-    // viewer can change only own data, so it's safe.
-    const promise = firebase.update({
-      [`vetos/${veto.id}`]: null,
-      [`vetos-archived/${veto.id}`]: veto
-    });
+    firebase.child('vetos-archive-queue/tasks').push({ vetoId: veto.id });
+    // TODO: Add client optimistic delete.
     return {
       type: DELETE_VETO,
-      payload: { promise }
+      payload: { veto }
     };
   };
 }
@@ -100,7 +97,7 @@ export function setVote(veto, yes) {
   return ({ firebase, getState }) => {
     const { viewer } = getState().users;
     const vote = new Vote({
-      createdAt: firebase.constructor.ServerValue.TIMESTAMP,
+      createdAt: Date.now(),
       userId: viewer.id,
       vetoCountry: veto.country,
       vetoCreatorDisplayName: veto.creatorDisplayName,
@@ -110,16 +107,18 @@ export function setVote(veto, yes) {
       vetoName: veto.name,
       yes
     });
-    const voteId = vote.id;
-    const voteJson = vote.toJS();
     // Note we don't use promise, because queue is processed on the server, and
     // we don't want to wait for a response. Instead of that we prefer an
     // optimistic update, which also works well for offline scenarios.
     // TODO: Handle error.
-    firebase.child('vetos-votes-queue/tasks').push(voteJson);
+    firebase.child('vetos-votes-queue/tasks').push({
+      userId: viewer.id,
+      vetoId: veto.id,
+      yes
+    });
     return {
       type: SET_VOTE,
-      payload: { voteId, vote: voteJson }
+      payload: { voteId: vote.id, vote: vote.toJS() }
     };
   };
 }

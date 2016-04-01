@@ -7,42 +7,52 @@ export default firebase => new Queue(
   firebase.child('vetos-votes-queue'),
   async (data, progress, resolve, reject) => {
     try {
-      const vote = new Vote(data).toJS();
-      const { vetoId, userId } = vote;
+      const { userId, vetoId, yes } = data;
       const previousVote = await firebase
         .child('vetos-votes')
-        .child(vote.yes ? 'yes' : 'no')
-        .child('vetos').child(vetoId).child(userId)
+        .child(yes ? 'yes' : 'no')
+        .child('vetos')
+        .child(vetoId)
+        .child(userId)
         .once('value');
       if (previousVote.exists()) {
         resolve();
         return;
       }
-
+      const vetoVal = await firebase.child('vetos').child(vetoId).once('value');
+      const veto = vetoVal.val();
       const yesTotalPath = 'vetos-votes-yes-total';
       const yesTotal = await firebase
         .child(`${yesTotalPath}/_all/${vetoId}/total`).once('value');
       const yesVoteTotal = new VoteTotal({
-        total: (yesTotal.val() || 0) + (vote.yes ? 1 : -1),
+        total: (yesTotal.val() || 0) + (yes ? 1 : -1),
         updatedAt: Firebase.ServerValue.TIMESTAMP,
-        vetoCountry: vote.vetoCountry,
-        vetoCreatorDisplayName: vote.vetoCreatorDisplayName,
-        vetoCreatorId: vote.vetoCreatorId,
+        vetoCountry: veto.country,
+        vetoCreatorDisplayName: veto.creatorDisplayName,
+        vetoCreatorId: veto.creatorId,
         vetoId,
-        vetoMunicipality: vote.vetoMunicipality,
-        vetoName: vote.vetoName
+        vetoMunicipality: veto.municipality,
+        vetoName: veto.name
       }).toJS();
-
-      const yesVoteValue = vote.yes ? vote : null;
-      const noVoteValue = vote.yes ? null : vote;
+      const vote = new Vote({
+        createdAt: Firebase.ServerValue.TIMESTAMP,
+        userId,
+        vetoCountry: veto.country,
+        vetoCreatorDisplayName: veto.creatorDisplayName,
+        vetoCreatorId: veto.creatorId,
+        vetoId,
+        vetoMunicipality: veto.municipality,
+        vetoName: veto.name,
+        yes
+      }).toJS();
       await firebase.update({
         // Denormalize for fast complex queries.
         [`${yesTotalPath}/_all/${vetoId}`]: yesVoteTotal,
-        [`${yesTotalPath}/${vote.vetoCountry}/${vetoId}`]: yesVoteTotal,
-        [`vetos-votes/yes/vetos/${vetoId}/${userId}`]: yesVoteValue,
-        [`vetos-votes/yes/votes/${userId}/${vetoId}`]: yesVoteValue,
-        [`vetos-votes/no/vetos/${vetoId}/${userId}`]: noVoteValue,
-        [`vetos-votes/no/votes/${userId}/${vetoId}`]: noVoteValue
+        [`${yesTotalPath}/${veto.country}/${vetoId}`]: yesVoteTotal,
+        [`vetos-votes/yes/vetos/${vetoId}/${userId}`]: yes ? vote : null,
+        [`vetos-votes/yes/votes/${userId}/${vetoId}`]: yes ? vote : null,
+        [`vetos-votes/no/vetos/${vetoId}/${userId}`]: yes ? null : vote,
+        [`vetos-votes/no/votes/${userId}/${vetoId}`]: yes ? null : vote
       });
       resolve();
     } catch (e) {

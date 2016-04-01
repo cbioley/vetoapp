@@ -5,7 +5,8 @@
 isAdmin() { root.roles.admins[auth.uid] != null }
 isQueue() { root.roles.queues[auth.uid] != null }
 isSignedIn() { auth != null }
-isViewer(uid) { isSignedIn() && auth.uid == uid }
+isViewer(uid) { isSignedIn() && uid == auth.uid }
+isViewerVeto(vetoId) { root.vetos[vetoId].creatorId == auth.uid }
 userExits(uid) { root.users[uid] != null }
 vetoExits(id) { root.vetos[id] != null }
 
@@ -78,9 +79,13 @@ type Veto {
   name: LongRequiredString,
   reason: ExtraLongRequiredString,
   updatedAt: Number
+}
+
+type VetoArchiveQueueItem {
+  vetoId: ShortRequiredString
 
   validate() {
-    this.id == key()
+    vetoExits(this.vetoId)
   }
 }
 
@@ -93,6 +98,16 @@ type Vote {
   vetoId: ShortRequiredString,
   vetoMunicipality: ShortString,
   vetoName: LongRequiredString,
+  yes: Boolean
+
+  validate() {
+    userExits(this.userId) && vetoExits(this.vetoId)
+  }
+}
+
+type VoteQueueItem {
+  userId: ShortRequiredString,
+  vetoId: ShortRequiredString,
   yes: Boolean
 
   validate() {
@@ -140,14 +155,29 @@ path /vetos {
   read() { true }
 
   path /{id} is Veto {
-    create() { isViewer(this.creatorId) }
-    delete() { isAdmin() || isViewer(prior(this).creatorId) }
-    update() { isAdmin() || isViewer(prior(this).creatorId) }
+    create() { id == this.id && isViewer(this.creatorId) }
+    delete() { isQueue() || isAdmin() || isViewer(prior(this).creatorId) }
+    update() { isQueue() || isAdmin() || isViewer(prior(this).creatorId) }
   }
 }
 
 path /vetos-archived/{id} is Veto {
-  create() { isViewer(this.creatorId) }
+  write() { isQueue() }
+}
+
+path /vetos-archive-queue {
+  path /tasks {
+    index() { ["_state"] }
+    read() { isQueue() }
+
+    path /{id} is VetoArchiveQueueItem | FirebaseQueueState {
+      // For some reason, this works, while plain write doesn't work.
+      // write() { isViewerVeto(this.vetoId) || isQueue() }
+      create() { isViewerVeto(this.vetoId) }
+      update() { isQueue() }
+      delete() { isQueue() }
+    }
+  }
 }
 
 path /vetos-votes-queue {
@@ -155,32 +185,31 @@ path /vetos-votes-queue {
     index() { ["_state"] }
     read() { isQueue() }
 
-    path /{id} is Vote | FirebaseQueueState {
-      write() { isViewer(this.userId) || isQueue() }
+    path /{id} is VoteQueueItem | FirebaseQueueState {
+      create() { isViewer(this.userId) }
+      update() { isQueue() }
+      delete() { isQueue() }
     }
   }
-  // TODO: Add specs.
 }
 
 path /vetos-votes {
   index() { ["userId", "vetoId"] }
   read() { true }
+  write() { isQueue() }
 
   path /{yesOrNo}/{vetosOrVotes}/{vetoIdOrUserId} {
     index() { ["createdAt"] }
-    path /{userIdOrVetoId} is Vote {
-      write() { isQueue() }
-    }
+    path /{userIdOrVetoId} is Vote {}
   }
 }
 
 path /vetos-votes-yes-total {
   read() { true }
+  write() { isQueue() }
 
   path /{vetoCountryOrAll} {
     index() { ["total"] }
-    path /{vetoId} is VoteTotal {
-      write() { isQueue() }
-    }
+    path /{vetoId} is VoteTotal {}
   }
 }
