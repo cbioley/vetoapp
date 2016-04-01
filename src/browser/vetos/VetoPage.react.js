@@ -1,6 +1,7 @@
 import './VetoPage.scss';
 import * as vetosActions from '../../common/vetos/actions';
 import Component from 'react-pure-render/component';
+import FacebookComments from './FacebookComments.react';
 import Flag from '../countries/Flag.react';
 import Helmet from 'react-helmet';
 import Linkify from 'react-linkify';
@@ -68,6 +69,7 @@ class VetoPage extends Component {
               </p>
               <Vote {...{ veto, vote, votesYesTotal }} />
             </div>
+            <FacebookComments />
           </div>
         </div>
       </div>

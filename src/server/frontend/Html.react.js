@@ -29,6 +29,24 @@ m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
 ga('create', '${googleAnalyticsId}', 'auto'); ga('send', 'pageview');` }}
       />;
 
+    const facebookSdk = `<script>
+      window.fbAsyncInit = function() {
+        FB.init({
+          appId      : '1479072252382154',
+          xfbml      : false,
+          version    : 'v2.5'
+        });
+      };
+
+      (function(d, s, id){
+         var js, fjs = d.getElementsByTagName(s)[0];
+         if (d.getElementById(id)) {return;}
+         js = d.createElement(s); js.id = id;
+         js.src = "//connect.facebook.net/en_US/sdk.js";
+         fjs.parentNode.insertBefore(js, fjs);
+       }(document, 'script', 'facebook-jssdk'));
+    </script>`;
+
     return (
       <html {...helmet.htmlAttributes.toComponent()}>
         <head>
@@ -40,7 +58,7 @@ ga('create', '${googleAnalyticsId}', 'auto'); ga('send', 'pageview');` }}
           {linkStyles}
           {analytics}
         </head>
-        <body dangerouslySetInnerHTML={{ __html: bodyHtml }} />
+        <body dangerouslySetInnerHTML={{ __html: facebookSdk + bodyHtml }} />
       </html>
     );
   }
