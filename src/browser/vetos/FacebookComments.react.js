@@ -12,11 +12,13 @@ class FacebookComments extends Component {
     const { href } = this.props;
 
     return (
-      <div
-        className="fb-comments"
-        data-href={href}
-        data-numposts="5"
-      />
+      <div className="facebook-comments">
+        <div
+          className="fb-comments"
+          data-href={href}
+          data-numposts="5"
+        />
+      </div>
     );
   }
 
