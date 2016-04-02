@@ -30,7 +30,7 @@ ga('create', '${googleAnalyticsId}', 'auto'); ga('send', 'pageview');` }}
       />;
 
     // https://developers.facebook.com/docs/javascript/quickstart/v2.5
-    const facebookSdk = `<script>
+    const preBodyHtml = `<script>
       window.fbAsyncInit = function() {
         FB.init({
           appId      : '1479072252382154',
@@ -44,6 +44,12 @@ ga('create', '${googleAnalyticsId}', 'auto'); ga('send', 'pageview');` }}
          js.src = "//connect.facebook.net/en_US/sdk.js";
          fjs.parentNode.insertBefore(js, fjs);
        }(document, 'script', 'facebook-jssdk'));
+
+      var appStorage = localStorage.getItem('redux-storage:vetoapp') || {};
+      if (Object.keys(appStorage).length > 0) {
+        // Hide content until storage is loaded.
+        document.body.classList.add('este-storage-is-loading');
+      }
     </script>`;
 
     return (
@@ -57,7 +63,7 @@ ga('create', '${googleAnalyticsId}', 'auto'); ga('send', 'pageview');` }}
           {linkStyles}
           {analytics}
         </head>
-        <body dangerouslySetInnerHTML={{ __html: facebookSdk + bodyHtml }} />
+        <body dangerouslySetInnerHTML={{ __html: preBodyHtml + bodyHtml }} />
       </html>
     );
   }

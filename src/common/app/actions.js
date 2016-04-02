@@ -12,6 +12,7 @@ export function updateAppStateFromStorage() {
         // to config defaultLocale.
         dispatch(setCurrentLocale('en'));
       }
+      document.body.classList.remove('este-storage-is-loading');
     });
     return {
       type: UPDATE_APP_STATE_FROM_STORAGE

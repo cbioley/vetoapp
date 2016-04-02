@@ -39,6 +39,11 @@ $font-family-sans-serif: "Segoe UI", "Lucida Grande", Ubuntu, sans-serif;
 @import "~bootstrap/scss/utilities-spacing";
 @import "~bootstrap/scss/utilities-responsive";
 
+// https://github.com/steida/vetoapp/issues/34
+body.este-storage-is-loading {
+  display: none;
+}
+
 .container {
   padding-top: 1em;
 
