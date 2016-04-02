@@ -29,15 +29,14 @@ m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
 ga('create', '${googleAnalyticsId}', 'auto'); ga('send', 'pageview');` }}
       />;
 
+    // https://developers.facebook.com/docs/javascript/quickstart/v2.5
     const facebookSdk = `<script>
       window.fbAsyncInit = function() {
         FB.init({
           appId      : '1479072252382154',
-          xfbml      : false,
           version    : 'v2.5'
         });
       };
-
       (function(d, s, id){
          var js, fjs = d.getElementsByTagName(s)[0];
          if (d.getElementById(id)) {return;}
