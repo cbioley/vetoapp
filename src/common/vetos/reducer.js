@@ -85,7 +85,7 @@ export default function vetosReducer(state = initialState, action) {
       return state.setIn(['votesYesTotals', vetoId], voteTotal);
     }
 
-    case actions.SET_VETO: {
+    case actions.ON_VETO: {
       const { id, json } = action.payload;
       const veto = json ? new Veto(json) : null;
       return state.setIn(['map', id], veto);

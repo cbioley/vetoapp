@@ -6,10 +6,10 @@ export const MORE_LAST_VETOS = 'MORE_LAST_VETOS';
 export const ON_LAST_VETOS = 'ON_LAST_VETOS';
 export const ON_USER_VETOS = 'ON_USER_VETOS';
 export const ON_USER_YES_VOTES = 'ON_USER_YES_VOTES';
+export const ON_VETO = 'ON_VETO';
 export const ON_VOTE = 'ON_VOTE';
 export const ON_VOTE_YES_TOTAL = 'ON_VOTE_YES_TOTAL';
 export const SAVE_VETO = 'SAVE_VETO';
-export const SET_VETO = 'SET_VETO';
 export const SET_VOTE = 'SET_VOTE';
 export const SUGGEST_VETO_ERROR = 'SUGGEST_VETO_ERROR';
 export const SUGGEST_VETO_START = 'SUGGEST_VETO_START';
@@ -60,6 +60,13 @@ export function onUserYesVotes(userId, votes) {
   };
 }
 
+export function onVeto(id, json) {
+  return {
+    type: ON_VETO,
+    payload: { id, json }
+  };
+}
+
 export function onVote(voteId, vote) {
   return {
     type: ON_VOTE,
@@ -83,13 +90,6 @@ export function saveVeto(veto) {
       type: SAVE_VETO,
       payload: { promise }
     };
-  };
-}
-
-export function setVeto(id, json) {
-  return {
-    type: SET_VETO,
-    payload: { id, json }
   };
 }
 

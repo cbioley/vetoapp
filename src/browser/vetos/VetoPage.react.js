@@ -47,7 +47,7 @@ class VetoPage extends Component {
                 {veto.name}{' '}
                 <Flag country={veto.country} />
                 {' '}
-                <VotesYesTotal value={votesYesTotal} />
+                <VotesYesTotal value={votesYesTotal} vetoId={veto.id} />
               </h2>
               <nav className="nav nav-inline">
                 <Link to={`/users/${veto.creatorId}`}>
@@ -83,10 +83,10 @@ VetoPage = loading(VetoPage, ['veto'], ({ viewer, vote, votesYesTotal }) =>
   (viewer && vote === undefined) // We fetch vote only for viewer.
 );
 
-VetoPage = queryFirebase(VetoPage, ({ setVeto, params: { vetoId } }) => ({
+VetoPage = queryFirebase(VetoPage, ({ onVeto, params: { vetoId } }) => ({
   path: `vetos/${vetoId}`,
   on: {
-    value: snapshot => setVeto(vetoId, snapshot.val())
+    value: snapshot => onVeto(vetoId, snapshot.val())
   }
 }));
 
