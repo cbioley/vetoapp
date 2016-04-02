@@ -7,12 +7,11 @@ import React, { PropTypes } from 'react';
 import start from '../../common/app/start';
 import { connect } from 'react-redux';
 
-// v4-alpha.getbootstrap.com/getting-started/introduction/#starter-template
 const bootstrap4Metas = [
   { charset: 'utf-8' },
   {
     name: 'viewport',
-    content: 'width=device-width, initial-scale=1, shrink-to-fit=no'
+    content: 'width=device-width, initial-scale=1, shrink-to-fit=no, user-scalable=no'
   },
   {
     'http-equiv': 'x-ua-compatible',
