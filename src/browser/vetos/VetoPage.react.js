@@ -69,7 +69,7 @@ class VetoPage extends Component {
               </p>
               <Vote {...{ veto, vote, votesYesTotal }} />
             </div>
-            <FacebookComments />
+            <FacebookComments href={`https://vetoapp.com/vetos/${veto.id}`} />
           </div>
         </div>
       </div>
