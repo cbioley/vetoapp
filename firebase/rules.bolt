@@ -91,7 +91,9 @@ type VetoArchiveQueueItem {
 
 type Vote {
   createdAt: Number,
+  userDisplayName: ShortRequiredString,
   userId: ShortRequiredString,
+  userProfileImageURL: LongString,
   vetoCountry: ShortRequiredString,
   vetoCreatorDisplayName: ShortRequiredString,
   vetoCreatorId: ShortRequiredString,

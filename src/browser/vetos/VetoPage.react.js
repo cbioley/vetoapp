@@ -41,34 +41,32 @@ class VetoPage extends Component {
       <div className="veto-page">
         <div className="row">
           <div className="col-md-10">
-            <div className="view">
-              <Helmet title={veto.name} />
-              <h2>
-                {veto.name}{' '}
-                <Flag country={veto.country} />
-                {' '}
-                <VotesYesTotal value={votesYesTotal} vetoId={veto.id} />
-              </h2>
-              <nav className="nav nav-inline">
-                <Link to={`/users/${veto.creatorId}`}>
-                  <FormattedMessage
-                    {...messages.suggestedBy}
-                    values={{ creatorDisplayName: veto.creatorDisplayName }}
-                  />
+            <Helmet title={veto.name} />
+            <h2>
+              {veto.name}{' '}
+              <Flag country={veto.country} />
+              {' '}
+              <VotesYesTotal value={votesYesTotal} vetoId={veto.id} />
+            </h2>
+            <nav className="nav nav-inline">
+              <Link to={`/users/${veto.creatorId}`}>
+                <FormattedMessage
+                  {...messages.suggestedBy}
+                  values={{ creatorDisplayName: veto.creatorDisplayName }}
+                />
+              </Link>
+              {showEdit &&
+                <Link to={`/vetos/${veto.id}/edit`}>
+                  <FormattedMessage {...buttonsMessages.edit} />
                 </Link>
-                {showEdit &&
-                  <Link to={`/vetos/${veto.id}/edit`}>
-                    <FormattedMessage {...buttonsMessages.edit} />
-                  </Link>
-                }
-              </nav>
-              <p>
-                <Linkify>
-                  {veto.reason}
-                </Linkify>
-              </p>
-              <Vote {...{ veto, vote, votesYesTotal }} />
-            </div>
+              }
+            </nav>
+            <p>
+              <Linkify>
+                {veto.reason}
+              </Linkify>
+            </p>
+            <Vote {...{ veto, vote, votesYesTotal }} />
             <FacebookComments href={`https://vetoapp.com/vetos/${veto.id}`} />
           </div>
         </div>

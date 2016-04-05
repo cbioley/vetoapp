@@ -2,7 +2,9 @@ import { Record } from 'immutable';
 
 const Vote = Record({
   createdAt: null,
+  userDisplayName: null,
   userId: null,
+  userProfileImageURL: null,
   vetoCountry: '',
   vetoCreatorDisplayName: '',
   vetoCreatorId: null,

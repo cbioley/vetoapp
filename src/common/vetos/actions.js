@@ -5,6 +5,7 @@ export const DELETE_VETO = 'DELETE_VETO';
 export const MORE_LAST_VETOS = 'MORE_LAST_VETOS';
 export const ON_LAST_VETOS = 'ON_LAST_VETOS';
 export const ON_USER_VETOS = 'ON_USER_VETOS';
+export const ON_USER_VOTE = 'ON_USER_VOTE';
 export const ON_USER_YES_VOTES = 'ON_USER_YES_VOTES';
 export const ON_VETO = 'ON_VETO';
 export const ON_VOTE = 'ON_VOTE';
@@ -53,6 +54,13 @@ export function onUserVetos(userId, vetos) {
   };
 }
 
+export function onUserVote(payload) {
+  return {
+    type: ON_USER_VOTE,
+    payload
+  };
+}
+
 export function onUserYesVotes(userId, votes) {
   return {
     type: ON_USER_YES_VOTES,
@@ -98,7 +106,9 @@ export function setVote(veto, yes) {
     const { viewer } = getState().users;
     const vote = new Vote({
       createdAt: Date.now(),
+      userDisplayName: viewer.displayName,
       userId: viewer.id,
+      userProfileImageURL: viewer.profileImageURL,
       vetoCountry: veto.country,
       vetoCreatorDisplayName: veto.creatorDisplayName,
       vetoCreatorId: veto.creatorId,

@@ -1,7 +1,8 @@
 import * as actions from './actions';
 import Veto from './Veto';
 import Vote from './Vote';
-import { Map, Record, Seq } from 'immutable';
+import { List, Map, Record } from 'immutable';
+import { onList } from '../lib/redux-firebase';
 
 const lastVetosPageSize = 10;
 
@@ -12,6 +13,7 @@ const InitialState = Record({
   suggestVetoFormDisabled: false,
   suggestVetoFormError: null,
   usersVetos: Map(),
+  usersVotes: Map(),
   usersYesVotes: Map(),
   votes: Map(),
   votesYesTotals: Map()
@@ -19,19 +21,22 @@ const InitialState = Record({
 const initialState = new InitialState;
 
 const vetoJsonToVeto = json => json && new Veto(json);
-const vetosJsonToMap = json => Seq(json).map(vetoJsonToVeto).toMap();
+const vetosJsonToMap = json => Map(json).map(vetoJsonToVeto);
 const vetosJsonToSortedByCreatedAtList = json => vetosJsonToMap(json)
   .sortBy(veto => -veto.createdAt)
   .toList();
 const voteJsonToVote = json => json && new Vote(json);
 
 // Don't revive usersVetos and usersYesVotes because user isn't server authed.
+// TODO: Revive usersVetos, protože sosal z open, a chci to pro bota, ok.
 const revive = state => initialState.merge({
   lastVetos: vetosJsonToSortedByCreatedAtList(state.lastVetos),
   lastVetosLimitToLast: state.lastVetosLimitToLast,
   map: vetosJsonToMap(state.map),
-  votes: Seq(state.votes).map(voteJsonToVote).toMap(),
-  votesYesTotals: Seq(state.votesYesTotals).toMap()
+  usersVotes: Map(state.usersVotes).map(array => List(array || [])
+    .map(json => voteJsonToVote(json))),
+  votes: Map(state.votes).map(voteJsonToVote),
+  votesYesTotals: Map(state.votesYesTotals)
 });
 
 export default function vetosReducer(state = initialState, action) {
@@ -65,9 +70,18 @@ export default function vetosReducer(state = initialState, action) {
         .setIn(['usersVetos', userId], list);
     }
 
+    case actions.ON_USER_VOTE: {
+      const { eventType, key, prevChildKey, props, value } = action.payload;
+      const { params: { vetoId } } = props;
+      return state.updateIn(['usersVotes', vetoId], (votes = List()) =>
+        onList(votes, eventType, key, prevChildKey, value, 'userId', Vote)
+          .sortBy(item => -item.createdAt)
+      );
+    }
+
     case actions.ON_USER_YES_VOTES: {
       const { userId, votes } = action.payload;
-      const list = votes && Seq(votes)
+      const list = votes && Map(votes)
         .map(voteJsonToVote)
         .sortBy(vote => -vote.createdAt)
         .toList();

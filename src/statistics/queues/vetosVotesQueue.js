@@ -34,9 +34,13 @@ export default firebase => new Queue(
         vetoMunicipality: veto.municipality,
         vetoName: veto.name
       }).toJS();
+      const userVal = await firebase.child('users').child(userId).once('value');
+      const user = userVal.val();
       const vote = new Vote({
         createdAt: Firebase.ServerValue.TIMESTAMP,
+        userDisplayName: user.displayName,
         userId,
+        userProfileImageURL: user.profileImageURL,
         vetoCountry: veto.country,
         vetoCreatorDisplayName: veto.creatorDisplayName,
         vetoCreatorId: veto.creatorId,
