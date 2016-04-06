@@ -17,7 +17,7 @@
 //   }
 // }));
 
-// TODO: Granular updates sucks, what we need it Virtual dom like diff for data.
+// TODO: Granular updates sucks. Use Virtual DOM like diff for "value" update.
 
 import * as actions from './actions';
 import Component from 'react-pure-render/component';
