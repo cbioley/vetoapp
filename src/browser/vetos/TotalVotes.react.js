@@ -41,7 +41,7 @@ class TotalVotes extends Component {
               {totalVotes.map(({ total, vetoId, vetoName }) =>
                 <tr key={vetoId}>
                   <td><Link to={`/vetos/${vetoId}`}>{vetoName}</Link></td>
-                  <td>{total}</td>
+                  <td><Link to={`/vetos/${vetoId}/votes`}>{total}</Link></td>
                 </tr>
               )}
             </tbody>
