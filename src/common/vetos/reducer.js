@@ -2,7 +2,7 @@ import * as actions from './actions';
 import Veto from './Veto';
 import Vote from './Vote';
 import { List, Map, Record, Seq } from 'immutable';
-import { onList } from '../lib/redux-firebase';
+import { updateList } from '../lib/redux-firebase';
 
 const lastVetosPageSize = 10;
 
@@ -74,7 +74,7 @@ export default function vetosReducer(state = initialState, action) {
       const { eventType, key, prevChildKey, props, value } = action.payload;
       const { params: { vetoId } } = props;
       return state.updateIn(['usersVotes', vetoId], (votes = List()) =>
-        onList(votes, eventType, key, prevChildKey, value, 'userId', Vote)
+        updateList(votes, eventType, key, prevChildKey, value, 'userId', Vote)
           .sortBy(item => -item.createdAt)
       );
     }

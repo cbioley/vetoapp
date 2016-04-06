@@ -1,4 +1,4 @@
-export default function onList(
+export default function updateList(
   list,
   eventType,
   id,
@@ -9,7 +9,7 @@ export default function onList(
 ) {
   const findIdx = id => list.findIndex(item => item[idProp] === id);
   const currentIdx = findIdx(id);
-  // console.log(eventType, id, prevId)
+  console.log(eventType, id, prevId)
   // Note updates check currect state because re-registration etc.
   switch (eventType) {
     case 'child_removed':
