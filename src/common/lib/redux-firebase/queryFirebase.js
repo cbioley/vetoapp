@@ -51,6 +51,7 @@ export default function queryFirebase(Wrapped, mapPropsToOptions) {
       // Make a shallow copy to prevent eventTypes argument modification.
       eventTypes = { ...eventTypes };
       // eventTypes.all is a shorthand for all granular Firebase events.
+      // We can project all changes to immutable list with updateList helper.
       if (eventTypes.all) {
         const action = eventTypes.all;
         delete eventTypes.all;
@@ -85,7 +86,7 @@ export default function queryFirebase(Wrapped, mapPropsToOptions) {
             });
         }
       }
-      // These ad hoc events doesn't make sense to listen on the server.
+      // These ad hoc events doesn't make sense to listen them on the server.
       if (serverFetching) {
         delete eventTypes.child_changed;
         delete eventTypes.child_moved;
@@ -94,6 +95,7 @@ export default function queryFirebase(Wrapped, mapPropsToOptions) {
       return Object.keys(eventTypes).map(eventType => [
         eventType,
         ...ensureArrayWithDefaultOnError(eventTypes[eventType])
+          // TODO: .map(fn => (...args) => fn.apply(this, [...args, this.props]))
       ]);
     }
 
@@ -145,8 +147,9 @@ export default function queryFirebase(Wrapped, mapPropsToOptions) {
 
     off(props) {
       this.dispatch(props, ref => {
-        this.onArgs.forEach(arg => ref.off(...arg));
-        this.onceArgs.forEach(arg => ref.off(...arg));
+        // For deregistration, we have to use only eventType and callback.
+        this.onArgs.forEach(arg => ref.off(arg[0], arg[1]));
+        this.onceArgs.forEach(arg => ref.off(arg[0], arg[1]));
         return actions.REDUX_FIREBASE_OFF_QUERY;
       });
     }

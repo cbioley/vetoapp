@@ -9,8 +9,8 @@ export default function updateList(
 ) {
   const findIdx = id => list.findIndex(item => item[idProp] === id);
   const currentIdx = findIdx(id);
-  console.log(eventType, id, prevId)
-  // Note updates check currect state because re-registration etc.
+  // Note updates check currect state to handle multiple or obsolete updates.
+  // Yes, that's poor man workaround when something is broken.
   switch (eventType) {
     case 'child_removed':
       if (currentIdx === -1) return list;
