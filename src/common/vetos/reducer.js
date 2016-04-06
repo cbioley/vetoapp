@@ -1,7 +1,7 @@
 import * as actions from './actions';
 import Veto from './Veto';
 import Vote from './Vote';
-import { List, Map, Record } from 'immutable';
+import { List, Map, Record, Seq } from 'immutable';
 import { onList } from '../lib/redux-firebase';
 
 const lastVetosPageSize = 10;
@@ -21,7 +21,7 @@ const InitialState = Record({
 const initialState = new InitialState;
 
 const vetoJsonToVeto = json => json && new Veto(json);
-const vetosJsonToMap = json => Map(json).map(vetoJsonToVeto);
+const vetosJsonToMap = json => Seq(json).map(vetoJsonToVeto).toMap();
 const vetosJsonToSortedByCreatedAtList = json => vetosJsonToMap(json)
   .sortBy(veto => -veto.createdAt)
   .toList();
