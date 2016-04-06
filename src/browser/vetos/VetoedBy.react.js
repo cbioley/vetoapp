@@ -7,7 +7,15 @@ import React, { PropTypes } from 'react';
 import loading from '../lib/loading';
 import { Link } from 'react-router';
 import { connect } from 'react-redux';
+import { defineMessages, injectIntl, intlShape } from 'react-intl';
 import { queryFirebase } from '../../common/lib/redux-firebase';
+
+const messages = defineMessages({
+  vetos: {
+    defaultMessage: 'Vetos',
+    id: 'vetos.vetoedBy.vetos'
+  }
+});
 
 // TODO: Pure, or stateless functional component with shouldComponentUpdate.
 const Vote = ({ vote }) =>
@@ -25,18 +33,20 @@ Vote.propTypes = {
 class VetoedBy extends Component {
 
   static propTypes = {
+    intl: intlShape.isRequired,
     veto: PropTypes.object.isRequired,
     votes: PropTypes.object.isRequired
   };
 
   render() {
-    const { veto, votes } = this.props;
+    const { intl, veto, votes } = this.props;
+    const vetos = intl.formatMessage(messages.vetos);
 
     return (
       <div className="vetoed-by-page">
         <div className="row">
           <div className="col-md-10">
-            <Helmet title={veto.name} />
+            <Helmet title={`${vetos} · ${veto.name}`} />
             <h2>
               <Link to={`/vetos/${veto.id}`}>
                 {veto.name}
@@ -44,6 +54,7 @@ class VetoedBy extends Component {
               {' '}
               <Flag country={veto.country} />
             </h2>
+            <h3>{vetos}</h3>
             <ol>
               {votes.map(vote =>
                 <Vote key={vote.userId} vote={vote} />
@@ -56,6 +67,8 @@ class VetoedBy extends Component {
   }
 
 }
+
+VetoedBy = injectIntl(VetoedBy);
 
 VetoedBy = loading(VetoedBy, ['veto', 'votes']);
 

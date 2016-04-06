@@ -268,6 +268,10 @@ export default [
     "defaultMessage": "Navržená veta"
   },
   {
+    "id": "vetos.vetoedBy.vetos",
+    "defaultMessage": "Veta"
+  },
+  {
     "id": "vetos.vetoedVetos.heading",
     "defaultMessage": "Vetováno"
   },

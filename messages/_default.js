@@ -189,6 +189,10 @@ export default [
     "defaultMessage": "Suggested vetos"
   },
   {
+    "id": "vetos.vetoedBy.vetos",
+    "defaultMessage": "Vetos"
+  },
+  {
     "id": "vetos.vetoedVetos.heading",
     "defaultMessage": "Vetoed"
   },
