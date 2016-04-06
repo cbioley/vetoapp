@@ -35,10 +35,10 @@ class EditVetoPage extends Component {
 
 }
 
-EditVetoPage = queryFirebase(EditVetoPage, ({ setVeto, params: { vetoId } }) => ({
+EditVetoPage = queryFirebase(EditVetoPage, ({ onVeto, params: { vetoId } }) => ({
   path: `vetos/${vetoId}`,
   on: {
-    value: snapshot => setVeto(vetoId, snapshot.val())
+    value: snapshot => onVeto(vetoId, snapshot.val())
   }
 }));
 
