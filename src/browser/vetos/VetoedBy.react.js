@@ -70,7 +70,7 @@ VetoedBy = queryFirebase(VetoedBy, ({ onUserVote, params: { vetoId } }) => ({
     ['orderByChild', 'createdAt']
     // TODO: Add pagination once we will have a lot of vetos.
   ],
-  on: { all: onUserVote }
+  on: { all: args => onUserVote(vetoId, args) }
 }));
 
 export default connect(({ users, vetos }, { params: { vetoId } }) => ({

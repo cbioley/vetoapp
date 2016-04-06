@@ -17,6 +17,8 @@
 //   }
 // }));
 
+// TODO: Granular updates sucks, what we need it Virtual dom like diff for data.
+
 import * as actions from './actions';
 import Component from 'react-pure-render/component';
 import Firebase from 'firebase';
@@ -52,6 +54,9 @@ export default function queryFirebase(Wrapped, mapPropsToOptions) {
       eventTypes = { ...eventTypes };
       // eventTypes.all is a shorthand for all granular Firebase events.
       // We can project all changes to immutable list with updateList helper.
+      // But there is an issue with Firebase granular updates, detached
+      // collection decays, and there is no way how to update it later, so it
+      // must be reseted.
       if (eventTypes.all) {
         const action = eventTypes.all;
         delete eventTypes.all;
@@ -62,13 +67,13 @@ export default function queryFirebase(Wrapped, mapPropsToOptions) {
           // The snapshot.val() doesn't ensure the order, nor snapshot.forEach.
           // And we can't use on 'child_added' on the server.
           // Therefore the order must be enforced in the reducer.
+          // TODO: I'm discussing this with Firebase support.
           eventTypes.value = (snapshot) => {
             const val = snapshot.val() || {};
             Object.keys(val).forEach(key => {
               action({
                 eventType: 'child_added',
                 key,
-                props: this.props,
                 value: val[key]
               });
             });
@@ -80,7 +85,6 @@ export default function queryFirebase(Wrapped, mapPropsToOptions) {
                 eventType,
                 key: snapshot.key(),
                 prevChildKey,
-                props: this.props,
                 value: snapshot.val()
               });
             });
@@ -95,7 +99,6 @@ export default function queryFirebase(Wrapped, mapPropsToOptions) {
       return Object.keys(eventTypes).map(eventType => [
         eventType,
         ...ensureArrayWithDefaultOnError(eventTypes[eventType])
-          // TODO: .map(fn => (...args) => fn.apply(this, [...args, this.props]))
       ]);
     }
 
@@ -160,6 +163,12 @@ export default function queryFirebase(Wrapped, mapPropsToOptions) {
     }
 
     componentDidMount() {
+      // Dispatch all handler without args to reset collection, because granular
+      // events works only on fresh collections.
+      const options = mapPropsToOptions(this.props);
+      if (options.on && options.on.all) {
+        options.on.all();
+      }
       this.on();
     }
 

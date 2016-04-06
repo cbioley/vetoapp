@@ -71,10 +71,9 @@ export default function vetosReducer(state = initialState, action) {
     }
 
     case actions.ON_USER_VOTE: {
-      const { eventType, key, prevChildKey, props, value } = action.payload;
-      const { params: { vetoId } } = props;
+      const { vetoId, args } = action.payload;
       return state.updateIn(['usersVotes', vetoId], (votes = List()) =>
-        updateList(votes, eventType, key, prevChildKey, value, 'userId', Vote)
+        updateList(votes, Vote, 'userId', args)
           .sortBy(item => -item.createdAt)
       );
     }

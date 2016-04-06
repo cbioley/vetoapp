@@ -1,16 +1,20 @@
+import { List } from 'immutable';
+
 export default function updateList(
   list,
-  eventType,
-  id,
-  prevId,
-  value,
+  ItemRecord,
   idProp,
-  ItemRecord
+  args
 ) {
+  // No args reset list because granular events can't update detached lists.
+  if (!args) {
+    return List();
+  }
+
+  const { eventType, key, prevChildKey, value } = args;
   const findIdx = id => list.findIndex(item => item[idProp] === id);
-  const currentIdx = findIdx(id);
-  // Note updates check currect state to handle multiple or obsolete updates.
-  // Yes, that's poor man workaround when something is broken.
+  // UpdateList check whether an operation is allowed since list can be stale.
+  const currentIdx = findIdx(key);
   switch (eventType) {
     case 'child_removed':
       if (currentIdx === -1) return list;
@@ -22,11 +26,11 @@ export default function updateList(
       if (currentIdx === -1) return list;
       return list
         .delete(currentIdx)
-        .insert(prevId ? findIdx(prevId) : 0, list.get(currentIdx));
-    case 'child_added': {
+        .insert(prevChildKey ? findIdx(prevChildKey) : 0, list.get(currentIdx));
+    case 'child_added':
       if (currentIdx !== -1) list = list.delete(currentIdx);
-      return list.insert(prevId ? findIdx(prevId) : 0, new ItemRecord(value));
-    }
+      return list
+        .insert(prevChildKey ? findIdx(prevChildKey) : 0, new ItemRecord(value));
   }
   return list;
 }

@@ -54,10 +54,10 @@ export function onUserVetos(userId, vetos) {
   };
 }
 
-export function onUserVote(payload) {
+export function onUserVote(vetoId, args) {
   return {
     type: ON_USER_VOTE,
-    payload
+    payload: { vetoId, args }
   };
 }
 
